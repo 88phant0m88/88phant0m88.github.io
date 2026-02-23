@@ -39,6 +39,37 @@
       z-index: 0;
     }
 
+    /* Лепестки сакуры */
+    .petal {
+      position: fixed;
+      top: -50px;
+      pointer-events: none;
+      z-index: 1000;
+      animation: fall linear infinite;
+      opacity: 0.8;
+      font-size: 20px;
+    }
+
+    @keyframes fall {
+      0% {
+        transform: translateY(0) rotate(0deg) translateX(0);
+        opacity: 0.8;
+      }
+      25% {
+        transform: translateY(25vh) rotate(90deg) translateX(20px);
+      }
+      50% {
+        transform: translateY(50vh) rotate(180deg) translateX(-20px);
+      }
+      75% {
+        transform: translateY(75vh) rotate(270deg) translateX(10px);
+      }
+      100% {
+        transform: translateY(100vh) rotate(360deg) translateX(0);
+        opacity: 0;
+      }
+    }
+
     .container {
       position: relative;
       z-index: 1;
@@ -250,6 +281,9 @@
   </style>
 </head>
 <body>
+  <!-- Контейнер для лепестков -->
+  <div id="petals-container"></div>
+
   <div class="container">
     <div class="profile-card">
       <div class="avatar-container">
@@ -292,6 +326,46 @@
       </div>
     </div>
   </div>
+
+  <script>
+    // Создание лепестков сакуры с emoji
+    function createPetal() {
+      const petal = document.createElement('div');
+      petal.className = 'petal';
+      
+      // Случайный emoji цветка
+      const flowers = ['🌸', '', '', ''];
+      petal.textContent = flowers[Math.floor(Math.random() * flowers.length)];
+      
+      // Случайный размер
+      const size = Math.random() * 15 + 15;
+      petal.style.fontSize = size + 'px';
+      
+      // Случайная позиция
+      petal.style.left = Math.random() * 100 + 'vw';
+      
+      // Случайная длительность
+      const duration = Math.random() * 5 + 7;
+      petal.style.animationDuration = duration + 's';
+      
+      // Случайная задержка
+      petal.style.animationDelay = Math.random() * 2 + 's';
+      
+      document.getElementById('petals-container').appendChild(petal);
+      
+      setTimeout(() => {
+        petal.remove();
+      }, (duration + 2) * 1000);
+    }
+
+    // Создание лепестков
+    setInterval(createPetal, 800);
+
+    // Начальные лепестки
+    for (let i = 0; i < 15; i++) {
+      setTimeout(createPetal, i * 300);
+    }
+  </script>
 </body>
 </html>
 
