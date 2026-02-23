@@ -328,27 +328,25 @@
   </div>
 
   <script>
-    // Создание лепестков сакуры с emoji
     function createPetal() {
       const petal = document.createElement('div');
       petal.className = 'petal';
       
-      // Случайный emoji цветка
+      
       const flowers = ['🌸', '', '', ''];
       petal.textContent = flowers[Math.floor(Math.random() * flowers.length)];
       
-      // Случайный размер
+      
       const size = Math.random() * 15 + 15;
       petal.style.fontSize = size + 'px';
       
-      // Случайная позиция
+    
       petal.style.left = Math.random() * 100 + 'vw';
       
-      // Случайная длительность
+      
       const duration = Math.random() * 5 + 7;
       petal.style.animationDuration = duration + 's';
       
-      // Случайная задержка
       petal.style.animationDelay = Math.random() * 2 + 's';
       
       document.getElementById('petals-container').appendChild(petal);
@@ -358,10 +356,8 @@
       }, (duration + 2) * 1000);
     }
 
-    // Создание лепестков
     setInterval(createPetal, 800);
 
-    // Начальные лепестки
     for (let i = 0; i < 15; i++) {
       setTimeout(createPetal, i * 300);
     }
