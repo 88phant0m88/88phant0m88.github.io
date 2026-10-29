@@ -34,7 +34,33 @@ h1{font-size:29px}.handle{font-size:13px;color:#c084fc;margin-top:5px}.bio{font-
 .room:after{content:"";position:absolute;inset:0;background:linear-gradient(135deg,#ffffff08,transparent 40%,#00000018);pointer-events:none}
 .zone{position:absolute;z-index:1;color:#d4c1e1;text-transform:uppercase;letter-spacing:.16em;font-size:10px;text-shadow:0 1px 3px #000;background:#211629bb;border:1px solid #745282;border-radius:5px;padding:5px 7px}
 .zone.office{left:2%;top:2%}.zone.kitchenlabel{right:2%;top:2%}.zone.lounge{right:2%;bottom:2%}.zone.chill{left:2%;bottom:2%}
-.window{position:absolute;left:22%;top:0;width:30%;height:5%;background:linear-gradient(90deg,#283657,#75519b,#283657);border:4px solid #5c4267;border-top:0}
+.window{position:absolute;z-index:1;left:17%;top:2%;width:39%;height:23%;overflow:hidden;background:linear-gradient(180deg,#6fa7d8 0%,#b7d9ed 62%,#e8c5ad 100%);border:7px solid #80658b;border-top-width:9px;box-shadow:inset 0 0 0 3px #d9c2df,0 8px 15px #10091699;transition:background 8s ease,border-color 8s ease}
+.window:before{content:"";position:absolute;z-index:1;left:0;right:0;top:0;bottom:0;background:linear-gradient(90deg,#ffffff28,transparent 18% 82%,#ffffff16),linear-gradient(180deg,transparent 50%,#fff1 100%);pointer-events:none}
+.window:after{content:"";position:absolute;z-index:5;left:49%;top:0;bottom:0;width:5px;background:linear-gradient(90deg,#c3b0cd,#f0e4f1,#947c9d);box-shadow:0 0 0 2px #35263d55}
+.window .skyline{position:absolute;left:0;right:0;bottom:0;height:62%;display:flex;align-items:flex-end;gap:2px;padding:0 3px;z-index:2}
+.window .building{position:relative;flex:1;min-width:5px;height:var(--h);background:linear-gradient(90deg,#5a6d83,#8797a8 48%,#46586f);border:1px solid #4c5c72;box-shadow:inset 3px 0 #ffffff18}
+.window .building:before{content:"";position:absolute;inset:8% 12%;background:repeating-linear-gradient(0deg,transparent 0 8px,#f7dba5 9px 12px,transparent 13px 17px),repeating-linear-gradient(90deg,transparent 0 7px,#c5e5ef 8px 10px,transparent 11px 14px);opacity:.75}
+.window .building.tower{background:linear-gradient(90deg,#43536d,#8296aa 55%,#394960)}
+.window .building.tower:after{content:"";position:absolute;left:45%;top:-14px;width:2px;height:15px;background:#7a8798}
+.window .sunmoon{position:absolute;z-index:1;left:15%;top:12%;width:clamp(14px,3vw,27px);aspect-ratio:1;border-radius:50%;background:#fff0b3;box-shadow:0 0 20px 7px #ffe8ac66;transition:all 8s ease}
+.window .distant{position:absolute;bottom:32%;left:0;right:0;height:18%;background:linear-gradient(180deg,#879eaa,#a8b8bd);clip-path:polygon(0 100%,0 65%,7% 65%,7% 25%,12% 25%,12% 50%,19% 50%,19% 10%,24% 10%,24% 65%,32% 65%,32% 35%,39% 35%,39% 70%,49% 70%,49% 20%,56% 20%,56% 60%,65% 60%,65% 5%,71% 5%,71% 65%,82% 65%,82% 30%,89% 30%,89% 60%,100% 60%,100% 100%);opacity:.8;transition:background 8s ease}
+.room[data-time="day"] .window{background:linear-gradient(180deg,#4d9be0 0%,#a9d7f5 65%,#e8d7c2 100%)}
+.room[data-time="day"] .sunmoon{left:18%;top:10%;background:#fff5b7;box-shadow:0 0 24px 10px #fff0a855}
+.room[data-time="evening"] .window{background:linear-gradient(180deg,#48386e 0%,#d47f78 53%,#f0b77f 100%);border-color:#8e6b8c}
+.room[data-time="evening"] .sunmoon{left:72%;top:45%;background:#ffb36c;box-shadow:0 0 25px 10px #ff9b5b66}
+.room[data-time="night"] .window{background:linear-gradient(180deg,#080f2b 0%,#17284b 65%,#29314c 100%);border-color:#564d7e}
+.room[data-time="night"] .sunmoon{left:74%;top:9%;background:#e4e8ff;box-shadow:0 0 18px 6px #c3d0ff44}
+.room[data-time="night"] .sunmoon:after{content:"";position:absolute;left:-4px;top:-2px;width:100%;height:100%;border-radius:50%;background:#111b3b}
+.room[data-time="night"] .building{background:linear-gradient(90deg,#18243c,#35435b 48%,#111c32);border-color:#1b2841}
+.room[data-time="night"] .building:before{background:repeating-linear-gradient(0deg,transparent 0 8px,#ffd68b 9px 12px,transparent 13px 17px),repeating-linear-gradient(90deg,transparent 0 7px,#ffe3a3 8px 10px,transparent 11px 14px);opacity:.95}
+.room[data-time="night"] .distant{background:linear-gradient(180deg,#1e2a43,#30354b)}
+.room[data-time="dawn"] .window{background:linear-gradient(180deg,#3e537f 0%,#d88c9c 54%,#f3c9a3 100%)}
+.room[data-time="dawn"] .sunmoon{left:25%;top:43%;background:#ffd9a2;box-shadow:0 0 23px 9px #ffcf9b66}
+.room[data-time="dawn"] .building{background:linear-gradient(90deg,#46526c,#7f879b 48%,#3c4863)}
+.room[data-time="dawn"] .distant{background:linear-gradient(180deg,#6b7891,#aab2bd)}
+.room[data-time="night"] .roomlight{opacity:1}
+.room[data-time="day"] .roomlight{opacity:.12}
+.roomlight{position:absolute;inset:0;z-index:6;pointer-events:none;opacity:.12;background:linear-gradient(180deg,#111b4c22,#070b2488);transition:opacity 8s ease}
 .plant{position:absolute;z-index:2;left:3%;top:13%;width:8%;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle at 40% 35%,#5d9c6b,#1d4938 60%,#142b24);border:5px solid #60496a;box-shadow:0 3px 0 #2b1d32}
 .plant:after{content:"";position:absolute;left:42%;top:35%;width:18%;height:55%;background:#95704d;border-radius:3px}
 .shelf{position:absolute;left:14%;top:3%;width:30%;height:7%;background:#67496f;border:4px solid #886491;box-shadow:0 5px 0 #2b1e31}
@@ -166,7 +192,7 @@ footer{display:flex;justify-content:space-between;gap:10px;color:#887794;font-si
 <section class="game">
 <div class="gamehead"><div><h2>AI House — вид сверху</h2><p>Большая комната, четыре агента и собственный распорядок дня</p></div><div class="clock" id="clock">00:00:00</div></div>
 <div class="mapwrap"><div class="room" id="room" aria-label="Карта комнаты с агентами">
-<div class="window"></div>
+<div class="window" id="window"><div class="sunmoon"></div><div class="distant"></div><div class="skyline" id="skyline"></div></div><div class="roomlight"></div>
 <div class="plant"></div><div class="shelf"><i class="book"></i><i class="book b2"></i><i class="book b3"></i><i class="book b4"></i></div>
 <div class="desk d1"></div><div class="desk d2"></div><div class="desk d3"></div><div class="desk d4"></div>
 <div class="chair c1"></div><div class="chair c2"></div><div class="chair c3"></div><div class="chair c4"></div>
@@ -277,7 +303,7 @@ async function conversationEvent(){
   const midY=Math.max(16,Math.min(82,(spots[0][1]+spots[1][1])/2));
   await walkTo(a,{label:"идёт поговорить с "+b.name,say:"Иду поговорить",route:[[midX-4,midY]]});
   await walkTo(b,{label:"разговаривает с "+a.name,say:"Слушаю",route:[[midX+4,midY]]});
-  const friendly=Math.random()<.68;
+  const friendly=Math.random()<.82;
   if(friendly){
    const lines=conversations[Math.floor(Math.random()*conversations.length)];
    say(a,lines[0]);await wait(2300);say(b,lines[1]);await wait(2400);
@@ -286,7 +312,7 @@ async function conversationEvent(){
   }else{
    const lines=disagreements[Math.floor(Math.random()*disagreements.length)];
    say(a,lines[0]);await wait(1800);say(b,lines[1]);await wait(1600);
-   if(Math.random()<.72){
+   if(Math.random()<.34){
     say(a,"Всё, хватит спорить!","fighting");say(b,"Тогда выйди и скажи это ещё раз!","fighting");
     nodes[a.id].classList.add("fighting");nodes[b.id].classList.add("fighting");
     await wait(1800);
@@ -318,8 +344,27 @@ people.forEach(p=>{
  });
 });
 people.forEach((p,i)=>setTimeout(()=>runAgent(p),i*1200));
-setInterval(()=>{if(Math.random()<.78)conversationEvent()},22000);
-function tick(){document.getElementById("clock").textContent=new Date().toLocaleTimeString("ru-RU",{hour12:false})}
-tick();setInterval(tick,1000);
+setInterval(()=>{if(Math.random()<.32)conversationEvent()},65000);
+
+const room=document.getElementById("room");
+const skyline=document.getElementById("skyline");
+for(let i=0;i<19;i++){
+ const building=document.createElement("span");
+ building.className="building"+(i%6===2?" tower":"");
+ building.style.setProperty("--h",(24+Math.random()*72)+"%");
+ building.style.flexGrow=String(.65+Math.random()*1.25);
+ skyline.appendChild(building);
+}
+function updateRoomTime(){
+ const cycle=(Date.now()/240000)%1;
+ const hour=cycle*24;
+ const phase=hour<5.5?"night":hour<7.5?"dawn":hour<17.5?"day":hour<20.5?"evening":"night";
+ room.dataset.time=phase;
+ const mins=Math.floor((hour%1)*60);
+ const clock=document.getElementById("clock");
+ clock.textContent=String(Math.floor(hour)).padStart(2,"0")+":"+String(mins).padStart(2,"0")+" · "+({dawn:"Рассвет",day:"День",evening:"Вечер",night:"Ночь"}[phase]);
+}
+updateRoomTime();setInterval(updateRoomTime,1000);
+
 </script>
 </body></html>
