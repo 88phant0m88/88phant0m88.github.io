@@ -1,378 +1,179 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Phantom | Links</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: #0a0a0a;
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
-      position: relative;
-      overflow-x: hidden;
-    }
-
-    body::before {
-      content: '';
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: 
-        radial-gradient(circle at 20% 50%, rgba(88, 28, 135, 0.4) 0%, transparent 50%),
-        radial-gradient(circle at 80% 80%, rgba(126, 34, 206, 0.3) 0%, transparent 50%),
-        radial-gradient(circle at 50% 50%, rgba(74, 20, 140, 0.2) 0%, transparent 70%);
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    /* Лепестки сакуры */
-    .petal {
-      position: fixed;
-      top: -50px;
-      pointer-events: none;
-      z-index: 1000;
-      animation: fall linear infinite;
-      opacity: 0.8;
-      font-size: 20px;
-    }
-
-    @keyframes fall {
-      0% {
-        transform: translateY(0) rotate(0deg) translateX(0);
-        opacity: 0.8;
-      }
-      25% {
-        transform: translateY(25vh) rotate(90deg) translateX(20px);
-      }
-      50% {
-        transform: translateY(50vh) rotate(180deg) translateX(-20px);
-      }
-      75% {
-        transform: translateY(75vh) rotate(270deg) translateX(10px);
-      }
-      100% {
-        transform: translateY(100vh) rotate(360deg) translateX(0);
-        opacity: 0;
-      }
-    }
-
-    .container {
-      position: relative;
-      z-index: 1;
-      width: 100%;
-      max-width: 450px;
-      animation: fadeInUp 0.8s ease-out;
-    }
-
-    @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(30px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .profile-card {
-      background: rgba(20, 20, 20, 0.8);
-      backdrop-filter: blur(20px);
-      border: 1px solid rgba(126, 34, 206, 0.4);
-      border-radius: 30px;
-      padding: 40px 30px;
-      text-align: center;
-      box-shadow: 
-        0 20px 60px rgba(88, 28, 135, 0.5),
-        inset 0 1px 0 rgba(255, 255, 255, 0.05);
-    }
-
-    .avatar-container {
-      position: relative;
-      width: 140px;
-      height: 140px;
-      margin: 0 auto 20px;
-    }
-
-    .avatar {
-      width: 140px;
-      height: 140px;
-      border-radius: 50%;
-      background: #000;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border: 3px solid rgba(126, 34, 206, 0.6);
-      box-shadow: 0 0 50px rgba(126, 34, 206, 0.6);
-      overflow: hidden;
-      transition: all 0.3s ease;
-    }
-
-    .avatar:hover {
-      box-shadow: 0 0 70px rgba(147, 51, 234, 0.8);
-      border-color: rgba(167, 139, 250, 0.8);
-    }
-
-    .avatar img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .status {
-      position: absolute;
-      bottom: 5px;
-      right: 5px;
-      width: 20px;
-      height: 20px;
-      background: #a855f7;
-      border: 3px solid #0a0a0a;
-      border-radius: 50%;
-      box-shadow: 0 0 10px rgba(168, 85, 247, 0.8);
-    }
-
-    h1 {
-      color: #e9d5ff;
-      font-size: 32px;
-      margin-bottom: 8px;
-      font-weight: 700;
-      text-shadow: 0 0 30px rgba(168, 85, 247, 0.6);
-      letter-spacing: 1px;
-    }
-
-    .username {
-      color: #a855f7;
-      font-size: 16px;
-      margin-bottom: 15px;
-      font-weight: 500;
-    }
-
-    .bio {
-      color: #c084fc;
-      font-size: 16px;
-      margin-bottom: 30px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-    }
-
-    .links {
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-    }
-
-    .link-card {
-      display: flex;
-      align-items: center;
-      padding: 18px 24px;
-      background: rgba(88, 28, 135, 0.15);
-      border: 2px solid rgba(126, 34, 206, 0.3);
-      border-radius: 16px;
-      text-decoration: none;
-      transition: all 0.3s ease;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .link-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(168, 85, 247, 0.2), transparent);
-      transition: left 0.5s;
-    }
-
-    .link-card:hover::before {
-      left: 100%;
-    }
-
-    .link-card:hover {
-      transform: translateY(-3px);
-      border-color: #a855f7;
-      box-shadow: 0 10px 30px rgba(168, 85, 247, 0.4);
-      background: rgba(126, 34, 206, 0.25);
-    }
-
-    .link-icon {
-      width: 50px;
-      height: 50px;
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 26px;
-      margin-right: 15px;
-      flex-shrink: 0;
-    }
-
-    .telegram {
-      background: linear-gradient(135deg, #2a0845, #6441a5);
-      color: #e9d5ff;
-      border: 1px solid rgba(168, 85, 247, 0.4);
-    }
-
-    .github {
-      background: linear-gradient(135deg, #1a1a1a, #4a148c);
-      color: #e9d5ff;
-      border: 1px solid rgba(168, 85, 247, 0.4);
-    }
-
-    .link-text {
-      flex: 1;
-      text-align: left;
-    }
-
-    .link-title {
-      color: #e9d5ff;
-      font-size: 18px;
-      font-weight: 600;
-      margin-bottom: 3px;
-    }
-
-    .link-subtitle {
-      color: #a855f7;
-      font-size: 13px;
-    }
-
-    .arrow {
-      color: #a855f7;
-      font-size: 18px;
-      transition: transform 0.3s;
-    }
-
-    .link-card:hover .arrow {
-      transform: translateX(5px);
-      color: #d8b4fe;
-    }
-
-    .footer {
-      margin-top: 30px;
-      color: rgba(192, 132, 252, 0.5);
-      font-size: 13px;
-    }
-
-    @media (max-width: 480px) {
-      .profile-card {
-        padding: 30px 20px;
-      }
-      
-      h1 {
-        font-size: 26px;
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#100b1d">
+<title>Phantom — моя цифровая комната</title>
+<style>
+:root{--bg:#0b0812;--panel:#171123;--purple:#a855f7;--lav:#e9d5ff;--muted:#b6a5ca;--line:#65418a}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{min-height:100vh;background:radial-gradient(ellipse at 50% 0,#2b1745 0,transparent 52%),var(--bg);color:#f8f1ff;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;padding:24px 16px 36px}
+a{color:inherit;text-decoration:none}
+.page{max-width:1180px;margin:auto}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:22px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:850;letter-spacing:.16em;font-size:13px;color:#d8b4fe}
+.brand-mark{width:34px;height:34px;border:1px solid #9b5de5;border-radius:11px;display:grid;place-items:center;background:#21132f;box-shadow:0 0 24px #9333ea38;font-size:19px}
+.live{display:flex;align-items:center;gap:8px;color:#c4b5d4;font-size:12px;background:#171123;border:1px solid #38264c;border-radius:99px;padding:9px 13px}
+.dot{width:7px;height:7px;background:#a3e635;border-radius:50%;box-shadow:0 0 12px #a3e635}
+.hero{display:grid;grid-template-columns:290px minmax(0,1fr);gap:22px;align-items:stretch}
+.profile{background:linear-gradient(155deg,#21152fef,#120d1cf5);border:1px solid #553475;border-radius:24px;padding:28px 22px;display:flex;flex-direction:column;align-items:center;text-align:center;box-shadow:0 22px 70px #0005;position:relative;overflow:hidden}
+.profile:before{content:"";position:absolute;width:220px;height:220px;border-radius:50%;background:#8b5cf622;filter:blur(20px);top:-130px;left:-50px}
+.avatar-wrap{width:112px;height:112px;padding:4px;border-radius:50%;border:1px solid #c084fc;box-shadow:0 0 35px #9333ea55;margin-bottom:17px;position:relative;z-index:1}
+.avatar{width:100%;height:100%;border-radius:50%;object-fit:cover;background:#08060c}
+h1{font-size:31px;letter-spacing:.02em;line-height:1.1}
+.handle{color:#c084fc;margin-top:7px;font-size:14px}
+.bio{color:#c7b8d8;font-size:13px;line-height:1.6;margin:16px 0 22px;max-width:235px}
+.links{display:grid;gap:10px;width:100%}
+.link{display:flex;align-items:center;gap:12px;text-align:left;padding:13px 14px;border:1px solid #53356f;background:#241632a8;border-radius:14px;transition:.2s}
+.link:hover{transform:translateY(-2px);border-color:#c084fc;background:#38204b;box-shadow:0 8px 24px #9333ea20}
+.link-icon{width:38px;height:38px;display:grid;place-items:center;border-radius:11px;background:linear-gradient(135deg,#6d28d9,#312044);font-size:20px;flex:none}
+.link strong{display:block;font-size:14px}
+.link small{display:block;color:#bba6d0;font-size:11px;margin-top:3px}
+.link .arrow{margin-left:auto;color:#c084fc}
+.profile-foot{font-size:11px;color:#776789;margin-top:auto;padding-top:24px}
+.room-card{min-width:0;background:#130e1c;border:1px solid #4d3064;border-radius:24px;overflow:hidden;box-shadow:0 22px 70px #0005}
+.room-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:17px 20px;background:#1b1326;border-bottom:1px solid #3d284f}
+.room-head h2{font-size:15px;letter-spacing:.02em}
+.room-head p{font-size:11px;color:#aa98bd;margin-top:4px}
+.room-clock{font-variant-numeric:tabular-nums;color:#d8b4fe;font-size:13px;background:#2a1b3a;border:1px solid #54366c;border-radius:9px;padding:8px 10px;white-space:nowrap}
+.scene{height:470px;position:relative;overflow:hidden;isolation:isolate;background:linear-gradient(#171225 0 58%,#30233a 58% 100%)}
+.window{position:absolute;left:4%;top:7%;width:29%;height:31%;border:7px solid #3b294b;border-radius:5px;background:linear-gradient(135deg,#10172e,#25194b 60%,#101528);box-shadow:inset 0 0 25px #8b5cf733,0 5px 0 #0b0812}
+.window:before{content:"";position:absolute;left:50%;height:100%;width:4px;background:#4d3763}
+.window:after{content:"";position:absolute;left:0;top:52%;height:4px;width:100%;background:#4d3763}
+.moon{position:absolute;right:15%;top:13%;width:24px;height:24px;background:#e9d5ff;border-radius:50%;box-shadow:0 0 24px #c084fc99}
+.stars{position:absolute;inset:0;background-image:radial-gradient(#e9d5ff 1px,transparent 1.5px),radial-gradient(#a78bfa 1px,transparent 1.5px);background-size:37px 31px,53px 43px;background-position:9px 12px,22px 6px;opacity:.5}
+.shelf{position:absolute;left:4%;top:42%;width:29%;height:7px;background:#684783;box-shadow:0 5px 0 #24162f}
+.book{position:absolute;bottom:7px;width:13px;height:24px;background:#9f67c9;left:8%}
+.book.b2{left:14%;height:19px;background:#477c98}.book.b3{left:20%;height:27px;background:#b77c6d}
+.plant{position:absolute;left:34%;top:39%;font-size:31px;filter:drop-shadow(0 4px 3px #0008)}
+.floor{position:absolute;left:0;right:0;bottom:0;height:42%;background:repeating-linear-gradient(90deg,transparent 0 95px,#21172b 96px 99px),linear-gradient(#3a2b42,#251a30);border-top:3px solid #654779}
+.rug{position:absolute;left:25%;bottom:4%;width:52%;height:24%;background:#3c2850;border:2px solid #63437b;border-radius:5px;transform:perspective(120px) rotateX(3deg)}
+.zone-label{position:absolute;z-index:2;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:#bda6d2;background:#160f20bb;border:1px solid #513663;border-radius:6px;padding:5px 7px}
+.label-work{left:4%;top:52%}.label-kitchen{right:4%;top:8%}.label-lounge{right:4%;bottom:4%}
+.desk{position:absolute;z-index:3;left:5%;top:61%;width:27%;height:12%;background:#5a3c69;border:2px solid #805a93;border-radius:4px;box-shadow:0 9px 0 #2b1b38}
+.desk:before{content:"";position:absolute;left:10%;right:10%;bottom:-43px;height:42px;border-left:6px solid #3c2949;border-right:6px solid #3c2949}
+.monitor{position:absolute;z-index:4;left:11%;top:48%;width:11%;height:15%;border:4px solid #6c4a82;border-radius:5px;background:#0a1421;box-shadow:0 0 17px #8b5cf744;overflow:hidden}
+.monitor:before{content:"";position:absolute;inset:5px;background:repeating-linear-gradient(0deg,transparent 0 5px,#64e8c4 6px 7px,transparent 8px 12px);opacity:.7}
+.monitor:after{content:"";position:absolute;bottom:-11px;left:42%;width:9px;height:12px;background:#76548a}
+.monitor.m2{left:23%;top:50%;width:8%;height:12%;transform:scale(.8)}
+.keyboard{position:absolute;z-index:4;left:19%;top:65%;width:8%;height:4px;background:#b39ac6;border-radius:4px}
+.kitchen{position:absolute;z-index:2;right:4%;top:15%;width:28%;height:28%;border:2px solid #594168;background:#31233d;border-radius:5px}
+.cabinet{position:absolute;top:0;left:0;right:0;height:53%;background:repeating-linear-gradient(90deg,#463151 0 48px,#24172e 49px 52px);border-bottom:5px solid #8a6897}
+.counter{position:absolute;top:53%;left:-4%;right:-4%;height:12px;background:#a18aa7;border:2px solid #d1b6d9}
+.fridge{position:absolute;right:4%;top:9%;height:79%;width:22%;background:#786786;border:3px solid #a18bab;border-radius:3px}
+.fridge:after{content:"";position:absolute;right:5px;top:12px;height:27%;width:3px;background:#d6c3df}
+.stool{position:absolute;right:14%;top:45%;width:9%;height:16%;background:#77538a;border-radius:4px}
+.sofa{position:absolute;z-index:3;right:5%;bottom:10%;width:27%;height:16%;background:#674a78;border:3px solid #9770aa;border-radius:10px 10px 5px 5px;box-shadow:0 10px 0 #30203d}
+.sofa:before{content:"";position:absolute;left:8%;right:8%;top:8px;height:60%;background:#80608f;border-radius:6px}
+.tv{position:absolute;z-index:3;right:10%;bottom:29%;width:18%;height:16%;border:5px solid #493153;border-radius:5px;background:linear-gradient(135deg,#10162a,#4a2370,#152039);box-shadow:0 0 18px #a855f733}
+.tv:before{content:"▶";position:absolute;inset:0;display:grid;place-items:center;color:#e9d5ff;font-size:20px;text-shadow:0 0 10px #c084fc}
+.tv-stand{position:absolute;right:15%;bottom:25%;width:9%;height:4px;background:#7d628a}
+.actor{--x:18%;--y:53%;position:absolute;z-index:8;left:var(--x);top:var(--y);width:54px;display:flex;flex-direction:column;align-items:center;gap:2px;transition:left 1.6s ease-in-out,top 1.6s ease-in-out;cursor:pointer;filter:drop-shadow(0 4px 4px #0008)}
+.actor .sprite{font-size:31px;line-height:1.15;animation:bob 1.5s ease-in-out infinite}
+.actor .name{font-size:9px;font-weight:800;background:#170e22eF;border:1px solid #73518a;border-radius:5px;padding:3px 5px;white-space:nowrap;color:#f1e4ff}
+.actor .bubble{position:absolute;bottom:100%;left:50%;transform:translateX(-50%);font-size:10px;white-space:nowrap;background:#f3e8ff;color:#24132e;border-radius:7px;padding:5px 7px;margin-bottom:5px;opacity:0;transition:opacity .2s;pointer-events:none}
+.actor:hover .bubble,.actor:focus .bubble{opacity:1}
+.actor.work{--x:17%;--y:48%}.actor.eat{--x:72%;--y:27%}.actor.tvtime{--x:75%;--y:65%}
+.actor.qwen{--x:24%;--y:50%}.actor.deepseek{--x:12%;--y:51%}.actor.codex{--x:19%;--y:52%}.actor.claude{--x:26%;--y:53%}
+.actor.walking .sprite{animation:walk .28s linear infinite alternate}
+@keyframes bob{50%{transform:translateY(-3px)}}@keyframes walk{to{transform:translateY(-5px) rotate(5deg)}}
+.activitybar{display:flex;flex-wrap:wrap;gap:8px;padding:14px 16px;background:#1a1224;border-top:1px solid #3d284f}
+.activity-pill{display:flex;align-items:center;gap:7px;font-size:11px;color:#c8b7d8;background:#241731;border:1px solid #49305f;border-radius:99px;padding:7px 10px}
+.activity-pill b{color:#f1e5ff;font-weight:650}
+.activity-pill .mini-dot{width:6px;height:6px;background:#a855f7;border-radius:50%}
+.hint{padding:0 18px 15px;background:#1a1224;color:#8e7b9f;font-size:11px}
+.bottom{margin-top:22px;display:flex;justify-content:space-between;gap:15px;align-items:center;color:#84718f;font-size:11px}
+.bottom span{color:#b89bcf}
+@media(max-width:800px){body{padding:14px 10px 26px}.hero{grid-template-columns:1fr}.profile{padding:24px 20px}.avatar-wrap{width:94px;height:94px}.bio{margin:12px 0 18px}.links{max-width:420px}.profile-foot{padding-top:18px}.scene{height:390px}.room-head{padding:14px}.actor .sprite{font-size:27px}.actor{width:48px}.desk{left:4%;width:34%}.monitor{left:9%;width:13%}.monitor.m2{left:23%;width:10%}.kitchen{width:31%;right:3%}.sofa{width:30%;right:4%}.tv{right:9%;width:20%}.label-work{left:3%}.label-kitchen{right:3%}}
+@media(max-width:420px){.scene{height:340px}.room-head h2{font-size:13px}.room-clock{font-size:11px;padding:7px}.actor .name{font-size:8px;padding:2px 4px}.actor .sprite{font-size:24px}.actor{width:42px}.floor{height:39%}.desk{top:64%;height:10%}.monitor{top:51%;height:13%}.kitchen{top:16%;height:27%}.tv{bottom:28%}.sofa{bottom:9%}.label-work{top:55%}.label-lounge{bottom:3%}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}}
+</style>
 </head>
 <body>
-  <!-- Контейнер для лепестков -->
-  <div id="petals-container"></div>
-
-  <div class="container">
-    <div class="profile-card">
-      <div class="avatar-container">
-        <div class="avatar">
-          <img src="IMG_9768.jpeg" alt="Phantom">
-        </div>
-        <div class="status"></div>
-      </div>
-      
+<div class="page">
+  <header class="topbar">
+    <div class="brand"><div class="brand-mark">◈</div><span>PHANTOM / PERSONAL SPACE</span></div>
+    <div class="live"><span class="dot"></span> Комната активна</div>
+  </header>
+  <main class="hero">
+    <section class="profile">
+      <div class="avatar-wrap"><img class="avatar" src="IMG_9768.jpeg" alt="Аватар Phantom"></div>
       <h1>Phantom</h1>
-      <div class="username">88</div>
-      <p class="bio">Мои ресурсы</p>
-
-      <div class="links">
-        <a href="https://t.me/IzOverlord" target="_blank" class="link-card">
-          <div class="link-icon telegram">
-            <i class="fab fa-telegram-plane"></i>
-          </div>
-          <div class="link-text">
-            <div class="link-title">Telegram</div>
-            <div class="link-subtitle">Личные сообщения</div>
-          </div>
-          <i class="fas fa-chevron-right arrow"></i>
+      <div class="handle">@88 · цифровая мастерская</div>
+      <p class="bio">Мои проекты, идеи и маленькая команда ИИ. Заглядывай — здесь всегда что-то происходит.</p>
+      <nav class="links" aria-label="Мои ссылки">
+        <a class="link" href="https://t.me/IzOverlord" target="_blank" rel="noopener noreferrer">
+          <span class="link-icon">✈</span><span><strong>Написать в Telegram</strong><small>Личные сообщения</small></span><span class="arrow">↗</span>
         </a>
-
-        <a href="https://t.me/InfoPhantomchik" target="_blank" rel="noopener noreferrer" class="link-card">
-          <div class="link-icon telegram">
-            <i class="fab fa-telegram-plane"></i>
-          </div>
-          <div class="link-text">
-            <div class="link-title">Telegram-канал</div>
-            <div class="link-subtitle">@InfoPhantomchik · новости и посты</div>
-          </div>
-          <i class="fas fa-chevron-right arrow"></i>
+        <a class="link" href="https://t.me/InfoPhantomchik" target="_blank" rel="noopener noreferrer">
+          <span class="link-icon">◉</span><span><strong>Telegram-канал</strong><small>@InfoPhantomchik · новости и посты</small></span><span class="arrow">↗</span>
         </a>
+      </nav>
+      <div class="profile-foot">© 2026 Phantom · Сделано с любопытством</div>
+    </section>
 
-        <a href="/worldbox/" class="link-card">
-          <div class="link-icon github">
-            <i class="fas fa-globe"></i>
-          </div>
-          <div class="link-text">
-            <div class="link-title">PHANTOM: WORLD AT WAR</div>
-            <div class="link-subtitle">Моя игра · открыть сайт проекта</div>
-          </div>
-          <i class="fas fa-chevron-right arrow"></i>
-        </a>
+    <section class="room-card" aria-label="Интерактивная комната ИИ">
+      <div class="room-head"><div><h2>Комната команды</h2><p>Небольшая симуляция жизни цифровых агентов</p></div><div class="room-clock" id="clock">00:00:00</div></div>
+      <div class="scene" id="scene">
+        <div class="stars"></div><div class="window"><div class="moon"></div></div>
+        <div class="shelf"><span class="book"></span><span class="book b2"></span><span class="book b3"></span></div>
+        <div class="plant">🪴</div>
+        <span class="zone-label label-work">Рабочая зона</span><span class="zone-label label-kitchen">Кухня</span><span class="zone-label label-lounge">Зона отдыха</span>
+        <div class="floor"></div><div class="rug"></div>
+        <div class="desk"></div><div class="monitor"></div><div class="monitor m2"></div><div class="keyboard"></div>
+        <div class="kitchen"><div class="cabinet"></div><div class="counter"></div><div class="fridge"></div><div class="stool"></div></div>
+        <div class="tv"></div><div class="tv-stand"></div><div class="sofa"></div>
+        <button class="actor claude work" data-agent="claude" aria-label="Claude: сменить занятие" type="button"><span class="bubble">Пишу и анализирую</span><span class="sprite">🤖</span><span class="name">Claude</span></button>
+        <button class="actor codex work" data-agent="codex" aria-label="Codex: сменить занятие" type="button"><span class="bubble">Разбираюсь с кодом</span><span class="sprite">🧑‍💻</span><span class="name">Codex</span></button>
+        <button class="actor qwen work" data-agent="qwen" aria-label="Qwen: сменить занятие" type="button"><span class="bubble">Изучаю задачу</span><span class="sprite">👩‍💻</span><span class="name">Qwen</span></button>
+        <button class="actor deepseek work" data-agent="deepseek" aria-label="DeepSeek: сменить занятие" type="button"><span class="bubble">Думаю над решением</span><span class="sprite">🧑‍🔬</span><span class="name">DeepSeek</span></button>
       </div>
-
-      <div class="footer">
-        © 2026 Phantom • All rights reserved
+      <div class="activitybar" id="activitybar">
+        <div class="activity-pill"><span class="mini-dot"></span><b>Claude</b><span>пишет код</span></div>
+        <div class="activity-pill"><span class="mini-dot"></span><b>Codex</b><span>разработка</span></div>
+        <div class="activity-pill"><span class="mini-dot"></span><b>Qwen</b><span>исследует</span></div>
+        <div class="activity-pill"><span class="mini-dot"></span><b>DeepSeek</b><span>анализирует</span></div>
       </div>
-    </div>
-  </div>
-
-  <script>
-    function createPetal() {
-      const petal = document.createElement('div');
-      petal.className = 'petal';
-      
-      
-      const flowers = ['🌸', '', '', ''];
-      petal.textContent = flowers[Math.floor(Math.random() * flowers.length)];
-      
-      
-      const size = Math.random() * 15 + 15;
-      petal.style.fontSize = size + 'px';
-      
-    
-      petal.style.left = Math.random() * 100 + 'vw';
-      
-      
-      const duration = Math.random() * 5 + 7;
-      petal.style.animationDuration = duration + 's';
-      
-      petal.style.animationDelay = Math.random() * 2 + 's';
-      
-      document.getElementById('petals-container').appendChild(petal);
-      
-      setTimeout(() => {
-        petal.remove();
-      }, (duration + 2) * 1000);
-    }
-
-    setInterval(createPetal, 800);
-
-    for (let i = 0; i < 15; i++) {
-      setTimeout(createPetal, i * 300);
-    }
-  </script>
+      <div class="hint">Нажми на любого агента, чтобы переключить его занятие. Они будут работать, перекусывать и отдыхать у телевизора.</div>
+    </section>
+  </main>
+  <footer class="bottom"><span>PHANTOM LAB <span>— личное пространство</span></span><span>Чуть-чуть кода, немного хаоса и много идей.</span></footer>
+</div>
+<script>
+const agents=[
+ {id:"claude",name:"Claude",jobs:[["work","пишет код","Пишу и анализирую"],["eat","перекусывает","Пора на кухню"],["tvtime","смотрит телевизор","Нужна пауза"]] },
+ {id:"codex",name:"Codex",jobs:[["work","разработка","Разбираюсь с кодом"],["tvtime","смотрит телевизор","Перезагрузка мозга"],["eat","ест на кухне","Перерыв на еду"]] },
+ {id:"qwen",name:"Qwen",jobs:[["work","исследует","Изучаю задачу"],["eat","готовит перекус","Что-нибудь вкусное"],["tvtime","отдыхает","Смотрю одну серию"]] },
+ {id:"deepseek",name:"DeepSeek",jobs:[["work","анализирует","Думаю над решением"],["tvtime","отдыхает","Пауза для идей"],["eat","перекусывает","Заслуженный перерыв"]] }
+];
+const activitybar=document.getElementById("activitybar");
+function setActivity(agent,idx,walking=true){
+ const el=document.querySelector('[data-agent="'+agent.id+'"]');
+ const job=agent.jobs[idx%agent.jobs.length];
+ el.classList.add("walking");
+ el.classList.remove("work","eat","tvtime");
+ el.querySelector(".bubble").textContent=job[2];
+ setTimeout(()=>{el.classList.remove("walking");el.classList.add(job[0]);},walking?500:0);
+ const pill=activitybar.querySelector('[data-pill="'+agent.id+'"]');
+ if(pill)pill.innerHTML='<span class="mini-dot"></span><b>'+agent.name+'</b><span>'+job[1]+'</span>';
+}
+agents.forEach((agent,i)=>{
+ const pill=document.createElement("div");pill.className="activity-pill";pill.dataset.pill=agent.id;
+ pill.innerHTML='<span class="mini-dot"></span><b>'+agent.name+'</b><span>'+agent.jobs[0][1]+'</span>';
+ activitybar.appendChild(pill);
+ const el=document.querySelector('[data-agent="'+agent.id+'"]');
+ el.addEventListener("click",()=>{
+   const current=agent.jobs.findIndex(j=>el.classList.contains(j[0]));
+   setActivity(agent,(current+1)%agent.jobs.length);
+ });
+ // Agents have different schedules so the room feels alive.
+ let idx=0;
+ setTimeout(()=>{setActivity(agent,1);setInterval(()=>{idx=(idx+1)%agent.jobs.length;setActivity(agent,idx);},9000+i*1700);},3500+i*2200);
+});
+function tick(){document.getElementById("clock").textContent=new Date().toLocaleTimeString("ru-RU",{hour12:false});}
+tick();setInterval(tick,1000);
+</script>
 </body>
 </html>
-
