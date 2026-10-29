@@ -2,178 +2,128 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#100b1d">
-<title>Phantom — моя цифровая комната</title>
+<title>Phantom — AI room</title>
 <style>
-:root{--bg:#0b0812;--panel:#171123;--purple:#a855f7;--lav:#e9d5ff;--muted:#b6a5ca;--line:#65418a}
+:root{--bg:#0c0912;--panel:#171120;--purple:#ad70f5;--muted:#a99ab9;--line:#4d3760}
 *{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
-body{min-height:100vh;background:radial-gradient(ellipse at 50% 0,#2b1745 0,transparent 52%),var(--bg);color:#f8f1ff;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;padding:24px 16px 36px}
-a{color:inherit;text-decoration:none}
-.page{max-width:1180px;margin:auto}
-.topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:22px}
-.brand{display:flex;align-items:center;gap:10px;font-weight:850;letter-spacing:.16em;font-size:13px;color:#d8b4fe}
-.brand-mark{width:34px;height:34px;border:1px solid #9b5de5;border-radius:11px;display:grid;place-items:center;background:#21132f;box-shadow:0 0 24px #9333ea38;font-size:19px}
-.live{display:flex;align-items:center;gap:8px;color:#c4b5d4;font-size:12px;background:#171123;border:1px solid #38264c;border-radius:99px;padding:9px 13px}
-.dot{width:7px;height:7px;background:#a3e635;border-radius:50%;box-shadow:0 0 12px #a3e635}
-.hero{display:grid;grid-template-columns:290px minmax(0,1fr);gap:22px;align-items:stretch}
-.profile{background:linear-gradient(155deg,#21152fef,#120d1cf5);border:1px solid #553475;border-radius:24px;padding:28px 22px;display:flex;flex-direction:column;align-items:center;text-align:center;box-shadow:0 22px 70px #0005;position:relative;overflow:hidden}
-.profile:before{content:"";position:absolute;width:220px;height:220px;border-radius:50%;background:#8b5cf622;filter:blur(20px);top:-130px;left:-50px}
-.avatar-wrap{width:112px;height:112px;padding:4px;border-radius:50%;border:1px solid #c084fc;box-shadow:0 0 35px #9333ea55;margin-bottom:17px;position:relative;z-index:1}
-.avatar{width:100%;height:100%;border-radius:50%;object-fit:cover;background:#08060c}
-h1{font-size:31px;letter-spacing:.02em;line-height:1.1}
-.handle{color:#c084fc;margin-top:7px;font-size:14px}
-.bio{color:#c7b8d8;font-size:13px;line-height:1.6;margin:16px 0 22px;max-width:235px}
-.links{display:grid;gap:10px;width:100%}
-.link{display:flex;align-items:center;gap:12px;text-align:left;padding:13px 14px;border:1px solid #53356f;background:#241632a8;border-radius:14px;transition:.2s}
-.link:hover{transform:translateY(-2px);border-color:#c084fc;background:#38204b;box-shadow:0 8px 24px #9333ea20}
-.link-icon{width:38px;height:38px;display:grid;place-items:center;border-radius:11px;background:linear-gradient(135deg,#6d28d9,#312044);font-size:20px;flex:none}
-.link strong{display:block;font-size:14px}
-.link small{display:block;color:#bba6d0;font-size:11px;margin-top:3px}
-.link .arrow{margin-left:auto;color:#c084fc}
-.profile-foot{font-size:11px;color:#776789;margin-top:auto;padding-top:24px}
-.room-card{min-width:0;background:#130e1c;border:1px solid #4d3064;border-radius:24px;overflow:hidden;box-shadow:0 22px 70px #0005}
-.room-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:17px 20px;background:#1b1326;border-bottom:1px solid #3d284f}
-.room-head h2{font-size:15px;letter-spacing:.02em}
-.room-head p{font-size:11px;color:#aa98bd;margin-top:4px}
-.room-clock{font-variant-numeric:tabular-nums;color:#d8b4fe;font-size:13px;background:#2a1b3a;border:1px solid #54366c;border-radius:9px;padding:8px 10px;white-space:nowrap}
-.scene{height:470px;position:relative;overflow:hidden;isolation:isolate;background:linear-gradient(#171225 0 58%,#30233a 58% 100%)}
-.window{position:absolute;left:4%;top:7%;width:29%;height:31%;border:7px solid #3b294b;border-radius:5px;background:linear-gradient(135deg,#10172e,#25194b 60%,#101528);box-shadow:inset 0 0 25px #8b5cf733,0 5px 0 #0b0812}
-.window:before{content:"";position:absolute;left:50%;height:100%;width:4px;background:#4d3763}
-.window:after{content:"";position:absolute;left:0;top:52%;height:4px;width:100%;background:#4d3763}
-.moon{position:absolute;right:15%;top:13%;width:24px;height:24px;background:#e9d5ff;border-radius:50%;box-shadow:0 0 24px #c084fc99}
-.stars{position:absolute;inset:0;background-image:radial-gradient(#e9d5ff 1px,transparent 1.5px),radial-gradient(#a78bfa 1px,transparent 1.5px);background-size:37px 31px,53px 43px;background-position:9px 12px,22px 6px;opacity:.5}
-.shelf{position:absolute;left:4%;top:42%;width:29%;height:7px;background:#684783;box-shadow:0 5px 0 #24162f}
-.book{position:absolute;bottom:7px;width:13px;height:24px;background:#9f67c9;left:8%}
-.book.b2{left:14%;height:19px;background:#477c98}.book.b3{left:20%;height:27px;background:#b77c6d}
-.plant{position:absolute;left:34%;top:39%;font-size:31px;filter:drop-shadow(0 4px 3px #0008)}
-.floor{position:absolute;left:0;right:0;bottom:0;height:42%;background:repeating-linear-gradient(90deg,transparent 0 95px,#21172b 96px 99px),linear-gradient(#3a2b42,#251a30);border-top:3px solid #654779}
-.rug{position:absolute;left:25%;bottom:4%;width:52%;height:24%;background:#3c2850;border:2px solid #63437b;border-radius:5px;transform:perspective(120px) rotateX(3deg)}
-.zone-label{position:absolute;z-index:2;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:#bda6d2;background:#160f20bb;border:1px solid #513663;border-radius:6px;padding:5px 7px}
-.label-work{left:4%;top:52%}.label-kitchen{right:4%;top:8%}.label-lounge{right:4%;bottom:4%}
-.desk{position:absolute;z-index:3;left:5%;top:61%;width:27%;height:12%;background:#5a3c69;border:2px solid #805a93;border-radius:4px;box-shadow:0 9px 0 #2b1b38}
-.desk:before{content:"";position:absolute;left:10%;right:10%;bottom:-43px;height:42px;border-left:6px solid #3c2949;border-right:6px solid #3c2949}
-.monitor{position:absolute;z-index:4;left:11%;top:48%;width:11%;height:15%;border:4px solid #6c4a82;border-radius:5px;background:#0a1421;box-shadow:0 0 17px #8b5cf744;overflow:hidden}
-.monitor:before{content:"";position:absolute;inset:5px;background:repeating-linear-gradient(0deg,transparent 0 5px,#64e8c4 6px 7px,transparent 8px 12px);opacity:.7}
-.monitor:after{content:"";position:absolute;bottom:-11px;left:42%;width:9px;height:12px;background:#76548a}
-.monitor.m2{left:23%;top:50%;width:8%;height:12%;transform:scale(.8)}
-.keyboard{position:absolute;z-index:4;left:19%;top:65%;width:8%;height:4px;background:#b39ac6;border-radius:4px}
-.kitchen{position:absolute;z-index:2;right:4%;top:15%;width:28%;height:28%;border:2px solid #594168;background:#31233d;border-radius:5px}
-.cabinet{position:absolute;top:0;left:0;right:0;height:53%;background:repeating-linear-gradient(90deg,#463151 0 48px,#24172e 49px 52px);border-bottom:5px solid #8a6897}
-.counter{position:absolute;top:53%;left:-4%;right:-4%;height:12px;background:#a18aa7;border:2px solid #d1b6d9}
-.fridge{position:absolute;right:4%;top:9%;height:79%;width:22%;background:#786786;border:3px solid #a18bab;border-radius:3px}
-.fridge:after{content:"";position:absolute;right:5px;top:12px;height:27%;width:3px;background:#d6c3df}
-.stool{position:absolute;right:14%;top:45%;width:9%;height:16%;background:#77538a;border-radius:4px}
-.sofa{position:absolute;z-index:3;right:5%;bottom:10%;width:27%;height:16%;background:#674a78;border:3px solid #9770aa;border-radius:10px 10px 5px 5px;box-shadow:0 10px 0 #30203d}
-.sofa:before{content:"";position:absolute;left:8%;right:8%;top:8px;height:60%;background:#80608f;border-radius:6px}
-.tv{position:absolute;z-index:3;right:10%;bottom:29%;width:18%;height:16%;border:5px solid #493153;border-radius:5px;background:linear-gradient(135deg,#10162a,#4a2370,#152039);box-shadow:0 0 18px #a855f733}
-.tv:before{content:"▶";position:absolute;inset:0;display:grid;place-items:center;color:#e9d5ff;font-size:20px;text-shadow:0 0 10px #c084fc}
-.tv-stand{position:absolute;right:15%;bottom:25%;width:9%;height:4px;background:#7d628a}
-.actor{--x:18%;--y:53%;position:absolute;z-index:8;left:var(--x);top:var(--y);width:54px;display:flex;flex-direction:column;align-items:center;gap:2px;transition:left 1.6s ease-in-out,top 1.6s ease-in-out;cursor:pointer;filter:drop-shadow(0 4px 4px #0008)}
-.actor .sprite{font-size:31px;line-height:1.15;animation:bob 1.5s ease-in-out infinite}
-.actor .name{font-size:9px;font-weight:800;background:#170e22eF;border:1px solid #73518a;border-radius:5px;padding:3px 5px;white-space:nowrap;color:#f1e4ff}
-.actor .bubble{position:absolute;bottom:100%;left:50%;transform:translateX(-50%);font-size:10px;white-space:nowrap;background:#f3e8ff;color:#24132e;border-radius:7px;padding:5px 7px;margin-bottom:5px;opacity:0;transition:opacity .2s;pointer-events:none}
-.actor:hover .bubble,.actor:focus .bubble{opacity:1}
-.actor.work{--x:17%;--y:48%}.actor.eat{--x:72%;--y:27%}.actor.tvtime{--x:75%;--y:65%}
-.actor.qwen{--x:24%;--y:50%}.actor.deepseek{--x:12%;--y:51%}.actor.codex{--x:19%;--y:52%}.actor.claude{--x:26%;--y:53%}
-.actor.walking .sprite{animation:walk .28s linear infinite alternate}
-@keyframes bob{50%{transform:translateY(-3px)}}@keyframes walk{to{transform:translateY(-5px) rotate(5deg)}}
-.activitybar{display:flex;flex-wrap:wrap;gap:8px;padding:14px 16px;background:#1a1224;border-top:1px solid #3d284f}
-.activity-pill{display:flex;align-items:center;gap:7px;font-size:11px;color:#c8b7d8;background:#241731;border:1px solid #49305f;border-radius:99px;padding:7px 10px}
-.activity-pill b{color:#f1e5ff;font-weight:650}
-.activity-pill .mini-dot{width:6px;height:6px;background:#a855f7;border-radius:50%}
-.hint{padding:0 18px 15px;background:#1a1224;color:#8e7b9f;font-size:11px}
-.bottom{margin-top:22px;display:flex;justify-content:space-between;gap:15px;align-items:center;color:#84718f;font-size:11px}
-.bottom span{color:#b89bcf}
-@media(max-width:800px){body{padding:14px 10px 26px}.hero{grid-template-columns:1fr}.profile{padding:24px 20px}.avatar-wrap{width:94px;height:94px}.bio{margin:12px 0 18px}.links{max-width:420px}.profile-foot{padding-top:18px}.scene{height:390px}.room-head{padding:14px}.actor .sprite{font-size:27px}.actor{width:48px}.desk{left:4%;width:34%}.monitor{left:9%;width:13%}.monitor.m2{left:23%;width:10%}.kitchen{width:31%;right:3%}.sofa{width:30%;right:4%}.tv{right:9%;width:20%}.label-work{left:3%}.label-kitchen{right:3%}}
-@media(max-width:420px){.scene{height:340px}.room-head h2{font-size:13px}.room-clock{font-size:11px;padding:7px}.actor .name{font-size:8px;padding:2px 4px}.actor .sprite{font-size:24px}.actor{width:42px}.floor{height:39%}.desk{top:64%;height:10%}.monitor{top:51%;height:13%}.kitchen{top:16%;height:27%}.tv{bottom:28%}.sofa{bottom:9%}.label-work{top:55%}.label-lounge{bottom:3%}}
-@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}}
+body{min-height:100vh;padding:20px;background:radial-gradient(ellipse at 50% -10%,#35204d 0,transparent 48%),var(--bg);color:#f5efff;font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
+a{color:inherit;text-decoration:none}.page{max-width:1400px;margin:auto}
+header{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:0 auto 18px;max-width:1400px}
+.brand{display:flex;align-items:center;gap:10px;color:#e4caff;font-size:13px;font-weight:850;letter-spacing:.16em}
+.brand-icon{display:grid;place-items:center;width:36px;height:36px;border:1px solid #8055a2;background:#21152d;border-radius:12px;font-size:20px;box-shadow:0 0 24px #a855f733}
+.live{display:flex;gap:8px;align-items:center;color:#c9bad7;font-size:12px;border:1px solid #49345c;border-radius:99px;padding:9px 12px;background:#171120}
+.live i{width:7px;height:7px;border-radius:50%;background:#a3e635;box-shadow:0 0 10px #a3e635}
+.layout{display:grid;grid-template-columns:280px minmax(0,1fr);gap:18px;align-items:start}
+.profile{background:linear-gradient(145deg,#21162e,#120d19);border:1px solid #4e3565;border-radius:22px;padding:25px 20px;text-align:center;box-shadow:0 20px 60px #0005}
+.avatar-wrap{width:105px;height:105px;margin:0 auto 15px;border-radius:50%;padding:4px;border:1px solid #c084fc;box-shadow:0 0 28px #9333ea55}
+.avatar{width:100%;height:100%;object-fit:cover;border-radius:50%;background:#08060c}
+h1{font-size:29px}.handle{font-size:13px;color:#c084fc;margin-top:5px}.bio{font-size:13px;line-height:1.6;color:#c5b5d5;margin:14px 0 20px}
+.links{display:grid;gap:10px}.link{display:flex;align-items:center;text-align:left;gap:11px;padding:13px;border:1px solid #52386a;background:#251832;border-radius:13px;transition:.2s}
+.link:hover{transform:translateY(-2px);border-color:#c084fc;background:#342047}
+.linkicon{width:38px;height:38px;display:grid;place-items:center;border-radius:11px;background:linear-gradient(135deg,#7438b9,#30203d);font-size:20px;flex-shrink:0}
+.link strong{display:block;font-size:13px}.link small{display:block;color:#bba8cf;font-size:11px;margin-top:3px}.arrow{margin-left:auto;color:#c084fc}
+.copyright{font-size:11px;color:#796b88;margin-top:22px}
+.game{min-width:0;border:1px solid #51386a;border-radius:22px;overflow:hidden;background:#120d1a;box-shadow:0 20px 60px #0005}
+.gamehead{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:16px 19px;background:#1b1325;border-bottom:1px solid #443052}
+.gamehead h2{font-size:16px}.gamehead p{font-size:11px;color:#a99ab9;margin-top:4px}.clock{font-size:13px;font-variant-numeric:tabular-nums;color:#e0c7ff;border:1px solid #563b6c;background:#2a1b39;border-radius:9px;padding:8px 10px;white-space:nowrap}
+.mapwrap{padding:14px;background:#0f0b15}
+.room{height:clamp(440px,57vw,710px);min-height:440px;position:relative;overflow:hidden;border:8px solid #45314f;border-radius:9px;background:#3b2b40;box-shadow:inset 0 0 0 3px #705477}
+.room:before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent 0 58px,#2d2135 59px 61px),repeating-linear-gradient(90deg,transparent 0 58px,#2d2135 59px 61px);opacity:.52;pointer-events:none}
+.room:after{content:"";position:absolute;inset:0;background:linear-gradient(135deg,#ffffff08,transparent 40%,#00000018);pointer-events:none}
+.zone{position:absolute;z-index:1;color:#d4c1e1;text-transform:uppercase;letter-spacing:.16em;font-size:10px;text-shadow:0 1px 3px #000;background:#211629bb;border:1px solid #745282;border-radius:5px;padding:5px 7px}
+.zone.office{left:2%;top:2%}.zone.kitchenlabel{right:2%;top:2%}.zone.lounge{right:2%;bottom:2%}.zone.chill{left:2%;bottom:2%}
+.window{position:absolute;left:22%;top:0;width:30%;height:5%;background:linear-gradient(90deg,#283657,#75519b,#283657);border:4px solid #5c4267;border-top:0}
+.plant{position:absolute;z-index:2;left:3%;top:13%;width:8%;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle at 40% 35%,#5d9c6b,#1d4938 60%,#142b24);border:5px solid #60496a;box-shadow:0 3px 0 #2b1d32}
+.plant:after{content:"";position:absolute;left:42%;top:35%;width:18%;height:55%;background:#95704d;border-radius:3px}
+.shelf{position:absolute;left:14%;top:3%;width:30%;height:7%;background:#67496f;border:4px solid #886491;box-shadow:0 5px 0 #2b1e31}
+.book{position:absolute;bottom:3px;left:8%;width:6%;height:70%;background:#d69a70}.book.b2{left:17%;height:58%;background:#87b5c9}.book.b3{left:26%;height:78%;background:#b8a0e6}.book.b4{left:35%;height:65%;background:#d7c08c}
+.desk{position:absolute;z-index:2;width:19%;height:14%;background:#795b77;border:4px solid #a17e9e;border-radius:4px;box-shadow:0 7px 0 #2b1c33}
+.desk:before{content:"";position:absolute;left:9%;right:9%;top:12%;height:15%;background:#ba9cb5;border-radius:2px}
+.desk.d1{left:12%;top:18%}.desk.d2{left:35%;top:18%}.desk.d3{left:12%;top:37%}.desk.d4{left:35%;top:37%}
+.screen{position:absolute;z-index:3;width:7%;height:6%;background:#101727;border:4px solid #a28aad;border-radius:3px;box-shadow:0 0 14px #7c4db966;overflow:hidden}
+.screen:after{content:"";position:absolute;inset:3px;background:repeating-linear-gradient(0deg,transparent 0 4px,#62e6c0 5px 6px,transparent 7px 9px);opacity:.75}
+.screen.s1{left:18%;top:21%}.screen.s2{left:41%;top:21%}.screen.s3{left:18%;top:40%}.screen.s4{left:41%;top:40%}
+.keyboard{position:absolute;z-index:3;width:6%;height:1.2%;background:#d0bad9;border-radius:3px}.keyboard.k1{left:19%;top:30%}.keyboard.k2{left:42%;top:30%}.keyboard.k3{left:19%;top:49%}.keyboard.k4{left:42%;top:49%}
+.cabinet{position:absolute;z-index:2;right:2%;top:12%;width:26%;height:10%;background:repeating-linear-gradient(90deg,#61466a 0 18%,#36253e 19% 21%);border:4px solid #9a79a3;border-radius:3px}
+.counter{position:absolute;z-index:2;right:2%;top:23%;width:26%;height:5%;background:#b6a0b7;border:3px solid #e0c7df}
+.sink{position:absolute;z-index:3;right:17%;top:23.6%;width:7%;height:3.5%;border:3px solid #6f5b7d;background:#536a77;border-radius:5px}
+.fridge{position:absolute;z-index:2;right:2%;top:30%;width:10%;height:18%;background:#a69aaf;border:4px solid #d6c8dc;border-radius:4px}
+.fridge:after{content:"";position:absolute;right:12%;top:12%;height:24%;width:3px;background:#5e4c68}
+.island{position:absolute;z-index:2;right:13%;top:34%;width:14%;height:8%;background:#7c5c80;border:4px solid #ad8db0;border-radius:4px;box-shadow:0 6px 0 #2a1b32}
+.plate{position:absolute;z-index:3;right:17%;top:36%;width:5%;aspect-ratio:1;border-radius:50%;background:#e4d6dd;border:4px solid #9d7d9c}
+.sofa{position:absolute;z-index:2;right:8%;bottom:16%;width:23%;height:10%;background:#765d88;border:5px solid #b59bc7;border-radius:10px;box-shadow:0 7px 0 #2b1c32}
+.sofa:after{content:"";position:absolute;inset:15% 7%;background:linear-gradient(90deg,#9575a8 0 47%,#62486f 48% 52%,#9575a8 53%);border-radius:5px}
+.tv{position:absolute;z-index:2;right:12%;bottom:31%;width:15%;height:9%;background:linear-gradient(135deg,#17263c,#55327e,#15253b);border:5px solid #302137;border-radius:4px;box-shadow:0 0 16px #b36aff44}
+.tv:after{content:"▶";position:absolute;inset:0;display:grid;place-items:center;color:#e9d5ff;font-size:clamp(12px,1.8vw,22px)}
+.rug{position:absolute;z-index:1;left:39%;bottom:9%;width:28%;height:19%;background:#574064;border:3px solid #9872a4;border-radius:4px;transform:rotate(-2deg)}
+.plant2{position:absolute;z-index:2;left:43%;bottom:5%;font-size:clamp(18px,3vw,35px)}
+.table{position:absolute;z-index:2;left:45%;bottom:17%;width:16%;height:9%;border-radius:50%;background:#9a789f;border:5px solid #c5a4ca;box-shadow:0 7px 0 #2c1d32}
+.table:after{content:"";position:absolute;left:45%;top:85%;height:30%;width:10%;background:#49324f}
+.door{position:absolute;z-index:2;left:2%;bottom:8%;width:12%;height:4%;background:#b090a4;border:3px solid #e2bfd6;border-radius:4px}
+.agent{position:absolute;z-index:8;width:clamp(48px,6.3%,76px);min-width:48px;display:flex;flex-direction:column;align-items:center;gap:3px;border:0;background:transparent;cursor:pointer;transform:translate(-50%,-50%);transition:left 2.8s cubic-bezier(.2,.75,.25,1),top 2.8s cubic-bezier(.2,.75,.25,1);filter:drop-shadow(0 4px 3px #0009)}
+.agent img{width:clamp(30px,3.7vw,45px);height:clamp(30px,3.7vw,45px);object-fit:contain;padding:4px;background:#f8f4ff;border:2px solid #e3caff;border-radius:50%;box-shadow:0 0 12px #b36aff55}
+.agent .tag{font-size:10px;white-space:nowrap;font-weight:800;color:#fff;background:#21152c;border:1px solid #8863a1;border-radius:5px;padding:3px 6px}
+.agent .speech{position:absolute;bottom:calc(100% + 4px);background:#f1e7ff;color:#2c1838;border-radius:7px;padding:5px 7px;font-size:10px;white-space:nowrap;opacity:0;transition:opacity .2s;pointer-events:none}
+.agent:hover .speech,.agent:focus-visible .speech{opacity:1}
+.agent .shadow{position:absolute;z-index:-1;top:7px;width:32px;height:12px;background:#08050b66;border-radius:50%}
+.agent.moving img{animation:step .25s infinite alternate}
+@keyframes step{to{transform:translateY(-3px) rotate(4deg)}}
+.statusbar{display:flex;flex-wrap:wrap;gap:8px;padding:13px 16px;background:#1a1223;border-top:1px solid #433050}
+.status{display:flex;align-items:center;gap:7px;border:1px solid #49325e;background:#251831;border-radius:99px;padding:7px 10px;font-size:11px;color:#cdbbdc}
+.status b{color:#f2e7ff}.status i{width:6px;height:6px;border-radius:50%;background:#a855f7}
+.hint{padding:0 17px 15px;background:#1a1223;color:#9584a5;font-size:11px}
+footer{display:flex;justify-content:space-between;gap:10px;color:#887794;font-size:11px;margin-top:18px}footer span{color:#bba0d2}
+@media(max-width:900px){body{padding:12px}.layout{grid-template-columns:1fr}.profile{display:grid;grid-template-columns:90px 1fr;column-gap:16px;text-align:left;align-items:center;padding:18px}.avatar-wrap{grid-row:1/4;width:86px;height:86px;margin:0}.profile h1{align-self:end;font-size:25px}.handle{align-self:start}.bio{grid-column:1/-1;max-width:none;margin:13px 0}.links{grid-column:1/-1;grid-template-columns:1fr 1fr}.copyright{grid-column:1/-1;margin-top:14px}.room{height:clamp(430px,75vw,650px)}}
+@media(max-width:540px){.brand{font-size:10px;letter-spacing:.1em}.live{font-size:10px;padding:8px}.gamehead{padding:13px}.gamehead h2{font-size:14px}.room{height:470px;min-height:470px}.mapwrap{padding:7px}.room{border-width:5px}.zone{font-size:8px;padding:4px}.agent .tag{font-size:8px;padding:3px 4px}.agent{min-width:42px}.agent img{width:30px;height:30px}.links{grid-template-columns:1fr}footer{flex-direction:column}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{transition:none!important;animation:none!important}}
 </style>
 </head>
 <body>
-<div class="page">
-  <header class="topbar">
-    <div class="brand"><div class="brand-mark">◈</div><span>PHANTOM / PERSONAL SPACE</span></div>
-    <div class="live"><span class="dot"></span> Комната активна</div>
-  </header>
-  <main class="hero">
-    <section class="profile">
-      <div class="avatar-wrap"><img class="avatar" src="IMG_9768.jpeg" alt="Аватар Phantom"></div>
-      <h1>Phantom</h1>
-      <div class="handle">@88 · цифровая мастерская</div>
-      <p class="bio">Мои проекты, идеи и маленькая команда ИИ. Заглядывай — здесь всегда что-то происходит.</p>
-      <nav class="links" aria-label="Мои ссылки">
-        <a class="link" href="https://t.me/IzOverlord" target="_blank" rel="noopener noreferrer">
-          <span class="link-icon">✈</span><span><strong>Написать в Telegram</strong><small>Личные сообщения</small></span><span class="arrow">↗</span>
-        </a>
-        <a class="link" href="https://t.me/InfoPhantomchik" target="_blank" rel="noopener noreferrer">
-          <span class="link-icon">◉</span><span><strong>Telegram-канал</strong><small>@InfoPhantomchik · новости и посты</small></span><span class="arrow">↗</span>
-        </a>
-      </nav>
-      <div class="profile-foot">© 2026 Phantom · Сделано с любопытством</div>
-    </section>
-
-    <section class="room-card" aria-label="Интерактивная комната ИИ">
-      <div class="room-head"><div><h2>Комната команды</h2><p>Небольшая симуляция жизни цифровых агентов</p></div><div class="room-clock" id="clock">00:00:00</div></div>
-      <div class="scene" id="scene">
-        <div class="stars"></div><div class="window"><div class="moon"></div></div>
-        <div class="shelf"><span class="book"></span><span class="book b2"></span><span class="book b3"></span></div>
-        <div class="plant">🪴</div>
-        <span class="zone-label label-work">Рабочая зона</span><span class="zone-label label-kitchen">Кухня</span><span class="zone-label label-lounge">Зона отдыха</span>
-        <div class="floor"></div><div class="rug"></div>
-        <div class="desk"></div><div class="monitor"></div><div class="monitor m2"></div><div class="keyboard"></div>
-        <div class="kitchen"><div class="cabinet"></div><div class="counter"></div><div class="fridge"></div><div class="stool"></div></div>
-        <div class="tv"></div><div class="tv-stand"></div><div class="sofa"></div>
-        <button class="actor claude work" data-agent="claude" aria-label="Claude: сменить занятие" type="button"><span class="bubble">Пишу и анализирую</span><span class="sprite">🤖</span><span class="name">Claude</span></button>
-        <button class="actor codex work" data-agent="codex" aria-label="Codex: сменить занятие" type="button"><span class="bubble">Разбираюсь с кодом</span><span class="sprite">🧑‍💻</span><span class="name">Codex</span></button>
-        <button class="actor qwen work" data-agent="qwen" aria-label="Qwen: сменить занятие" type="button"><span class="bubble">Изучаю задачу</span><span class="sprite">👩‍💻</span><span class="name">Qwen</span></button>
-        <button class="actor deepseek work" data-agent="deepseek" aria-label="DeepSeek: сменить занятие" type="button"><span class="bubble">Думаю над решением</span><span class="sprite">🧑‍🔬</span><span class="name">DeepSeek</span></button>
-      </div>
-      <div class="activitybar" id="activitybar">
-        <div class="activity-pill"><span class="mini-dot"></span><b>Claude</b><span>пишет код</span></div>
-        <div class="activity-pill"><span class="mini-dot"></span><b>Codex</b><span>разработка</span></div>
-        <div class="activity-pill"><span class="mini-dot"></span><b>Qwen</b><span>исследует</span></div>
-        <div class="activity-pill"><span class="mini-dot"></span><b>DeepSeek</b><span>анализирует</span></div>
-      </div>
-      <div class="hint">Нажми на любого агента, чтобы переключить его занятие. Они будут работать, перекусывать и отдыхать у телевизора.</div>
-    </section>
-  </main>
-  <footer class="bottom"><span>PHANTOM LAB <span>— личное пространство</span></span><span>Чуть-чуть кода, немного хаоса и много идей.</span></footer>
-</div>
+<header><div class="brand"><div class="brand-icon">◈</div> PHANTOM / DIGITAL HOUSE</div><div class="live"><i></i> Все агенты в сети</div></header>
+<main class="page layout">
+<section class="profile">
+<div class="avatar-wrap"><img class="avatar" src="IMG_9768.jpeg" alt="Аватар Phantom"></div>
+<h1>Phantom</h1><div class="handle">@88 · цифровая мастерская</div>
+<p class="bio">Мои проекты, идеи и команда ИИ. Заглядывай — в доме постоянно что-то происходит.</p>
+<nav class="links" aria-label="Контакты">
+<a class="link" href="https://t.me/IzOverlord" target="_blank" rel="noopener noreferrer"><span class="linkicon">✈</span><span><strong>Написать в Telegram</strong><small>Личные сообщения</small></span><span class="arrow">↗</span></a>
+<a class="link" href="https://t.me/InfoPhantomchik" target="_blank" rel="noopener noreferrer"><span class="linkicon">◉</span><span><strong>Telegram-канал</strong><small>@InfoPhantomchik · новости и посты</small></span><span class="arrow">↗</span></a>
+</nav>
+<div class="copyright">© 2026 Phantom · личное пространство</div>
+</section>
+<section class="game">
+<div class="gamehead"><div><h2>AI House — вид сверху</h2><p>Большая комната, четыре агента и собственный распорядок дня</p></div><div class="clock" id="clock">00:00:00</div></div>
+<div class="mapwrap"><div class="room" id="room" aria-label="Карта комнаты с агентами">
+<div class="window"></div><div class="zone office">Рабочая зона</div><div class="zone kitchenlabel">Кухня</div><div class="zone lounge">Гостиная</div><div class="zone chill">Зона отдыха</div>
+<div class="plant"></div><div class="shelf"><i class="book"></i><i class="book b2"></i><i class="book b3"></i><i class="book b4"></i></div>
+<div class="desk d1"></div><div class="desk d2"></div><div class="desk d3"></div><div class="desk d4"></div>
+<div class="screen s1"></div><div class="screen s2"></div><div class="screen s3"></div><div class="screen s4"></div>
+<div class="keyboard k1"></div><div class="keyboard k2"></div><div class="keyboard k3"></div><div class="keyboard k4"></div>
+<div class="cabinet"></div><div class="counter"></div><div class="sink"></div><div class="fridge"></div><div class="island"></div><div class="plate"></div>
+<div class="rug"></div><div class="table"></div><div class="plant2">🪴</div><div class="tv"></div><div class="sofa"></div><div class="door"></div>
+<button class="agent" data-agent="claude" style="left:21%;top:26%" aria-label="Claude — нажми, чтобы сменить занятие"><span class="speech">Пишу код</span><span class="shadow"></span><img src="https://raw.githubusercontent.com/lobehub/lobe-icons/master/packages/static-png/light/claude-color.png" alt="Claude"><span class="tag">Claude</span></button>
+<button class="agent" data-agent="codex" style="left:43%;top:27%" aria-label="Codex — нажми, чтобы сменить занятие"><span class="speech">Разбираюсь с задачей</span><span class="shadow"></span><img src="https://raw.githubusercontent.com/lobehub/lobe-icons/master/packages/static-png/light/openai.png" alt="OpenAI Codex"><span class="tag">Codex</span></button>
+<button class="agent" data-agent="qwen" style="left:21%;top:45%" aria-label="Qwen — нажми, чтобы сменить занятие"><span class="speech">Изучаю информацию</span><span class="shadow"></span><img src="https://raw.githubusercontent.com/lobehub/lobe-icons/master/packages/static-png/light/qwen-color.png" alt="Qwen"><span class="tag">Qwen</span></button>
+<button class="agent" data-agent="deepseek" style="left:43%;top:45%" aria-label="DeepSeek — нажми, чтобы сменить занятие"><span class="speech">Анализирую код</span><span class="shadow"></span><img src="https://raw.githubusercontent.com/lobehub/lobe-icons/master/packages/static-png/light/deepseek-color.png" alt="DeepSeek"><span class="tag">DeepSeek</span></button>
+</div></div>
+<div class="statusbar" id="statuses"></div><div class="hint">Агенты сами ходят между рабочими столами, кухней и телевизором. Нажми на любого, чтобы вручную переключить занятие.</div>
+</section>
+</main>
+<footer><div>PHANTOM LAB <span>— моя цифровая мастерская</span></div><div>Много идей. Четыре ИИ. Одна комната.</div></footer>
 <script>
-const agents=[
- {id:"claude",name:"Claude",jobs:[["work","пишет код","Пишу и анализирую"],["eat","перекусывает","Пора на кухню"],["tvtime","смотрит телевизор","Нужна пауза"]] },
- {id:"codex",name:"Codex",jobs:[["work","разработка","Разбираюсь с кодом"],["tvtime","смотрит телевизор","Перезагрузка мозга"],["eat","ест на кухне","Перерыв на еду"]] },
- {id:"qwen",name:"Qwen",jobs:[["work","исследует","Изучаю задачу"],["eat","готовит перекус","Что-нибудь вкусное"],["tvtime","отдыхает","Смотрю одну серию"]] },
- {id:"deepseek",name:"DeepSeek",jobs:[["work","анализирует","Думаю над решением"],["tvtime","отдыхает","Пауза для идей"],["eat","перекусывает","Заслуженный перерыв"]] }
+const people=[
+{id:"claude",name:"Claude",jobs:[{label:"пишет код",x:21,y:26,say:"Пишу код и разбираю задачу"},{label:"перекус на кухне",x:81,y:37,say:"Перерыв на кухне"},{label:"смотрит телевизор",x:82,y:67,say:"Выбираю, что посмотреть"},{label:"прогулка",x:60,y:78,say:"Немного разомнусь"}]},
+{id:"codex",name:"Codex",jobs:[{label:"пишет код",x:43,y:27,say:"Проверяю проект"},{label:"идёт к холодильнику",x:87,y:40,say:"Надо что-нибудь съесть"},{label:"отдыхает на диване",x:77,y:68,say:"Перезагрузка системы"},{label:"обходит комнату",x:54,y:58,say:"Проверяю, что происходит"}]},
+{id:"qwen",name:"Qwen",jobs:[{label:"исследует",x:21,y:45,say:"Изучаю информацию"},{label:"готовит перекус",x:74,y:36,say:"Готовлю себе перекус"},{label:"смотрит телевизор",x:86,y:65,say:"Смотрю что-то интересное"},{label:"идёт к рабочему столу",x:34,y:55,say:"Возвращаюсь к задаче"}]},
+{id:"deepseek",name:"DeepSeek",jobs:[{label:"анализирует код",x:43,y:45,say:"Анализирую код"},{label:"ест на кухне",x:77,y:42,say:"Время на обед"},{label:"отдыхает",x:69,y:70,say:"Делаю перерыв"},{label:"идёт к компьютеру",x:31,y:33,say:"Есть новая идея"}]}
 ];
-const activitybar=document.getElementById("activitybar");
-function setActivity(agent,idx,walking=true){
- const el=document.querySelector('[data-agent="'+agent.id+'"]');
- const job=agent.jobs[idx%agent.jobs.length];
- el.classList.add("walking");
- el.classList.remove("work","eat","tvtime");
- el.querySelector(".bubble").textContent=job[2];
- setTimeout(()=>{el.classList.remove("walking");el.classList.add(job[0]);},walking?500:0);
- const pill=activitybar.querySelector('[data-pill="'+agent.id+'"]');
- if(pill)pill.innerHTML='<span class="mini-dot"></span><b>'+agent.name+'</b><span>'+job[1]+'</span>';
-}
-agents.forEach((agent,i)=>{
- const pill=document.createElement("div");pill.className="activity-pill";pill.dataset.pill=agent.id;
- pill.innerHTML='<span class="mini-dot"></span><b>'+agent.name+'</b><span>'+agent.jobs[0][1]+'</span>';
- activitybar.appendChild(pill);
- const el=document.querySelector('[data-agent="'+agent.id+'"]');
- el.addEventListener("click",()=>{
-   const current=agent.jobs.findIndex(j=>el.classList.contains(j[0]));
-   setActivity(agent,(current+1)%agent.jobs.length);
- });
- // Agents have different schedules so the room feels alive.
- let idx=0;
- setTimeout(()=>{setActivity(agent,1);setInterval(()=>{idx=(idx+1)%agent.jobs.length;setActivity(agent,idx);},9000+i*1700);},3500+i*2200);
-});
-function tick(){document.getElementById("clock").textContent=new Date().toLocaleTimeString("ru-RU",{hour12:false});}
-tick();setInterval(tick,1000);
+const nodes={};const statuses=document.getElementById("statuses");
+function renderStatuses(){statuses.innerHTML="";people.forEach(p=>{const e=document.createElement("div");e.className="status";e.id="status-"+p.id;e.innerHTML='<i></i><b>'+p.name+'</b><span>'+p.jobs[0].label+'</span>';statuses.appendChild(e)})}
+function setJob(p,index){p.index=index%p.jobs.length;const job=p.jobs[p.index],el=nodes[p.id];el.classList.add("moving");el.style.left=job.x+"%";el.style.top=job.y+"%";el.querySelector(".speech").textContent=job.say;const status=document.getElementById("status-"+p.id);if(status)status.innerHTML='<i></i><b>'+p.name+'</b><span>'+job.label+'</span>';setTimeout(()=>el.classList.remove("moving"),2400)}
+people.forEach((p,i)=>{const el=document.querySelector('[data-agent="'+p.id+'"]');nodes[p.id]=el;el.addEventListener("click",()=>setJob(p,p.index===undefined?1:p.index+1));p.index=0;setTimeout(()=>{setJob(p,1);setInterval(()=>setJob(p,p.index+1),6500+i*1250)},1800+i*950)});
+renderStatuses();
+function tick(){document.getElementById("clock").textContent=new Date().toLocaleTimeString("ru-RU",{hour12:false})}tick();setInterval(tick,1000);
 </script>
-</body>
-</html>
+</body></html>
