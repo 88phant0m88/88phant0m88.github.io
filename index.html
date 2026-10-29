@@ -105,6 +105,48 @@ body{min-height:100vh;padding:14px;display:grid;place-items:center;background:ra
 </section>
 <script>
 const $=s=>document.querySelector(s),room=$('#room');
+
+/* ---------- Phantom House audio engine ---------- */
+const SOUND_DEFAULTS={master:90,ambience:45,actions:65,voices:80,night:true};
+let soundSettings={...SOUND_DEFAULTS};
+try{soundSettings={...SOUND_DEFAULTS,...JSON.parse(localStorage.getItem('phantomHouseSound')||'{}')}}catch(e){}
+let audioCtx=null,ambGain=null,ambOsc1=null,ambOsc2=null,soundEnabled=false;
+function soundLevel(channel){const base=(soundSettings.master/100)*(soundSettings[channel]/100);return base*(soundSettings.night&&room.dataset.t==='night'&&channel==='ambience'?.35:1)}
+function startAudio(){
+ const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;
+ if(!audioCtx){audioCtx=new AC();ambGain=audioCtx.createGain();ambGain.gain.value=0;ambGain.connect(audioCtx.destination);
+  ambOsc1=audioCtx.createOscillator();ambOsc2=audioCtx.createOscillator();const filter=audioCtx.createBiquadFilter();filter.type='lowpass';filter.frequency.value=180;
+  ambOsc1.type='sine';ambOsc1.frequency.value=50;ambOsc2.type='triangle';ambOsc2.frequency.value=83;
+  ambOsc1.connect(filter);ambOsc2.connect(filter);filter.connect(ambGain);ambOsc1.start();ambOsc2.start()}
+ audioCtx.resume();soundEnabled=true;updateAmbient();updateSoundButton()
+}
+function updateAmbient(){if(!audioCtx||!ambGain)return;ambGain.gain.setTargetAtTime(soundEnabled?soundLevel('ambience')*.012:0,audioCtx.currentTime,.5)}
+function updateSoundButton(){const b=$('#soundFab');if(b)b.textContent=soundEnabled?'♫ Звук: вкл.':'♫ Звук: выкл.'}
+function tone(freq,duration,volume,shape='sine',endFreq=null){
+ if(!soundEnabled||!audioCtx)return;const now=audioCtx.currentTime,o=audioCtx.createOscillator(),g=audioCtx.createGain();
+ o.type=shape;o.frequency.setValueAtTime(freq,now);if(endFreq)o.frequency.exponentialRampToValueAtTime(endFreq,now+duration);
+ g.gain.setValueAtTime(.0001,now);g.gain.exponentialRampToValueAtTime(Math.max(.0002,volume),now+.015);g.gain.exponentialRampToValueAtTime(.0001,now+duration);
+ o.connect(g);g.connect(audioCtx.destination);o.start(now);o.stop(now+duration+.03)
+}
+function soundCue(kind){
+ if(!soundEnabled)return;
+ if(['work','tidy','read'].includes(kind)){tone(680,.045,.018*soundLevel('actions'),'square',520);return}
+ if(['coffee','cook','eat','fridge'].includes(kind)){tone(520,.11,.035*soundLevel('actions'),'sine',760);return}
+ if(['relax','tv','window','sleep'].includes(kind)){tone(330,.16,.018*soundLevel('actions'),'sine',260);return}
+ if(kind==='goal'){tone(620,.16,.06*soundLevel('voices'),'triangle',900);setTimeout(()=>tone(880,.24,.055*soundLevel('voices'),'triangle',1100),130);return}
+ tone(440,.08,.02*soundLevel('voices'),'sine',620)
+}
+function saveSoundSettings(){try{localStorage.setItem('phantomHouseSound',JSON.stringify(soundSettings))}catch(e){}updateAmbient()}
+function initSoundUI(){
+ const fab=$('#soundFab'),panel=$('#soundPanel');if(!fab||!panel)return;
+ fab.addEventListener('click',()=>{if(!soundEnabled)startAudio();else{soundEnabled=false;updateAmbient();updateSoundButton()}panel.classList.toggle('open')});
+ $('#soundClose').addEventListener('click',()=>panel.classList.remove('open'));
+ ['master','ambience','actions','voices'].forEach(k=>{const id=k[0].toUpperCase()+k.slice(1),input=$('#snd'+id),out=$('#snd'+id+'Val');input.value=soundSettings[k];out.textContent=soundSettings[k]+'%';input.addEventListener('input',()=>{soundSettings[k]=Number(input.value);out.textContent=input.value+'%';saveSoundSettings()})});
+ $('#sndNight').checked=!!soundSettings.night;$('#sndNight').addEventListener('change',e=>{soundSettings.night=e.target.checked;saveSoundSettings()});
+ updateSoundButton()
+}
+initSoundUI();
+
 const R=(x,y,w,h,f,e='')=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${f}" ${e}/>`;
 const C=(x,y,r,f,e='')=>`<circle cx="${x}" cy="${y}" r="${r}" fill="${f}" ${e}/>`;
 const rnd=(a,b)=>a+Math.random()*(b-a),pick=a=>a[Math.random()*a.length|0];
