@@ -136,10 +136,22 @@ footer{display:flex;justify-content:space-between;gap:10px;color:#887794;font-si
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{transition:none!important;animation:none!important}}
 
 /* Реалистичнее: материалы, свет, глубина и мелкий декор */
+/* Мелкие конструктивные детали, чтобы мебель читалась объёмнее */
+.desk:after{content:"";position:absolute;left:8%;right:8%;bottom:-28%;height:28%;background:linear-gradient(90deg,#4b344a,#76546d,#3a283b);clip-path:polygon(0 0,100% 0,92% 100%,8% 100%);box-shadow:0 3px 3px #0007}
+.chair{background:linear-gradient(135deg,#755b7d,#392942);border-color:#b397bd}
+.chair:before{content:"";position:absolute;inset:20% 15%;border-top:1px solid #c5a9ce;border-radius:2px}
+.cabinet:after{content:"";position:absolute;left:0;right:0;top:49%;height:3px;background:#bba2c2;box-shadow:0 1px 2px #21142a}
+.fridge:before{content:"";position:absolute;left:0;right:0;top:39%;height:3px;background:#91839e;box-shadow:0 1px 2px #fff5}
+.sofa:before{content:"";position:absolute;left:4%;right:4%;top:-23%;height:25%;background:linear-gradient(#c3a9d0,#80668f);border:2px solid #d6c2df;border-radius:8px 8px 3px 3px;box-shadow:0 3px 5px #17101d88}
+.plant2{filter:drop-shadow(0 5px 3px #0007);text-shadow:0 2px 3px #0005}
+.mug{filter:drop-shadow(1px 3px 2px #0008)}
+.notebook{background:repeating-linear-gradient(0deg,#e6c58f 0 3px,#bda171 4px 5px);border-left:3px solid #8b5b70}
+.picture{box-shadow:0 5px 9px #10091688,inset 0 0 0 2px #f2dff3}
+
 .room{background:linear-gradient(180deg,#514052 0 8%,transparent 8%),repeating-linear-gradient(90deg,#493448 0 7.8%,#3b2a3d 7.8% 8%,#443044 8% 15.8%),linear-gradient(#493448,#302337);box-shadow:inset 0 0 0 3px #806286,inset 0 18px 28px #17101d66,inset 0 -15px 30px #100b18aa}
 .room:before{background:repeating-linear-gradient(0deg,transparent 0 58px,#24192c55 59px 61px),linear-gradient(90deg,#ffffff09,transparent 18% 82%,#00000020);opacity:.75}
 .room:after{background:radial-gradient(ellipse at 35% 30%,#f7d7ff12,transparent 45%),linear-gradient(180deg,#100b1810,transparent 55%,#09060e35)}
-.window{left:22%;top:0;width:30%;height:8%;background:linear-gradient(90deg,#171e33 0 5%,#6889a4 7% 46%,#293c59 48% 52%,#7799ad 54% 93%,#171e33 95%);border:5px solid #735a79;border-top:0;box-shadow:0 5px 10px #10091699}
+.window{left:17%;top:2%;width:39%;height:23%;background:linear-gradient(180deg,#6fa7d8 0%,#b7d9ed 62%,#e8c5ad 100%);border:7px solid #80658b;border-top-width:9px;box-shadow:0 8px 15px #10091699}
 .window:after{content:"";position:absolute;left:49%;top:0;bottom:0;width:3px;background:#d6c2dc}
 .shelf,.desk,.cabinet,.counter,.fridge,.island,.sofa,.tv,.table,.chair,.picture,.speaker{box-shadow:inset 0 2px 3px #ffffff24,inset 0 -4px 5px #120b1d55,0 5px 8px #10091655}
 .shelf{background:linear-gradient(#89658b,#5a3f62);border-color:#a985ac}
