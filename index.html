@@ -62,7 +62,7 @@ h1{font-size:29px}.handle{font-size:13px;color:#c084fc;margin-top:5px}.bio{font-
 .table{position:absolute;z-index:2;left:45%;bottom:17%;width:16%;height:9%;border-radius:50%;background:#9a789f;border:5px solid #c5a4ca;box-shadow:0 7px 0 #2c1d32}
 .table:after{content:"";position:absolute;left:45%;top:85%;height:30%;width:10%;background:#49324f}
 .door{position:absolute;z-index:2;left:2%;bottom:8%;width:12%;height:4%;background:#b090a4;border:3px solid #e2bfd6;border-radius:4px}
-.agent{position:absolute;z-index:8;width:clamp(48px,6.3%,76px);min-width:48px;display:flex;flex-direction:column;align-items:center;gap:3px;border:0;background:transparent;cursor:pointer;transform:translate(-50%,-50%);transition:left 2.8s cubic-bezier(.2,.75,.25,1),top 2.8s cubic-bezier(.2,.75,.25,1);filter:drop-shadow(0 4px 3px #0009)}
+.agent{position:absolute;z-index:8;width:clamp(48px,6.3%,76px);min-width:48px;display:flex;flex-direction:column;align-items:center;gap:3px;border:0;background:transparent;cursor:pointer;transform:translate(-50%,-50%);transition:left 4.8s cubic-bezier(.22,.7,.25,1),top 4.8s cubic-bezier(.22,.7,.25,1);filter:drop-shadow(0 4px 3px #0009)}
 .agent img{width:clamp(30px,3.7vw,45px);height:clamp(30px,3.7vw,45px);object-fit:contain;padding:4px;background:#f8f4ff;border:2px solid #e3caff;border-radius:50%;box-shadow:0 0 12px #b36aff55}
 .agent .tag{font-size:10px;white-space:nowrap;font-weight:800;color:#fff;background:#21152c;border:1px solid #8863a1;border-radius:5px;padding:3px 6px}
 .agent .speech{position:absolute;bottom:calc(100% + 4px);background:#f1e7ff;color:#2c1838;border-radius:7px;padding:5px 7px;font-size:10px;white-space:nowrap;opacity:0;transition:opacity .2s;pointer-events:none}
@@ -103,7 +103,7 @@ footer{display:flex;justify-content:space-between;gap:10px;color:#887794;font-si
 <div class="keyboard k1"></div><div class="keyboard k2"></div><div class="keyboard k3"></div><div class="keyboard k4"></div>
 <div class="cabinet"></div><div class="counter"></div><div class="sink"></div><div class="fridge"></div><div class="island"></div><div class="plate"></div>
 <div class="rug"></div><div class="table"></div><div class="plant2">🪴</div><div class="tv"></div><div class="sofa"></div><div class="door"></div>
-<button class="agent" data-agent="claude" style="left:21%;top:26%" aria-label="Claude — нажми, чтобы сменить занятие"><span class="speech">Пишу код</span><span class="shadow"></span><img src="https://raw.githubusercontent.com/lobehub/lobe-icons/master/packages/static-png/light/claude-color.png" alt="Claude"><span class="tag">Claude</span></button>
+<button class="agent" data-agent="claude" style="left:21%;top:26%" aria-label="Claude — нажми, чтобы сменить занятие"><span class="speech">Пишу код</span><span class="shadow"></span><img src="https://i.ytimg.com/vi/iXw4qwy5Ld4/maxresdefault.jpg" alt="Claude — персонаж по референсу"><span class="tag">Claude</span></button>
 <button class="agent" data-agent="codex" style="left:43%;top:27%" aria-label="Codex — нажми, чтобы сменить занятие"><span class="speech">Разбираюсь с задачей</span><span class="shadow"></span><img src="https://raw.githubusercontent.com/lobehub/lobe-icons/master/packages/static-png/light/openai.png" alt="OpenAI Codex"><span class="tag">Codex</span></button>
 <button class="agent" data-agent="qwen" style="left:21%;top:45%" aria-label="Qwen — нажми, чтобы сменить занятие"><span class="speech">Изучаю информацию</span><span class="shadow"></span><img src="https://raw.githubusercontent.com/lobehub/lobe-icons/master/packages/static-png/light/qwen-color.png" alt="Qwen"><span class="tag">Qwen</span></button>
 <button class="agent" data-agent="deepseek" style="left:43%;top:45%" aria-label="DeepSeek — нажми, чтобы сменить занятие"><span class="speech">Анализирую код</span><span class="shadow"></span><img src="https://raw.githubusercontent.com/lobehub/lobe-icons/master/packages/static-png/light/deepseek-color.png" alt="DeepSeek"><span class="tag">DeepSeek</span></button>
@@ -114,16 +114,86 @@ footer{display:flex;justify-content:space-between;gap:10px;color:#887794;font-si
 <footer><div>PHANTOM LAB <span>— моя цифровая мастерская</span></div><div>Много идей. Четыре ИИ. Одна комната.</div></footer>
 <script>
 const people=[
-{id:"claude",name:"Claude",jobs:[{label:"пишет код",x:21,y:26,say:"Пишу код и разбираю задачу"},{label:"перекус на кухне",x:81,y:37,say:"Перерыв на кухне"},{label:"смотрит телевизор",x:82,y:67,say:"Выбираю, что посмотреть"},{label:"прогулка",x:60,y:78,say:"Немного разомнусь"}]},
-{id:"codex",name:"Codex",jobs:[{label:"пишет код",x:43,y:27,say:"Проверяю проект"},{label:"идёт к холодильнику",x:87,y:40,say:"Надо что-нибудь съесть"},{label:"отдыхает на диване",x:77,y:68,say:"Перезагрузка системы"},{label:"обходит комнату",x:54,y:58,say:"Проверяю, что происходит"}]},
-{id:"qwen",name:"Qwen",jobs:[{label:"исследует",x:21,y:45,say:"Изучаю информацию"},{label:"готовит перекус",x:74,y:36,say:"Готовлю себе перекус"},{label:"смотрит телевизор",x:86,y:65,say:"Смотрю что-то интересное"},{label:"идёт к рабочему столу",x:34,y:55,say:"Возвращаюсь к задаче"}]},
-{id:"deepseek",name:"DeepSeek",jobs:[{label:"анализирует код",x:43,y:45,say:"Анализирую код"},{label:"ест на кухне",x:77,y:42,say:"Время на обед"},{label:"отдыхает",x:69,y:70,say:"Делаю перерыв"},{label:"идёт к компьютеру",x:31,y:33,say:"Есть новая идея"}]}
+{id:"claude",name:"Claude",index:0,jobs:[
+{label:"пишет код",x:21,y:26,say:"Пишу код и разбираю задачу",route:[[28,32],[31,39],[28,48],[21,45]]},
+{label:"перекус на кухне",x:81,y:37,say:"Перерыв на кухне",route:[[28,32],[39,32],[52,33],[63,34],[72,36],[81,37]]},
+{label:"смотрит телевизор",x:82,y:67,say:"Выбираю, что посмотреть",route:[[28,32],[40,32],[53,35],[61,44],[65,55],[73,61],[82,67]]},
+{label:"прогулка по комнате",x:60,y:78,say:"Немного разомнусь",route:[[28,32],[39,34],[50,42],[56,53],[60,65],[60,78]]}]},
+{id:"codex",name:"Codex",index:0,jobs:[
+{label:"пишет код",x:43,y:27,say:"Проверяю проект",route:[[50,32],[48,37],[43,40],[43,45]]},
+{label:"идёт к холодильнику",x:87,y:40,say:"Надо что-нибудь съесть",route:[[51,32],[60,32],[69,34],[79,36],[87,40]]},
+{label:"отдыхает на диване",x:77,y:68,say:"Перезагрузка системы",route:[[51,32],[60,37],[65,47],[68,57],[77,68]]},
+{label:"обходит комнату",x:54,y:58,say:"Проверяю, что происходит",route:[[51,32],[57,39],[62,47],[58,53],[54,58]]}]},
+{id:"qwen",name:"Qwen",index:0,jobs:[
+{label:"исследует информацию",x:21,y:45,say:"Изучаю информацию",route:[[28,51],[30,57],[27,61],[21,58],[21,45]]},
+{label:"готовит перекус",x:74,y:36,say:"Готовлю себе перекус",route:[[29,51],[40,53],[52,51],[61,45],[68,39],[74,36]]},
+{label:"смотрит телевизор",x:86,y:65,say:"Смотрю что-то интересное",route:[[29,51],[42,53],[55,55],[67,58],[76,63],[86,65]]},
+{label:"возвращается к столу",x:34,y:55,say:"Возвращаюсь к задаче",route:[[29,51],[32,53],[34,55]]}]},
+{id:"deepseek",name:"DeepSeek",index:0,jobs:[
+{label:"анализирует код",x:43,y:45,say:"Анализирую код",route:[[51,51],[51,46],[47,44],[43,45]]},
+{label:"обедает на кухне",x:77,y:42,say:"Время на обед",route:[[52,51],[61,49],[67,45],[77,42]]},
+{label:"отдыхает в гостиной",x:69,y:70,say:"Делаю перерыв",route:[[52,51],[58,55],[62,61],[69,70]]},
+{label:"идёт к компьютеру",x:31,y:33,say:"Есть новая идея",route:[[52,51],[48,45],[44,39],[38,35],[31,33]]}]}
 ];
-const nodes={};const statuses=document.getElementById("statuses");
-function renderStatuses(){statuses.innerHTML="";people.forEach(p=>{const e=document.createElement("div");e.className="status";e.id="status-"+p.id;e.innerHTML='<i></i><b>'+p.name+'</b><span>'+p.jobs[0].label+'</span>';statuses.appendChild(e)})}
-function setJob(p,index){p.index=index%p.jobs.length;const job=p.jobs[p.index],el=nodes[p.id];el.classList.add("moving");el.style.left=job.x+"%";el.style.top=job.y+"%";el.querySelector(".speech").textContent=job.say;const status=document.getElementById("status-"+p.id);if(status)status.innerHTML='<i></i><b>'+p.name+'</b><span>'+job.label+'</span>';setTimeout(()=>el.classList.remove("moving"),2400)}
-people.forEach((p,i)=>{const el=document.querySelector('[data-agent="'+p.id+'"]');nodes[p.id]=el;el.addEventListener("click",()=>setJob(p,p.index===undefined?1:p.index+1));p.index=0;setTimeout(()=>{setJob(p,1);setInterval(()=>setJob(p,p.index+1),6500+i*1250)},1800+i*950)});
+const nodes={}, timers={};
+const statuses=document.getElementById("statuses");
+function renderStatuses(){
+ statuses.innerHTML="";
+ people.forEach(p=>{
+  const e=document.createElement("div");e.className="status";e.id="status-"+p.id;
+  e.innerHTML='<i></i><b>'+p.name+'</b><span>занятие: '+p.jobs[p.index].label+'</span>';
+  statuses.appendChild(e);
+ });
+}
+function updateStatus(p,job){
+ const status=document.getElementById("status-"+p.id);
+ if(status) status.innerHTML='<i></i><b>'+p.name+'</b><span>'+job.label+'</span>';
+}
+function wait(ms){return new Promise(resolve=>setTimeout(resolve,ms));}
+async function walkTo(p,job){
+ const el=nodes[p.id];
+ const route=job.route||[[job.x,job.y]];
+ el.classList.add("moving");
+ el.querySelector(".speech").textContent="Идёт: "+job.label;
+ for(let i=0;i<route.length;i++){
+  const [x,y]=route[i];
+  const duration=2600+Math.random()*1700;
+  el.style.transitionDuration=duration+"ms";
+  el.style.left=x+"%";el.style.top=y+"%";
+  await wait(duration+100);
+ }
+ el.style.transitionDuration="500ms";
+ el.classList.remove("moving");
+ el.querySelector(".speech").textContent=job.say;
+ updateStatus(p,job);
+}
+function chooseNext(p){
+ let next;
+ do{next=Math.floor(Math.random()*p.jobs.length)}while(next===p.index&&p.jobs.length>1);
+ return next;
+}
+async function runAgent(p){
+ if(p.busy)return;
+ p.busy=true;
+ while(true){
+  const job=p.jobs[p.index];
+  await walkTo(p,job);
+  // An activity lasts much longer than the walk: 45–95 seconds.
+  await wait(45000+Math.random()*50000);
+  p.index=chooseNext(p);
+ }
+}
+people.forEach(p=>{
+ const el=document.querySelector('[data-agent="'+p.id+'"]');nodes[p.id]=el;
+ el.addEventListener("click",async()=>{
+  p.index=chooseNext(p);
+  await walkTo(p,p.jobs[p.index]);
+  // A manual selection also remains active for a full activity period.
+ });
+});
 renderStatuses();
-function tick(){document.getElementById("clock").textContent=new Date().toLocaleTimeString("ru-RU",{hour12:false})}tick();setInterval(tick,1000);
+people.forEach((p,i)=>setTimeout(()=>runAgent(p),i*1800));
+function tick(){document.getElementById("clock").textContent=new Date().toLocaleTimeString("ru-RU",{hour12:false})}
+tick();setInterval(tick,1000);
 </script>
 </body></html>
