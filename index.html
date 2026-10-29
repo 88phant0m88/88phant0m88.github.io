@@ -57,6 +57,13 @@ body{min-height:100vh;padding:14px;display:grid;place-items:center;background:ra
 .belt{opacity:0}.belt.on{opacity:1;animation:belt .45s linear infinite}@keyframes belt{to{stroke-dashoffset:12}}
 .steam{animation:steam 2.4s ease-out infinite;opacity:0}@keyframes steam{0%{opacity:.7;transform:translateY(0)}100%{opacity:0;transform:translateY(-16px)}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important}}
+
+/* ---------- Phantom House sound controls ---------- */
+.sound-fab{position:fixed;right:16px;bottom:16px;z-index:30;border:1px solid #76539a;background:#21152f;color:#f4eaff;border-radius:12px;padding:11px 14px;font:700 13px system-ui;box-shadow:0 5px 22px #0008;cursor:pointer}
+.sound-panel{position:fixed;right:16px;bottom:68px;z-index:31;width:min(330px,calc(100vw - 32px));padding:17px;background:#171020f5;border:1px solid #604477;border-radius:16px;color:#f4eaff;font:13px system-ui;box-shadow:0 12px 38px #000b;backdrop-filter:blur(14px);display:none}
+.sound-panel.open{display:block}.sound-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;font-weight:800;letter-spacing:.08em;color:#d9bdff}
+.sound-close{background:none;border:0;color:#cdb8e8;font-size:22px;cursor:pointer}.sound-row{margin:13px 0}.sound-row label{display:flex;justify-content:space-between;margin-bottom:7px;color:#e9ddf5}.sound-row output{color:#c69cff;font-variant-numeric:tabular-nums}.sound-row input{width:100%;accent-color:#a879e8}.sound-toggle{display:flex;align-items:center;gap:9px;margin-top:14px;color:#d9c9e8}.sound-toggle input{accent-color:#a879e8}.sound-note{margin-top:12px;color:#a99ab8;font-size:11px;line-height:1.4}
+@media(max-width:600px){.sound-fab{right:10px;bottom:10px}.sound-panel{right:10px;bottom:60px}}
 </style>
 </head>
 <body>
@@ -85,6 +92,17 @@ body{min-height:100vh;padding:14px;display:grid;place-items:center;background:ra
 <g id="scene"></g>
 </svg>
 </div></div>
+
+<button class="sound-fab" id="soundFab" type="button">♫ Звук: выкл.</button>
+<section class="sound-panel" id="soundPanel" aria-label="Настройки звука">
+ <div class="sound-head"><span>PHANTOM HOUSE · SOUND</span><button class="sound-close" id="soundClose" type="button" aria-label="Закрыть">×</button></div>
+ <div class="sound-row"><label for="sndMaster">Общая громкость <output id="sndMasterVal">90%</output></label><input id="sndMaster" type="range" min="0" max="100" value="90"></div>
+ <div class="sound-row"><label for="sndAmbience">Атмосфера дома <output id="sndAmbienceVal">45%</output></label><input id="sndAmbience" type="range" min="0" max="100" value="45"></div>
+ <div class="sound-row"><label for="sndActions">Звуки действий <output id="sndActionsVal">65%</output></label><input id="sndActions" type="range" min="0" max="100" value="65"></div>
+ <div class="sound-row"><label for="sndVoices">Голоса и реакции <output id="sndVoicesVal">80%</output></label><input id="sndVoices" type="range" min="0" max="100" value="80"></div>
+ <label class="sound-toggle"><input id="sndNight" type="checkbox" checked> Приглушать атмосферу ночью</label>
+ <p class="sound-note">Звук запускается только после нажатия — так браузеры разрешают воспроизведение. Пока используются синтезированные звуковые эффекты, не настоящая речь агентов.</p>
+</section>
 <script>
 const $=s=>document.querySelector(s),room=$('#room');
 const R=(x,y,w,h,f,e='')=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${f}" ${e}/>`;
@@ -241,7 +259,7 @@ async function life(p){
   while(p.busy)await wait(400);
   const k=p.force||choose(p);p.force=null;const a=ACT[k],at=a.at(p);
   taken[at]=p;ui(p,'🚶 идёт: '+a.t);await go(p,at);
-  p.st='dwell';p.last=k;a.cls&&a.cls.split(' ').forEach(c=>p.el.classList.add(c));p.zz.textContent='Zzz';ui(p,a.em+' '+a.t);fx();
+  p.st='dwell';p.last=k;a.cls&&a.cls.split(' ').forEach(c=>p.el.classList.add(c));p.zz.textContent='Zzz';ui(p,a.em+' '+a.t);soundCue(k);fx();
   if(k==='sleep')bubble(p,'Спокойной ночи…',2200);
   await dwell(p,a.s(p),a.l);
   p.tok=null;delete taken[at];
@@ -325,7 +343,7 @@ tick();setInterval(tick,1000);
  function move(p,tx,ty,s){const dx=tx-p.x,dy=ty-p.y,d=Math.hypot(dx,dy)||1,m=Math.min(s,d);p.x+=dx/d*m;p.y+=dy/d*m}
  function reset(){P.forEach(p=>{if(p.k){p.x=76+rnd(-30,30);p.y=rnd(8,44)}else{p.x=p.t?140:12;p.y=26}});car=pick(P.filter(p=>p.k));pu.x=76;pu.y=26;shot=null}
  function newGame(){sc=[0,0];per=1;left=1200;st='play';reset()}
- function cheer(){AG.filter(p=>/^G/.test(p.node)&&p.st==='dwell').sort(()=>Math.random()-.5).slice(0,2).forEach((p,i)=>setTimeout(()=>bubble(p,pick(['ГОЛ! 🏒','Шайба!','Вот это бросок!','Монреаль, давай!','Тампа не сдаётся!'])),i*700));const fan=AG.find(p=>p.el.classList.contains('tv')&&p.st==='dwell');if(fan)bubble(fan,'ГОООЛ! 🏒',2800);eventReact('goal',AG.find(p=>p.st==='dwell')||AG[0])}
+ function cheer(){soundCue('goal');AG.filter(p=>/^G/.test(p.node)&&p.st==='dwell').sort(()=>Math.random()-.5).slice(0,2).forEach((p,i)=>setTimeout(()=>bubble(p,pick(['ГОЛ! 🏒','Шайба!','Вот это бросок!','Монреаль, давай!','Тампа не сдаётся!'])),i*700));const fan=AG.find(p=>p.el.classList.contains('tv')&&p.st==='dwell');if(fan)bubble(fan,'ГОООЛ! 🏒',2800);eventReact('goal',AG.find(p=>p.st==='dwell')||AG[0])}
  function draw(){P.forEach(p=>{p.e.setAttribute('cx',p.x);p.e.setAttribute('cy',p.y)});pk.setAttribute('cx',pu.x);pk.setAttribute('cy',pu.y);
   $('#hs0').textContent=sc[0];$('#hs1').textContent=sc[1];
   $('#hkt').textContent=st==='final'?'ФИНАЛ':st==='break'?'ПЕРЕРЫВ':(per>3?'ОТ':per+'-й')+' '+Math.floor(left/60)+':'+String(Math.floor(left%60)).padStart(2,'0');
