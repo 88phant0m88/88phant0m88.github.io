@@ -108,7 +108,47 @@ footer{display:flex;justify-content:space-between;gap:10px;color:#887794;font-si
 @media(max-width:900px){body{padding:12px}.layout{grid-template-columns:1fr}.profile{display:grid;grid-template-columns:90px 1fr;column-gap:16px;text-align:left;align-items:center;padding:18px}.avatar-wrap{grid-row:1/4;width:86px;height:86px;margin:0}.profile h1{align-self:end;font-size:25px}.handle{align-self:start}.bio{grid-column:1/-1;max-width:none;margin:13px 0}.links{grid-column:1/-1;grid-template-columns:1fr 1fr}.copyright{grid-column:1/-1;margin-top:14px}.room{height:clamp(430px,75vw,650px)}}
 @media(max-width:540px){.brand{font-size:10px;letter-spacing:.1em}.live{font-size:10px;padding:8px}.gamehead{padding:13px}.gamehead h2{font-size:14px}.room{height:470px;min-height:470px}.mapwrap{padding:7px}.room{border-width:5px}.zone{font-size:8px;padding:4px}.agent .tag{font-size:7px;padding:3px 4px}.agent{min-width:42px}.agent img{width:30px;height:30px}.links{grid-template-columns:1fr}footer{flex-direction:column}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{transition:none!important;animation:none!important}}
-</style>
+
+/* Реалистичнее: материалы, свет, глубина и мелкий декор */
+.room{background:linear-gradient(180deg,#514052 0 8%,transparent 8%),repeating-linear-gradient(90deg,#493448 0 7.8%,#3b2a3d 7.8% 8%,#443044 8% 15.8%),linear-gradient(#493448,#302337);box-shadow:inset 0 0 0 3px #806286,inset 0 18px 28px #17101d66,inset 0 -15px 30px #100b18aa}
+.room:before{background:repeating-linear-gradient(0deg,transparent 0 58px,#24192c55 59px 61px),linear-gradient(90deg,#ffffff09,transparent 18% 82%,#00000020);opacity:.75}
+.room:after{background:radial-gradient(ellipse at 35% 30%,#f7d7ff12,transparent 45%),linear-gradient(180deg,#100b1810,transparent 55%,#09060e35)}
+.window{left:22%;top:0;width:30%;height:8%;background:linear-gradient(90deg,#171e33 0 5%,#6889a4 7% 46%,#293c59 48% 52%,#7799ad 54% 93%,#171e33 95%);border:5px solid #735a79;border-top:0;box-shadow:0 5px 10px #10091699}
+.window:after{content:"";position:absolute;left:49%;top:0;bottom:0;width:3px;background:#d6c2dc}
+.shelf,.desk,.cabinet,.counter,.fridge,.island,.sofa,.tv,.table,.chair,.picture,.speaker{box-shadow:inset 0 2px 3px #ffffff24,inset 0 -4px 5px #120b1d55,0 5px 8px #10091655}
+.shelf{background:linear-gradient(#89658b,#5a3f62);border-color:#a985ac}
+.book{box-shadow:inset 2px 0 #ffffff38,inset -2px 0 #24162d66}
+.desk{background:linear-gradient(145deg,#a17a86,#75536d 48%,#50364f);border-color:#b18da7;border-bottom-color:#50344f}
+.desk:before{background:linear-gradient(90deg,#e3c6d8,#aa8aa9);box-shadow:0 2px 3px #120b1d77}
+.screen{background:linear-gradient(145deg,#080c17,#19253a);border-color:#b69abf;box-shadow:0 0 14px #7c4db966,inset 0 0 8px #000}
+.screen:after{background:linear-gradient(135deg,#3b6d85,#17283a 55%,#62e6c0);opacity:.9}
+.keyboard{background:repeating-linear-gradient(90deg,#b6a5bf 0 5%,#51425e 6% 8%);border:1px solid #d9c7e3;box-shadow:0 2px 3px #0008}
+.cabinet{background:repeating-linear-gradient(90deg,#725675 0 18%,#3e2b46 19% 21%);border-color:#b092b8}
+.counter{background:linear-gradient(180deg,#e1d3df,#a58da9);border-color:#f1e4f1;box-shadow:0 5px 8px #120b1d77}
+.sink{background:radial-gradient(ellipse,#91aab3,#526a78 70%);box-shadow:inset 0 2px 5px #1e2935}
+.fridge{background:linear-gradient(90deg,#c4b9cc,#f0e6f1 35%,#b2a5ba);box-shadow:inset -4px 0 #8b7b98,0 5px 8px #120b1d77}
+.island{background:linear-gradient(145deg,#9e7a9d,#64476f);border-color:#c4a4c5}
+.sofa{background:linear-gradient(180deg,#a68ab8,#735b87);border-color:#d1b8dc}
+.sofa:after{background:linear-gradient(90deg,#b59bc5 0 46%,#5c426d 47% 53%,#a68ab8 54%);box-shadow:inset 0 2px 5px #34213f}
+.tv{background:linear-gradient(135deg,#08101d,#213954 48%,#090d18);box-shadow:0 0 20px #b36aff33,inset 0 0 12px #000}
+.rug{background:repeating-linear-gradient(45deg,#60466d 0 7px,#50385f 7px 14px);box-shadow:inset 0 0 0 7px #755681,0 5px 10px #10091666}
+.table{background:radial-gradient(ellipse at 35% 25%,#c2a5c7,#8b6c91 60%,#604567);border-color:#d5b6da}
+.plant{background:radial-gradient(ellipse at 30% 25%,#83bd83,#286044 45%,#102f24 75%);border:5px solid #987a9d}
+.plant:after{background:linear-gradient(90deg,#6b4937,#b28b63,#68452f);box-shadow:0 3px 4px #0008}
+.picture{background:linear-gradient(145deg,#3f6278 0 35%,#8c6ca3 36% 60%,#e0b9c7 61% 65%,#29384f 66%);border-color:#c5a4c8}
+.lamp{background:#fff0b9;box-shadow:0 0 7px 4px #ffd87555,0 0 20px 8px #ffd8751b}
+.floorlamp:before{background:#f5e2ad;filter:drop-shadow(0 0 9px #ffe7a455)}
+.agent .speech{max-width:135px;font-size:9px;line-height:1.2;text-shadow:0 2px 5px #000,0 0 8px #000}
+.agent.talking img{animation:talk .22s infinite alternate}
+.agent.fighting{z-index:20;animation:scuffle .28s infinite alternate}
+.agent.fighting img{border-color:#ff7c8e;box-shadow:0 0 18px #ff355b99}
+.agent.ko{z-index:9;transition:top .5s, left .5s, transform .5s;transform:translate(-50%,-50%) rotate(90deg) scale(.86);filter:grayscale(.85) drop-shadow(0 4px 3px #0009);opacity:.78}
+.agent.ko img{border-color:#9a8ba5;box-shadow:none}
+.agent.ko .tag{border-color:#8d7b99;color:#d2c8da}
+@keyframes talk{to{transform:translateY(-2px) scale(1.05)}}
+@keyframes scuffle{0%{translate:-3px 0}50%{translate:4px -2px}100%{translate:-1px 2px}}
+@media(max-width:540px){.agent .speech{font-size:8px;max-width:105px}}
+\n</style>
 </head>
 <body>
 <header><div class="brand"><div class="brand-icon">◈</div> PHANTOM / DIGITAL HOUSE</div><div class="live"><i></i> Все агенты в сети</div></header>
@@ -171,7 +211,13 @@ const people=[
 {label:"идёт к компьютеру",x:31,y:33,say:"Есть новая идея",route:[[52,51],[48,45],[44,39],[38,35],[31,33]]}]}
 ];
 const nodes={};
+let sceneBusy=false;
 function wait(ms){return new Promise(resolve=>setTimeout(resolve,ms));}
+function say(p,text,mode="talking"){
+ const el=nodes[p.id];el.querySelector(".speech").textContent=text;
+ el.classList.add(mode);
+ if(mode==="talking")setTimeout(()=>el.classList.remove("talking"),2600);
+}
 async function walkTo(p,job){
  const el=nodes[p.id];
  const route=job.route||[[job.x,job.y]];
@@ -179,10 +225,10 @@ async function walkTo(p,job){
  el.querySelector(".speech").textContent="Идёт: "+job.label;
  for(let i=0;i<route.length;i++){
   const [x,y]=route[i];
-  const duration=2600+Math.random()*1700;
+  const duration=1300+Math.random()*1000;
   el.style.transitionDuration=duration+"ms";
   el.style.left=x+"%";el.style.top=y+"%";
-  await wait(duration+100);
+  await wait(duration+80);
  }
  el.style.transitionDuration="500ms";
  el.classList.remove("moving");
@@ -197,22 +243,82 @@ async function runAgent(p){
  if(p.busy)return;
  p.busy=true;
  while(true){
-  const job=p.jobs[p.index];
-  await walkTo(p,job);
-  // An activity lasts much longer than the walk: 45–95 seconds.
-  await wait(45000+Math.random()*50000);
+  if(!sceneBusy){
+   const job=p.jobs[p.index];
+   await walkTo(p,job);
+  }
+  await wait(18000+Math.random()*24000);
   p.index=chooseNext(p);
  }
+}
+const conversations=[
+ ["Слушай, я нашёл интересный способ решить эту задачу.","Покажи. Только без очередного костыля.","Это не костыль, а оптимизация.","Ладно, звучит убедительно."],
+ ["Кто опять оставил кружку у компьютера?","Это не я. У меня даже нет рук.","Очень смешно. Просто уберите её.","Окей, порядок наведём."],
+ ["Твой вариант слишком сложный.","Зато он надёжный и проверяемый.","Можно было сделать проще.","Можно. Но сначала докажем, что проще не сломает всё."],
+ ["Есть минутка обсудить новую идею?","Если она не требует переписать весь проект.","Обещать не могу.","Тогда хотя бы сначала покажи план."],
+ ["Я занял диван на пять минут.","Ты там уже полчаса лежишь.","Я анализирую в горизонтальном положении.","Ага. Очень научно."]
+];
+const disagreements=[
+ ["Ты опять перебил меня!","Потому что ты не даёшь договорить!"],
+ ["Не выдавай мою идею за свою.","Я вообще-то предложил это первым!"],
+ ["Хватит двигать мои файлы без спроса.","Там был беспорядок, я навёл порядок!"],
+ ["Ты сломал мой план.","Твой план сломался ещё до меня!"],
+ ["Выключи этот звук, я пытаюсь думать.","Сам выключи, я первый включил!"]
+];
+async function conversationEvent(){
+ if(sceneBusy)return;
+ sceneBusy=true;
+ const pair=[...people].sort(()=>Math.random()-.5).slice(0,2);
+ const [a,b]=pair;
+ try{
+  const spots=[[Math.max(12,Math.min(88,parseFloat(nodes[a.id].style.left)||25)),Math.max(16,Math.min(82,parseFloat(nodes[a.id].style.top)||35))],
+               [Math.max(12,Math.min(88,parseFloat(nodes[b.id].style.left)||50)),Math.max(16,Math.min(82,parseFloat(nodes[b.id].style.top)||45))]];
+  const midX=Math.max(12,Math.min(88,(spots[0][0]+spots[1][0])/2));
+  const midY=Math.max(16,Math.min(82,(spots[0][1]+spots[1][1])/2));
+  await walkTo(a,{label:"идёт поговорить с "+b.name,say:"Иду поговорить",route:[[midX-4,midY]]});
+  await walkTo(b,{label:"разговаривает с "+a.name,say:"Слушаю",route:[[midX+4,midY]]});
+  const friendly=Math.random()<.68;
+  if(friendly){
+   const lines=conversations[Math.floor(Math.random()*conversations.length)];
+   say(a,lines[0]);await wait(2300);say(b,lines[1]);await wait(2400);
+   say(a,lines[2]);await wait(2200);say(b,lines[3]);await wait(1800);
+   say(a,"Ладно, договорились.");await wait(1300);
+  }else{
+   const lines=disagreements[Math.floor(Math.random()*disagreements.length)];
+   say(a,lines[0]);await wait(1800);say(b,lines[1]);await wait(1600);
+   if(Math.random()<.72){
+    say(a,"Всё, хватит спорить!","fighting");say(b,"Тогда выйди и скажи это ещё раз!","fighting");
+    nodes[a.id].classList.add("fighting");nodes[b.id].classList.add("fighting");
+    await wait(1800);
+    say(a,"На, получай!","fighting");say(b,"Эй!","fighting");
+    await wait(1700);
+    const loser=Math.random()<.5?a:b, winner=loser===a?b:a;
+    nodes[a.id].classList.remove("fighting");nodes[b.id].classList.remove("fighting");
+    nodes[loser.id].classList.add("ko");
+    say(loser,"💫 НОКАУТ","ko");
+    say(winner,"Всё, хватит. Он отключился.");
+    await wait(7000+Math.random()*5000);
+    nodes[loser.id].classList.remove("ko");
+    say(loser,"Ох… что произошло?");
+    await wait(1600);
+    say(winner,"Мы поспорили. Давай без драки в следующий раз.");
+   }else{
+    say(b,"Ладно, не стоит оно того.");await wait(1600);say(a,"Согласен. Разошлись.");
+   }
+  }
+ }catch(e){console.error("Conversation event:",e)}
+ finally{nodes[a.id].classList.remove("fighting");nodes[b.id].classList.remove("fighting");sceneBusy=false;}
 }
 people.forEach(p=>{
  const el=document.querySelector('[data-agent="'+p.id+'"]');nodes[p.id]=el;
  el.addEventListener("click",async()=>{
+  if(sceneBusy)return;
   p.index=chooseNext(p);
   await walkTo(p,p.jobs[p.index]);
-  // A manual selection also remains active for a full activity period.
  });
 });
-people.forEach((p,i)=>setTimeout(()=>runAgent(p),i*1800));
+people.forEach((p,i)=>setTimeout(()=>runAgent(p),i*1200));
+setInterval(()=>{if(Math.random()<.78)conversationEvent()},22000);
 function tick(){document.getElementById("clock").textContent=new Date().toLocaleTimeString("ru-RU",{hour12:false})}
 tick();setInterval(tick,1000);
 </script>
