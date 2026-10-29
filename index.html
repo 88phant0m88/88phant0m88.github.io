@@ -62,11 +62,41 @@ h1{font-size:29px}.handle{font-size:13px;color:#c084fc;margin-top:5px}.bio{font-
 .table{position:absolute;z-index:2;left:45%;bottom:17%;width:16%;height:9%;border-radius:50%;background:#9a789f;border:5px solid #c5a4ca;box-shadow:0 7px 0 #2c1d32}
 .table:after{content:"";position:absolute;left:45%;top:85%;height:30%;width:10%;background:#49324f}
 .door{position:absolute;z-index:2;left:2%;bottom:8%;width:12%;height:4%;background:#b090a4;border:3px solid #e2bfd6;border-radius:4px}
+
+/* Мелкие детали интерьера */
+.chair{position:absolute;z-index:2;width:7%;height:4%;background:#45324f;border:3px solid #9b7ba5;border-radius:5px;box-shadow:0 4px 0 #261a2c}
+.chair:after{content:"";position:absolute;left:12%;right:12%;top:-55%;height:55%;background:#624a6e;border:2px solid #a98bb1;border-radius:5px 5px 2px 2px}
+.c1{left:18%;top:32%}.c2{left:41%;top:32%}.c3{left:18%;top:51%}.c4{left:41%;top:51%}
+.lamp{position:absolute;z-index:4;width:2.2%;height:2.2%;border-radius:50%;background:#ffe9a6;box-shadow:0 0 10px 5px #ffd87544}
+.l1{left:15%;top:23%}.l2{left:38%;top:23%}.l3{left:15%;top:42%}.l4{left:38%;top:42%}
+.mug{position:absolute;z-index:4;font-size:clamp(9px,1.1vw,14px);filter:drop-shadow(0 2px 1px #0005)}
+.m1{left:28%;top:28%}.m2{left:51%;top:47%}
+.plantpot{position:absolute;z-index:3;left:32%;top:22%;width:2.5%;height:3%;background:#b77a5d;border-radius:2px 2px 5px 5px}
+.plantpot:before{content:"";position:absolute;left:-50%;top:-140%;width:200%;height:160%;background:radial-gradient(ellipse at 50% 80%,#8bc28b 0 20%,transparent 23%),radial-gradient(ellipse at 20% 50%,#4e9a65 0 35%,transparent 38%),radial-gradient(ellipse at 80% 40%,#6eb67b 0 35%,transparent 38%)}
+.notebook{position:absolute;z-index:4;width:4%;height:2.5%;background:#e6c58f;border:1px solid #fff0cf;transform:rotate(-8deg);box-shadow:1px 2px 2px #0005}
+.n1{left:25%;top:29%}.n2{left:47%;top:48%;background:#a6c8db}
+.cupboardhandles{position:absolute;z-index:3;right:3.2%;top:14%;width:23%;height:6%;background:repeating-linear-gradient(90deg,transparent 0 22%,#bba4c4 23% 24%,transparent 25% 48%);pointer-events:none}
+.kitchenmug{position:absolute;z-index:4;right:5%;top:24%;font-size:clamp(10px,1.4vw,17px)}
+.fruit{position:absolute;z-index:4;right:21%;top:35%;font-size:clamp(10px,1.4vw,17px)}
+.stove{position:absolute;z-index:3;right:3%;top:24%;width:8%;height:4%;background:#50445a;border:2px solid #ded0e4;border-radius:3px}
+.stove:before{content:"";position:absolute;inset:2px;background:radial-gradient(circle at 25% 50%,#24202d 0 20%,#b3a0bf 22% 27%,transparent 29%),radial-gradient(circle at 70% 50%,#24202d 0 20%,#b3a0bf 22% 27%,transparent 29%)}
+.fridgelabel{position:absolute;z-index:3;right:3.5%;top:34%;width:7%;height:5%;border-radius:2px;background:linear-gradient(#d7cbe0 0 20%,#a89bb5 21% 25%,#d7cbe0 26%);opacity:.8}
+.cushion{position:absolute;z-index:4;bottom:20%;width:5%;height:5%;background:#d7a5c7;border:2px solid #f0d2e9;border-radius:5px;transform:rotate(-8deg)}
+.cu1{right:23%}.cu2{right:11%;background:#a8c9d7;border-color:#d5edf4;transform:rotate(7deg)}
+.remote{position:absolute;z-index:4;right:18%;bottom:20%;width:1.5%;height:4%;background:#211b2a;border:1px solid #b7a4c2;border-radius:3px;transform:rotate(25deg)}
+.coffee{position:absolute;z-index:4;left:51%;bottom:22%;width:3%;height:3%;border-radius:50%;background:#e8dbe9;border:3px solid #b69bc1}
+.floorlamp{position:absolute;z-index:3;right:4%;bottom:27%;width:1%;height:15%;background:#a98eaf}
+.floorlamp:before{content:"";position:absolute;top:-18%;left:-250%;width:600%;height:24%;background:#e9d8a9;clip-path:polygon(25% 0,75% 0,100% 100%,0 100%);box-shadow:0 0 12px #ffe7a455}
+.picture{position:absolute;z-index:2;left:65%;top:5%;width:9%;height:9%;background:linear-gradient(135deg,#8d6ab1,#2f4862 50%,#b2a0ca);border:4px solid #9b7ba5;box-shadow:0 3px 0 #291b31}
+.picture:after{content:"";position:absolute;inset:8%;border:1px solid #e5d3ed;background:linear-gradient(155deg,transparent 45%,#d3c0e3 46% 50%,transparent 51%)}
+.speaker{position:absolute;z-index:3;right:3%;bottom:14%;width:4%;height:7%;background:linear-gradient(90deg,#211a2a,#5e4b6b,#211a2a);border:2px solid #a28bad;border-radius:3px}
+.speaker:after{content:"";position:absolute;inset:20%;border-radius:50%;border:2px solid #c5b0d2;background:#35283e}
+
 .agent{position:absolute;z-index:8;width:clamp(48px,6.3%,76px);min-width:48px;display:flex;flex-direction:column;align-items:center;gap:3px;border:0;background:transparent;cursor:pointer;transform:translate(-50%,-50%);transition:left 4.8s cubic-bezier(.22,.7,.25,1),top 4.8s cubic-bezier(.22,.7,.25,1);filter:drop-shadow(0 4px 3px #0009)}
 .agent img{width:clamp(30px,3.7vw,45px);height:clamp(30px,3.7vw,45px);object-fit:contain;padding:4px;background:#f8f4ff;border:2px solid #e3caff;border-radius:50%;box-shadow:0 0 12px #b36aff55}
 .agent .tag{font-size:10px;white-space:nowrap;font-weight:800;color:#fff;background:#21152c;border:1px solid #8863a1;border-radius:5px;padding:3px 6px}
-.agent .speech{position:absolute;bottom:calc(100% + 4px);background:#f1e7ff;color:#2c1838;border-radius:7px;padding:5px 7px;font-size:10px;white-space:nowrap;opacity:0;transition:opacity .2s;pointer-events:none}
-.agent:hover .speech,.agent:focus-visible .speech{opacity:1}
+.agent .speech{position:absolute;bottom:calc(100% + 7px);left:50%;transform:translateX(-50%);background:#f1e7ff;color:#2c1838;border:1px solid #fff;border-radius:9px;padding:6px 8px;font-size:10px;line-height:1.25;font-weight:750;white-space:normal;width:max-content;max-width:125px;text-align:center;opacity:1;box-shadow:0 3px 10px #0005;pointer-events:none;z-index:10}
+.agent .speech:after{content:"";position:absolute;top:100%;left:calc(50% - 5px);border:5px solid transparent;border-top-color:#f1e7ff}
 .agent .shadow{position:absolute;z-index:-1;top:7px;width:32px;height:12px;background:#08050b66;border-radius:50%}
 .agent.moving img{animation:step .25s infinite alternate}
 @keyframes step{to{transform:translateY(-3px) rotate(4deg)}}
@@ -96,22 +126,27 @@ footer{display:flex;justify-content:space-between;gap:10px;color:#887794;font-si
 <section class="game">
 <div class="gamehead"><div><h2>AI House — вид сверху</h2><p>Большая комната, четыре агента и собственный распорядок дня</p></div><div class="clock" id="clock">00:00:00</div></div>
 <div class="mapwrap"><div class="room" id="room" aria-label="Карта комнаты с агентами">
-<div class="window"></div><div class="zone office">Рабочая зона</div><div class="zone kitchenlabel">Кухня</div><div class="zone lounge">Гостиная</div><div class="zone chill">Зона отдыха</div>
+<div class="window"></div>
 <div class="plant"></div><div class="shelf"><i class="book"></i><i class="book b2"></i><i class="book b3"></i><i class="book b4"></i></div>
 <div class="desk d1"></div><div class="desk d2"></div><div class="desk d3"></div><div class="desk d4"></div>
+<div class="chair c1"></div><div class="chair c2"></div><div class="chair c3"></div><div class="chair c4"></div>
+<div class="lamp l1"></div><div class="lamp l2"></div><div class="lamp l3"></div><div class="lamp l4"></div>
+<div class="mug m1">☕</div><div class="mug m2">☕</div><div class="plantpot"></div><div class="notebook n1"></div><div class="notebook n2"></div>
 <div class="screen s1"></div><div class="screen s2"></div><div class="screen s3"></div><div class="screen s4"></div>
 <div class="keyboard k1"></div><div class="keyboard k2"></div><div class="keyboard k3"></div><div class="keyboard k4"></div>
 <div class="cabinet"></div><div class="counter"></div><div class="sink"></div><div class="fridge"></div><div class="island"></div><div class="plate"></div>
+<div class="cupboardhandles"></div><div class="kitchenmug">☕</div><div class="fruit">🍎</div><div class="stove"></div><div class="fridgelabel"></div>
 <div class="rug"></div><div class="table"></div><div class="plant2">🪴</div><div class="tv"></div><div class="sofa"></div><div class="door"></div>
-<button class="agent" data-agent="claude" style="left:21%;top:26%" aria-label="Claude — нажми, чтобы сменить занятие"><span class="speech">Пишу код</span><span class="shadow"></span><img src="https://i.ytimg.com/vi/iXw4qwy5Ld4/maxresdefault.jpg" alt="Claude — персонаж по референсу"><span class="tag">Claude</span></button>
+<div class="cushion cu1"></div><div class="cushion cu2"></div><div class="remote"></div><div class="coffee"></div><div class="floorlamp"></div><div class="picture"></div><div class="speaker"></div>
+<button class="agent" data-agent="claude" style="left:21%;top:26%" aria-label="Claude — нажми, чтобы сменить занятие"><span class="speech">Пишу код</span><span class="shadow"></span><img src="https://raw.githubusercontent.com/lobehub/lobe-icons/master/packages/static-png/light/claude-color.png" alt="Claude"><span class="tag">Claude</span></button>
 <button class="agent" data-agent="codex" style="left:43%;top:27%" aria-label="Codex — нажми, чтобы сменить занятие"><span class="speech">Разбираюсь с задачей</span><span class="shadow"></span><img src="https://raw.githubusercontent.com/lobehub/lobe-icons/master/packages/static-png/light/openai.png" alt="OpenAI Codex"><span class="tag">Codex</span></button>
 <button class="agent" data-agent="qwen" style="left:21%;top:45%" aria-label="Qwen — нажми, чтобы сменить занятие"><span class="speech">Изучаю информацию</span><span class="shadow"></span><img src="https://raw.githubusercontent.com/lobehub/lobe-icons/master/packages/static-png/light/qwen-color.png" alt="Qwen"><span class="tag">Qwen</span></button>
 <button class="agent" data-agent="deepseek" style="left:43%;top:45%" aria-label="DeepSeek — нажми, чтобы сменить занятие"><span class="speech">Анализирую код</span><span class="shadow"></span><img src="https://raw.githubusercontent.com/lobehub/lobe-icons/master/packages/static-png/light/deepseek-color.png" alt="DeepSeek"><span class="tag">DeepSeek</span></button>
 </div></div>
-<div class="statusbar" id="statuses"></div><div class="hint">Агенты сами ходят между рабочими столами, кухней и телевизором. Нажми на любого, чтобы вручную переключить занятие.</div>
+
 </section>
 </main>
-<footer><div>PHANTOM LAB <span>— моя цифровая мастерская</span></div><div>Много идей. Четыре ИИ. Одна комната.</div></footer>
+<footer><div>Много идей. Четыре ИИ. Одна комната.</div></footer>
 <script>
 const people=[
 {id:"claude",name:"Claude",index:0,jobs:[
@@ -135,20 +170,7 @@ const people=[
 {label:"отдыхает в гостиной",x:69,y:70,say:"Делаю перерыв",route:[[52,51],[58,55],[62,61],[69,70]]},
 {label:"идёт к компьютеру",x:31,y:33,say:"Есть новая идея",route:[[52,51],[48,45],[44,39],[38,35],[31,33]]}]}
 ];
-const nodes={}, timers={};
-const statuses=document.getElementById("statuses");
-function renderStatuses(){
- statuses.innerHTML="";
- people.forEach(p=>{
-  const e=document.createElement("div");e.className="status";e.id="status-"+p.id;
-  e.innerHTML='<i></i><b>'+p.name+'</b><span>занятие: '+p.jobs[p.index].label+'</span>';
-  statuses.appendChild(e);
- });
-}
-function updateStatus(p,job){
- const status=document.getElementById("status-"+p.id);
- if(status) status.innerHTML='<i></i><b>'+p.name+'</b><span>'+job.label+'</span>';
-}
+const nodes={};
 function wait(ms){return new Promise(resolve=>setTimeout(resolve,ms));}
 async function walkTo(p,job){
  const el=nodes[p.id];
@@ -191,7 +213,6 @@ people.forEach(p=>{
   // A manual selection also remains active for a full activity period.
  });
 });
-renderStatuses();
 people.forEach((p,i)=>setTimeout(()=>runAgent(p),i*1800));
 function tick(){document.getElementById("clock").textContent=new Date().toLocaleTimeString("ru-RU",{hour12:false})}
 tick();setInterval(tick,1000);
