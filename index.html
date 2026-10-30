@@ -520,7 +520,8 @@ tick();setInterval(tick,1000);
  function setMode(mode){stop();state.mode=mode;reset();$h('hkTraining').classList.toggle('active',mode==='training');$h('hkMatch').classList.toggle('active',mode==='match');$h('hkModeLabel').textContent=mode==='training'?'10 бросков: нападающий против вратаря':'3 минуты · две команды по два агента';$h('hkStart').textContent=mode==='training'?'Начать тренировку':'Начать матч 2 на 2';$h('hkRight').style.display=mode==='training'?'inline':'inline';historyUI();draw()}
  $h('hockeyFab').addEventListener('click',()=>$h('hockeyOverlay').classList.add('open'));$h('hockeyClose').addEventListener('click',()=>{$h('hockeyOverlay').classList.remove('open');stop()});$h('hockeyOverlay').addEventListener('click',e=>{if(e.target===$h('hockeyOverlay')){$h('hockeyOverlay').classList.remove('open');stop()}});$h('hkTraining').addEventListener('click',()=>setMode('training'));$h('hkMatch').addEventListener('click',()=>setMode('match'));$h('hkStart').addEventListener('click',start);$h('hkPause').addEventListener('click',()=>state.running?stop():start());$h('hkReset').addEventListener('click',reset);historyUI();draw();
 })();
-\n/* ---------- хоккей на ТВ в спортзале ---------- */
+
+/* ---------- хоккей на ТВ в спортзале ---------- */
 (function(){
  const NS='http://www.w3.org/2000/svg',g=$('#hkp'),pk=$('#hkpk'),cl=(v,a,b)=>Math.max(a,Math.min(b,v)),P=[];
  for(let t=0;t<2;t++)for(let k=0;k<6;k++){const e=document.createElementNS(NS,'circle');e.setAttribute('r',k?2.6:3.3);e.setAttribute('fill',t?'#2b6fd6':'#c8102e');e.setAttribute('stroke','#fff');e.setAttribute('stroke-width','.7');g.appendChild(e);P.push({t,k,e,x:76,y:26,ox:0,oy:0})}
