@@ -225,14 +225,6 @@ S+=R(448,606,94,14,'#d9c5a0')+R(458,576,74,24,'#4b3a52','rx="4"')+`<path d="M450
  </g>`;
  S+=shoePair(548,565,'#d97757')+shoePair(592,565,'#10a37f')+shoePair(548,590,'#7c6cf0')+shoePair(592,590,'#4d7cff');
 S+=`<g filter="url(#sh)">${C(590,505,48,'url(#dw)','stroke="#4a3220" stroke-width="2"')}</g>`+[0,120,240].map(a=>C(590+78*Math.cos(a*Math.PI/180+.6),505+78*Math.sin(a*Math.PI/180+.6),17,'#352c40')).join('')+C(590,505,13,'#8a5a3c')+C(590,498,9,'#3f8a55')+C(570,520,5,'#f1ece6');
-// настенные электронные часы — московское реальное время
-S+=`<g id="wallClock" filter="url(#sh)">
- <rect x="1000" y="7" width="76" height="48" rx="5" fill="#17131f" stroke="#8a70a6" stroke-width="1.5"/>
- <rect x="1005" y="12" width="66" height="30" rx="3" fill="#090d13" stroke="#443454" stroke-width="1"/>
- <text id="wallClockTime" x="1038" y="33" text-anchor="middle" font-family="ui-monospace,monospace" font-size="19" font-weight="800" letter-spacing=".5" fill="#c9a5ff" style="filter:drop-shadow(0 0 3px #a879e8)">00:00</text>
- <text x="1038" y="51" text-anchor="middle" font-family="system-ui,sans-serif" font-size="6.5" font-weight="700" letter-spacing="1.2" fill="#a99ab8">MOSCOW · UTC+3</text>
- <circle cx="1066" cy="18" r="1.5" fill="#a879e8"/>
-</g>`;
 // спортзал, еда, растения
 S+=R(996,70,8,322,'#3b2f45')+R(996,468,8,152,'#3b2f45')+R(996,392,8,76,'#5d412c')+R(993,386,14,8,'#241a2b')+R(993,466,14,8,'#241a2b');
 S+=R(1004,70,246,550,'#2b2e35')+`<path d="${[...Array(14)].map((_,i)=>`M1004 ${70+i*42}H1250`).join('')}${[...Array(6)].map((_,i)=>`M${1004+i*50} 70V620`).join('')}" stroke="#3d414b" stroke-width="1.5"/>`;
@@ -475,11 +467,8 @@ const PH=(function(){
 /* ---------- время суток ---------- */
 const hx=h=>[1,3,5].map(i=>parseInt(h.substr(i,2),16)),mix=(a,b,t)=>{const A=hx(a),B=hx(b);return'rgb('+A.map((v,i)=>Math.round(v+(B[i]-v)*t))+')'};
 
-const mskClockTime=new Intl.DateTimeFormat('ru-RU',{timeZone:'Europe/Moscow',hour:'2-digit',minute:'2-digit',hourCycle:'h23'});
 function tick(){
- const t=PH.now();
- const clock=$('#wallClockTime');if(clock)clock.textContent=mskClockTime.format(new Date(t));
- const h=PH.mskHour(t),day=PH.mskDay(t),{sr,ss}=PH.sunTimes(day),K=PH.keys(day);
+ const t=PH.now(),h=PH.mskHour(t),day=PH.mskDay(t),{sr,ss}=PH.sunTimes(day),K=PH.keys(day);
  const j=K.findIndex((k,i)=>h<K[i+1][0]),a=K[j],b=K[j+1],f=(h-a[0])/(b[0]-a[0]),d=a[3]+(b[3]-a[3])*f;
  $('#s1').setAttribute('stop-color',mix(a[1],b[1],f));$('#s2').setAttribute('stop-color',mix(a[2],b[2],f));
  const dayT=h>=sr&&h<ss,u=dayT?(h-sr)/(ss-sr):((h>=ss?h-ss:h+24-ss)/(24-ss+sr));
