@@ -213,6 +213,15 @@ S+=R(x+14,y+12,62,24,'#fbf7f1','rx="9" stroke="#d8cfc4"')+R(x+5,y+56,80,74,c,'rx
 S+=`<g filter="url(#sh)">${R(440,474,32,32,'#7a5436','rx="3"')}</g>`+C(456,490,8,'#2c2433')+C(456,490,5,'#ffe7a3');
 // стол и дверь
 S+=R(448,606,94,14,'#d9c5a0')+R(458,576,74,24,'#4b3a52','rx="4"')+`<path d="M450 608L474 534" stroke="#7a5a3a" stroke-width="7" stroke-linecap="round"/><path d="M474 534A76 76 0 0 1 540 608" fill="none" stroke="#fff" stroke-opacity=".12" stroke-dasharray="4 4"/>`;
+ // обувь у входной двери — четыре пары, по одной для каждого агента
+ const shoePair=(x,y,color)=>`<g filter="url(#sh)">
+  <path d="M${x} ${y+5}q4-1 7-7l5 1q2 5 8 7q4 2 3 6h-22q-4-1-1-7z" fill="#29232f" stroke="#17131d" stroke-width="1.5"/>
+  <path d="M${x+2} ${y+5}q5-1 7-7l4 1q2 5 7 7q3 2 2 4h-19q-3-1-1-5z" fill="${color}" stroke="#eadfce" stroke-opacity=".55" stroke-width="1"/>
+  <path d="M${x+25} ${y+5}q4-1 7-7l5 1q2 5 8 7q4 2 3 6h-22q-4-1-1-7z" fill="#29232f" stroke="#17131d" stroke-width="1.5"/>
+  <path d="M${x+27} ${y+5}q5-1 7-7l4 1q2 5 7 7q3 2 2 4h-19q-3-1-1-5z" fill="${color}" stroke="#eadfce" stroke-opacity=".55" stroke-width="1"/>
+  <path d="M${x+8} ${y+2}l5 2m19-2 5 2" stroke="#f3e9dc" stroke-opacity=".7" stroke-width="1.2" stroke-linecap="round"/>
+ </g>`;
+ S+=shoePair(548,565,'#d97757')+shoePair(592,565,'#10a37f')+shoePair(548,590,'#7c6cf0')+shoePair(592,590,'#4d7cff');
 S+=`<g filter="url(#sh)">${C(590,505,48,'url(#dw)','stroke="#4a3220" stroke-width="2"')}</g>`+[0,120,240].map(a=>C(590+78*Math.cos(a*Math.PI/180+.6),505+78*Math.sin(a*Math.PI/180+.6),17,'#352c40')).join('')+C(590,505,13,'#8a5a3c')+C(590,498,9,'#3f8a55')+C(570,520,5,'#f1ece6');
 // спортзал, еда, растения
 S+=R(996,70,8,322,'#3b2f45')+R(996,468,8,152,'#3b2f45')+R(996,392,8,76,'#5d412c')+R(993,386,14,8,'#241a2b')+R(993,466,14,8,'#241a2b');
