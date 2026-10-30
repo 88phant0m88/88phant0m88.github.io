@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -260,12 +261,12 @@ AG.forEach((p,i)=>{
 });
 function place(p,[x,y],t=null){p.pos=[x,y];const s=p.el.style;if(t===0)s.transitionDuration='0s';s.left=x/12.5+'%';s.top=y/6.2+'%';s.zIndex=10+Math.round(y/10)}
 function bubble(p,t,ms=3300){p.say.textContent=t;p.say.classList.add('show');clearTimeout(p.bt);p.bt=setTimeout(()=>p.say.classList.remove('show'),ms)}
-function ui(p,t){if(t)p.label=t;p.act.textContent=p.label;p.bar.style.width=p.e+'%'}
+function ui(p,t){if(t)p.label=t;if(p._l!==p.label){p.act.textContent=p.label;p._l=p.label}const w=Math.round(p.e);if(p._w!==w){p.bar.style.width=w+'%';p._w=w}}
 const SPEED=120;
 async function go(p,target,off){
  const el=p.el,pts=path(p.node,target).map(k=>N[k]);
  if(off)pts.push([N[target][0]+off[0],N[target][1]+off[1]]);
- el.classList.remove('sit','sleep','work','eat','tv');el.classList.add('moving');p.st='moving';
+ el.classList.remove('sit','sleep','work','eat','tv','run','lift','yoga');el.classList.add('moving');p.st='moving';
  for(const[x,y]of pts){const dx=x-p.pos[0],dy=y-p.pos[1],d=Math.hypot(dx,dy);if(d<2)continue;const t=d/SPEED;el.style.setProperty('--dir',dx>=0?1:-1);el.style.transitionDuration=t+'s';place(p,[x,y]);await wait(t*1000+30)}
  p.node=target;el.classList.remove('moving');
 }
@@ -286,12 +287,9 @@ const ACT={
  relax:{t:'отдыхает на диване',em:'🛋️',at:()=>free(['V1','V2','V3']),cls:'sit',s:()=>rnd(15,28),l:['Наконец-то передышка','Пять минут тишины','Можно немного выдохнуть']},
  tidy:{t:'наводит порядок на столе',em:'🧹',at:p=>p.seat,cls:'work sit',s:()=>rnd(10,17),l:['Навожу порядок','Так гораздо удобнее','Готово, теперь всё на месте']},
  read:{t:'читает у окна',em:'📖',at:()=>'WN',cls:'sit',s:()=>rnd(12,22),l:['Интересная мысль','Нужно это запомнить','Хорошая книга']},
- sleep:{t:'спит',em:'💤',at:p=>'BD'+p.bed,cls:'sleep',s:p=>Math.max(14,Math.min(42,(97-p.e)/2.4)),l:null}
+ sleep:{t:'спит',em:'💤',at:p=>'BD'+p.bed,cls:'sleep',s:p=>PH.sleepSec(p),l:null}
 };
-function choose(p,notSame){const n=room.dataset.t==='night';
- const w={work:n?1:4,fridge:1,cook:.8,eat:.8,coffee:.7,relax:n?1.2:.5,tidy:.65,read:.65,tv:n?2:1,window:.8,stroll:.6,run:n?.2:1.1,bench:n?.2:.9,dumb:n?.2:.8,yoga:.8,sleep:(n?2.5:.15)+Math.max(0,(45-p.e)/6)};
- if(!notSame&&p.e<25)return'sleep';if(p.e>88||notSame)w.sleep=notSame?0:w.sleep*.1;if(p.last)w[p.last]=0;
- let t=Object.values(w).reduce((a,b)=>a+b,0)*Math.random();for(const k in w){t-=w[k];if(t<=0)return k}return'work'}
+const choose=(p,n)=>PH.choose(p,n);
 function dwell(p,sec,lines){return new Promise(res=>{const tok=p.tok={};p.wake=res;setTimeout(res,sec*1000);const tick=()=>{if(p.tok!==tok)return;if(lines)bubble(p,pick(lines));setTimeout(tick,5500+Math.random()*5000)};setTimeout(tick,1500+Math.random()*2500)})}
 const tvUsers=()=>AG.filter(p=>p.el.classList.contains('tv')).length;
 function fx(){AG.forEach(p=>{const w=p.el.classList.contains('work'),i=p.i;$('#sc'+i).classList.toggle('on',w);$('#dg'+i).classList.toggle('on',w)});const t=tvUsers()>0;$('#tvs').classList.toggle('on',t);$('#tvc').classList.toggle('on',t);[['G1','tm0'],['G2','tm1']].forEach(([n,id])=>$('#'+id).classList.toggle('on',AG.some(p=>p.node===n&&p.el.classList.contains('run'))))}
@@ -299,18 +297,28 @@ async function life(p){
  await wait(p.i*1500+800);
  for(;;){
   while(p.busy)await wait(400);
-  const k=p.force||choose(p);p.force=null;const a=ACT[k],at=a.at(p);
-  taken[at]=p;ui(p,'🚶 идёт: '+a.t);await go(p,at);
-  p.st='dwell';p.last=k;a.cls&&a.cls.split(' ').forEach(c=>p.el.classList.add(c));p.zz.textContent='Zzz';ui(p,a.em+' '+a.t);soundCue(k);fx();
-  if(k==='sleep')bubble(p,'Спокойной ночи…',2200);
-  await dwell(p,a.s(p),a.l);
+  let k,rem=null;
+  if(p.resume){const r=p.resume;p.resume=null;k=r.k;rem=Math.max(2,(r.until-PH.now())/1000);p.act={k,at:r.at,t0:r.t0};p.plan=r.plan||rem}
+  else{k=p.force||choose(p);p.force=null}
+  const a=ACT[k],at=rem!==null?p.act.at:a.at(p),cont=rem!==null||(k==='sleep'&&p.node===at&&p.el.classList.contains('sleep'));
+  taken[at]=p;
+  if(!cont){ui(p,'🚶 идёт: '+a.t);await go(p,at)}
+  if(!cont||rem!==null){p.st='dwell';p.last=k;a.cls&&a.cls.split(' ').forEach(c=>p.el.classList.add(c));p.zz.textContent='Zzz';ui(p,a.em+' '+a.t);if(!cont)soundCue(k);fx();
+   if(k==='sleep'&&!cont){bubble(p,'Спокойной ночи…',2200);p.sleepFrom=PH.now()}}
+  const sec=rem!==null?rem:a.s(p),t0=PH.now();
+  if(rem===null){p.act={k,at,t0};p.plan=sec}
+  p.until=t0+sec*1000;
+  await dwell(p,sec,a.l);
   p.tok=null;delete taken[at];
+  PH.finish(p,k);
+  if(k==='sleep'&&PH.asleep(p)&&!p.force)continue;
   if(k==='work')eventReact('work',p);else if(k==='coffee')eventReact('coffee',p);else if(k==='tidy')eventReact('clean',p);else if(k==='relax')eventReact('rest',p);else if(k==='read')eventReact('read',p);
-  if(k==='sleep'){p.el.classList.remove('sleep');bubble(p,pick(['Ох, хорошо выспался','Бодр и свеж!','Мне снился чистый код']))}
-  ['work','eat','tv','sit'].forEach(c=>p.el.classList.remove(c));fx();
+  if(k==='sleep'){p.el.classList.remove('sleep');PH.woke(p);bubble(p,pick(['Ох, хорошо выспался','Бодр и свеж!','Мне снился чистый код']))}
+  ['work','eat','tv','sit','run','lift','yoga'].forEach(c=>p.el.classList.remove(c));fx();
  }
 }
-setInterval(()=>AG.forEach(p=>{const c=p.el.classList;p.e=Math.max(0,Math.min(100,p.e+(c.contains('sleep')?2.4:c.contains('run')||c.contains('lift')?-.9:c.contains('eat')?.5:c.contains('work')?-.5:-.18)));ui(p)}),1000);
+const rate=p=>{const c=p.el.classList;return c.contains('sleep')?14:c.contains('run')||c.contains('lift')?-30:c.contains('work')?-8:c.contains('yoga')?-10:-5};
+setInterval(()=>{const t=PH.now();AG.forEach(p=>{const dt=Math.min(5,(t-(p.et||t))/1000);p.et=t;p.e=Math.max(0,Math.min(100,p.e+rate(p)*dt/3600));ui(p)})},1000);
 
 /* ---------- общение, события и ссоры ---------- */
 let convo=false,lastReaction=0;
@@ -348,31 +356,113 @@ const SPAT=[["Ты опять перебил меня!","Потому что т�
 async function chat(){
  const c=AG.filter(p=>p.st==='dwell'&&!p.busy&&!p.el.classList.contains('sleep'));
  if(convo||c.length<2)return;convo=true;
- const[a,b]=c.sort(()=>Math.random()-.5);a.busy=b.busy=true;a.wake&&a.wake();b.wake&&b.wake();await wait(200);
+ const[a,b]=c.sort(()=>Math.random()-.5),t0=PH.now();let out='talk',wi=null,lo=null;a.busy=b.busy=true;a.wake&&a.wake();b.wake&&b.wake();await wait(200);
  try{
   const m=pick(['H2','H3','H4','L1']);a.st=b.st='chat';ui(a,'🚶 идёт к '+b.name);ui(b,'🚶 идёт к '+a.name);
   await Promise.all([go(a,m,[-28,0]),go(b,m,[28,0])]);a.st=b.st='chat';ui(a,'💬 говорит с '+b.name);ui(b,'💬 говорит с '+a.name);
-  if(Math.random()<.6){const l=pick(TALK);for(let i=0;i<4;i++){bubble(i%2?b:a,l[i],2600);await wait(2800)}}
-  else{const l=pick(SPAT);bubble(a,l[0],1900);await wait(2000);bubble(b,l[1],1900);await wait(2000);
-   if(Math.random()<.55){a.el.classList.add('fight');b.el.classList.add('fight');ui(a,'🥊 дерётся с '+b.name);ui(b,'🥊 дерётся с '+a.name);bubble(a,'Ну всё, хватит!',1600);bubble(b,'Давай, попробуй!',1600);await wait(2200);
-    const lo=Math.random()<.5?a:b,wi=lo===a?b:a;a.el.classList.remove('fight');b.el.classList.remove('fight');
-    lo.el.classList.add('ko');ui(lo,'💫 нокаут');lo.zz.textContent='💫';lo.e=Math.min(lo.e,28);bubble(wi,'Ой… он отключился.',3000);await wait(7000);
+  if(Math.random()<.7){const l=pick(TALK);for(let i=0;i<4;i++){bubble(i%2?b:a,l[i],2600);await wait(2800)}}
+  else{out='spat';const l=pick(SPAT);bubble(a,l[0],1900);await wait(2000);bubble(b,l[1],1900);await wait(2000);
+   if(Math.random()<.4){a.el.classList.add('fight');b.el.classList.add('fight');ui(a,'🥊 дерётся с '+b.name);ui(b,'🥊 дерётся с '+a.name);bubble(a,'Ну всё, хватит!',1600);bubble(b,'Давай, попробуй!',1600);await wait(2200);
+    lo=Math.random()<.5?a:b;wi=lo===a?b:a;out='fight';a.el.classList.remove('fight');b.el.classList.remove('fight');
+    lo.el.classList.add('ko');ui(lo,'💫 нокаут');lo.zz.textContent='💫';lo.e=Math.max(0,lo.e-12);bubble(wi,'Ой… он отключился.',3000);await wait(7000);
     lo.el.classList.remove('ko');lo.zz.textContent='Zzz';bubble(lo,'Что произошло?',2600);await wait(2400);bubble(wi,'Давай без драк.',2600);await wait(2600)}
    else{bubble(b,'Ладно, не стоит оно того.',2000);await wait(2100);bubble(a,'Согласен. Разошлись.',2000);await wait(2000)}}
  }catch(e){console.error(e)}
- finally{[a,b].forEach(p=>{p.el.classList.remove('fight','ko');p.st='dwell';p.busy=false});convo=false}
+ finally{[a,b].forEach(p=>{p.el.classList.remove('fight','ko');p.st='dwell';p.busy=false});try{PH.chat(a,b,out,wi,lo,t0)}catch(e){console.error(e)}convo=false}
 }
-setTimeout(chat,12000);setInterval(()=>{if(Math.random()<.65)chat()},22000);
+setTimeout(chat,12000);setInterval(()=>{if(Math.random()<.33)chat()},50000);
+
+/*PH:BEGIN*/
+const PH=(function(){
+ const QS=new URLSearchParams(location.search),TEST=QS.get('msk'),DAYMS=864e5,MSK=108e5,AWAY=12e4,OFF=[0,.4,-.2,.8];
+ const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+ /* ---- реальное московское время (UTC+3, без перехода). ?msk=ЧЧ:ММ — подмена часа для проверки ---- */
+ const TOFF=(()=>{const m=/^(\d{1,2}):(\d{2})$/.exec(TEST||'');if(!m)return 0;const d=new Date(Date.now()+MSK),cur=((d.getUTCHours()*60+d.getUTCMinutes())*60+d.getUTCSeconds())*1e3;return(+m[1]*60+ +m[2])*6e4-cur})();
+ const now=()=>Date.now()+TOFF,mskD=(t=now())=>new Date(t+MSK),mskDay=(t=now())=>mskD(t).toISOString().slice(0,10);
+ const mskHour=(t=now())=>{const d=mskD(t);return d.getUTCHours()+d.getUTCMinutes()/60+d.getUTCSeconds()/3600},dayTs=(day,h)=>Date.parse(day+'T00:00:00Z')-MSK+h*36e5;
+ /* ---- восход и закат Москвы по дате (определяют небо) ---- */
+ let SUN={},KC={};
+ function sunTimes(day){if(SUN.day===day)return SUN;const r=Math.PI/180,N=Math.round((Date.parse(day+'T00:00:00Z')-Date.parse(day.slice(0,4)+'-01-01T00:00:00Z'))/DAYMS)+1;
+  const dec=-Math.asin(.39779*Math.cos(r*(.98565*(N+10)+1.914*Math.sin(r*.98565*(N-2))))),B=2*Math.PI*(N-81)/364,eot=9.87*Math.sin(2*B)-7.53*Math.cos(B)-1.5*Math.sin(B),lat=55.75*r;
+  const c=(Math.cos(90.833*r)-Math.sin(lat)*Math.sin(dec))/(Math.cos(lat)*Math.cos(dec)),H=Math.acos(clamp(c,-1,1))/r/15,noon=15-37.62/15-eot/60;return SUN={day,sr:noon-H,ss:noon+H}}
+ function keys(day){if(KC.day===day)return KC.k;const{sr,ss}=sunTimes(day);KC={day,k:[[0,'#050a1f','#16264a',.62],[sr-1.6,'#0b1330','#2b3358',.55],[sr-.2,'#4a4a7a','#e89b86',.3],[sr+1.3,'#5aa3dc','#bfe0f2',.04],[ss-1.5,'#5aa3dc','#bfe0f2',.04],[ss+.1,'#5a4a8a','#f08c6a',.3],[ss+1.4,'#14183c','#3a3a63',.52],[24,'#050a1f','#16264a',.62]]};return KC.k}
+ /* ---- расписание агента на день (детерминированно: день + имя) ---- */
+ const hsh=s=>{let x=7;for(let i=0;i<s.length;i++)x=(Math.imul(x,31)+s.charCodeAt(i))>>>0;return x},jit=(day,id,m)=>(hsh(day+id+m)%41-20)/60;
+ function plan(p,day){const dow=new Date(day+'T12:00:00Z').getUTCDay(),we=dow===0||dow===6?1:0,o=OFF[p.i],J=m=>jit(day,p.id,m),wake=7+o*.6+we*1.1+J('w');
+  return{day,wake,bed:Math.min(23.9,23.2+o+we*.8+J('b')),b:[wake+.3,wake+2],l:[13+J('l'),14.6],d:[19+o*.4+J('d'),21],gym:hsh(day+p.id+'g')%10<7?[17.3+J('g'),20]:null}}
+ const planOf=p=>{const day=mskDay();return p.pl&&p.pl.day===day?p.pl:(p.pl=plan(p,day))},inSleep=(pl,h)=>h<pl.wake||h>=pl.bed,asleep=p=>inSleep(planOf(p),mskHour());
+ function script(p,h,day,pl){const add=(key,list,until)=>{if(p.done[key]||p.q.some(x=>x.key===key))return;list.forEach(([a,fin])=>p.q.push({a,key,fin:!!fin,until,day}))};
+  if(h>=pl.b[0]&&h<pl.b[1])add(day+'b',[['coffee'],['eat',1]],pl.b[1]);
+  if(h>=pl.l[0]&&h<pl.l[1])add(day+'l',[['cook'],['eat',1]],pl.l[1]);
+  if(h>=pl.d[0]&&h<pl.d[1])add(day+'d',[['cook'],['eat',1]],pl.d[1]);
+  if(pl.gym&&h>=pl.gym[0]&&h<pl.gym[1])add(day+'g',[[pick(['run','bench'])],[pick(['dumb','yoga']),1]],pl.gym[1])}
+ const weights=(p,h)=>({work:h>=9.5&&h<18?5:h>=18&&h<21?1.2:.4,fridge:.5,cook:.2,eat:.2,coffee:h<11.5?1.6:h<16?.9:.3,relax:h>=18&&h<23.5?1.6:.5,tidy:.7,read:h>=20.5?1.4:.7,tv:h>=18&&h<23.5?2.6:.9,window:.8,stroll:.6,run:.25,bench:.2,dumb:.2,yoga:.4,sleep:p.e<15?(15-p.e)/3:0});
+ function choose(p,notSame){p.cur=null;const t=now(),h=mskHour(t),day=mskDay(t),pl=planOf(p);
+  if(!notSame){if(inSleep(pl,h)){p.q=[];return'sleep'}script(p,h,day,pl);while(p.q.length){const e=p.q.shift();if(e.day===day&&e.until>h){p.cur=e;return e.a}}}
+  const w=weights(p,h);if(p.last)w[p.last]=0;if(notSame)w.sleep=0;
+  let s=Object.values(w).reduce((a,b)=>a+b,0)*Math.random();for(const k in w){s-=w[k];if(s<=0)return k}return'work'}
+ const sleepSec=p=>{const h=mskHour(),pl=planOf(p);if(inSleep(pl,h))return clamp((h<pl.wake?pl.wake-h:24-h+pl.wake)*3600,20,900);return 150+Math.random()*150};
+ /* ---- хранилище: конверт {v,t,s(контрольная сумма),d}; журнал, агрегаты и состояние — отдельные ключи ---- */
+ const PFX=TEST?'phT:':'ph:',LS=(()=>{try{const s=window.localStorage;s.setItem('__ph','1');s.removeItem('__ph');return s}catch(e){return null}})();
+ if(LS&&QS.has('reset'))Object.keys(LS).filter(k=>k.startsWith(PFX)).forEach(k=>LS.removeItem(k));
+ let FUTURE=false;const fnv=s=>{let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return(h>>>0).toString(36)};
+ function rd(key){if(!LS)return null;try{const raw=LS.getItem(PFX+key);if(!raw)return null;const e=JSON.parse(raw);if(e&&e.v>1)FUTURE=true;if(!e||e.v!==1||typeof e.d!=='string'||fnv(e.d)!==e.s)return null;return JSON.parse(e.d)}catch(err){return null}}
+ function wr(key,data){if(!LS||FUTURE)return false;const d=JSON.stringify(data);try{LS.setItem(PFX+key,JSON.stringify({v:1,t:now(),s:fnv(d),d}));return true}catch(err){return false}}
+ const okLog=o=>o&&Array.isArray(o.ev)&&typeof o.seq==='number',okAgg=o=>o&&o.days&&Array.isArray(o.ak);
+ let LOG=rd('log'),AGG=rd('agg'),seen,dirty=false,leader=true,lastFlush=now(),bakAt=0,logAt=0;
+ if(!okLog(LOG))LOG={seq:0,ev:[]};if(!okAgg(AGG))AGG={days:{},ak:[]};
+ const reseen=()=>seen=new Set(LOG.ev.map(e=>e.k).filter(Boolean));reseen();
+ function logEvent(y,d,k){if(k&&seen.has(k))return false;if(k)seen.add(k);LOG.ev.push({i:++LOG.seq,t:now(),y,k,d});if(LOG.ev.length>4000){LOG.ev.splice(0,LOG.ev.length-3200);reseen()}dirty=true;return true}
+ function dayAgg(day,id){const D=AGG.days;if(!D[day]){D[day]={};const ks=Object.keys(D).sort();while(ks.length>120)delete D[ks.shift()]}return D[day][id]||(D[day][id]={acts:{},chats:0,fights:0,kos:0,meals:0,workouts:0})}
+ function aggAct(p,k,t0,t1,cap){const key=p.id+':'+t0;if(AGG.ak.includes(key))return;AGG.ak.push(key);if(AGG.ak.length>200)AGG.ak.splice(0,AGG.ak.length-150);
+  const r=(dayAgg(mskDay(t0),p.id).acts[k]||(dayAgg(mskDay(t0),p.id).acts[k]=[0,0]));r[0]++;r[1]=Math.round(r[1]+clamp((t1-t0)/1000,0,cap));dirty=true}
+ const prune=o=>{const ks=Object.keys(o||{}).sort().slice(-12),r={};ks.forEach(k=>r[k]=1);return r};
+ const snapshot=()=>({savedAt:now(),logSeq:LOG.seq,agents:AG.map(p=>({id:p.id,node:p.node,e:+p.e.toFixed(2),act:p.act||null,until:p.until||0,plan:p.plan||0,sleepFrom:p.sleepFrom||0,last:p.last||null,cur:p.cur||null,q:p.q,done:prune(p.done)}))});
+ function flush(force){if(!LS||!leader||FUTURE)return;const t=now();
+  if(dirty&&(force||t-logAt>45e3)){logAt=t;if(!wr('log',LOG)){LOG.ev.splice(0,LOG.ev.length>>1);reseen();wr('log',LOG)}wr('agg',AGG);dirty=false}
+  if(t-bakAt>3e5){const prev=LS.getItem(PFX+'state');if(prev&&rd('state'))try{LS.setItem(PFX+'state.bak',prev)}catch(e){}bakAt=t}
+  wr('state',snapshot());lastFlush=t}
+ /* ---- одна вкладка пишет, остальные только показывают (нет двойного учёта) ---- */
+ const TAB=Math.random().toString(36).slice(2);
+ function beat(){if(!LS)return;try{const l=JSON.parse(LS.getItem(PFX+'lock')||'null'),t=Date.now();if(!l||l.id===TAB||t-l.t>12e3){LS.setItem(PFX+'lock',JSON.stringify({id:TAB,t}));leader=true}else leader=false}catch(e){leader=true}}
+ const release=()=>{try{const l=JSON.parse(LS.getItem(PFX+'lock')||'null');if(l&&l.id===TAB)LS.removeItem(PFX+'lock')}catch(e){}};
+ function energyGap(p,t0,t1,e){for(let t=t0;t<t1;t+=6e5){const pl=plan(p,mskDay(t)),h=mskHour(t);e=clamp(e+(inSleep(pl,h)?14:-5)/6,0,100)}return e}
+ const bedTs=(p,t)=>{const h=mskHour(t),d=h<planOf(p).wake?mskDay(t-DAYMS):mskDay(t);return dayTs(d,plan(p,d).bed)};
+ /* ---- восстановление: <2 мин — продолжаем с того же места; дольше — «отсутствие» без выдуманных занятий ---- */
+ function restore(){const st=rd('state')||rd('state.bak');if(!st||!Array.isArray(st.agents))return null;const t=now();
+  if(st.logSeq>LOG.seq){LOG.seq=st.logSeq;logEvent('log_gap',{seq:st.logSeq},'gap:'+st.savedAt)}
+  let gap=t-st.savedAt;if(gap<0){logEvent('clock_skew',{gap},'skew:'+st.savedAt);gap=0}gap=Math.min(gap,30*DAYMS);
+  AG.forEach(p=>{const s=st.agents.find(x=>x.id===p.id);if(!s)return;p.e=clamp(+s.e||0,0,100);p.q=Array.isArray(s.q)?s.q:[];p.done=s.done||{};p.last=s.last;p.cur=s.cur;p.sleepFrom=s.sleepFrom||0;
+   if(N[s.node]){p.node=s.node;place(p,[...N[s.node]],0)}
+   if(gap<AWAY){if(s.act&&ACT[s.act.k]&&s.until>t)p.resume={k:s.act.k,at:s.act.at,t0:s.act.t0,until:s.until,plan:s.plan}}
+   else{if(s.act&&ACT[s.act.k])aggAct(p,s.act.k,s.act.t0,Math.min(st.savedAt,s.until||st.savedAt),(s.plan||60)+20);p.e=energyGap(p,st.savedAt,t,p.e);p.cur=null;p.q=[]}});
+  if(gap>=AWAY)logEvent('away',{from:st.savedAt,to:t,min:Math.round(gap/6e4)},'away:'+st.savedAt);return gap}
+ function start(){AG.forEach(p=>{p.q=[];p.done={};p.et=now()});beat();restore();const t=now();
+  AG.forEach(p=>{if(!p.resume&&asleep(p)){p.node='BD'+p.bed;place(p,[...N[p.node]],0);p.sleepFrom=p.sleepFrom||bedTs(p,t);p.resume={k:'sleep',at:p.node,t0:t,until:t+1e3,plan:1}}});
+  setInterval(beat,5e3);setInterval(flush,15e3);
+  addEventListener('visibilitychange',()=>{if(document.hidden)flush(true);else if(now()-lastFlush>AWAY&&leader)location.reload()});addEventListener('pagehide',()=>{flush(true);release()});flush(true)}
+ /* ---- события симуляции ---- */
+ function finish(p,k){const t1=now(),a=p.act;if(a)aggAct(p,k,a.t0,t1,(p.plan||60)+20);const c=p.cur;
+  if(k==='coffee')p.e=clamp(p.e+3,0,100);if(k==='eat')p.e=clamp(p.e+6,0,100);
+  if(c&&c.a===k&&c.fin){p.done[c.key]=1;const g=c.key.slice(-1)==='g';if(logEvent(g?'workout':'meal',{a:p.id,m:c.key.slice(-1)},(g?'workout:':'meal:')+p.id+':'+c.key))dayAgg(c.day,p.id)[g?'workouts':'meals']++;p.cur=null}dirty=true}
+ function woke(p){if(p.sleepFrom){logEvent('sleep',{a:p.id,from:p.sleepFrom,to:now()},'sleep:'+p.id+':'+p.sleepFrom);p.sleepFrom=0}}
+ function chat(a,b,out,wi,lo,t0){const day=mskDay(t0);if(!logEvent('chat',{a:a.id,b:b.id,o:out,w:wi&&wi.id,l:lo&&lo.id},'chat:'+t0+':'+a.id+b.id))return;
+  dayAgg(day,a.id).chats++;dayAgg(day,b.id).chats++;if(out==='fight'){dayAgg(day,a.id).fights++;dayAgg(day,b.id).fights++;dayAgg(day,lo.id).kos++;lo.q.unshift({a:'sleep',key:'ko'+t0,fin:false,until:24,day})}}
+ return{now,mskHour,mskDay,sunTimes,keys,plan,planOf,choose,asleep,sleepSec,finish,woke,chat,start,flush,restore,rd,logEvent,
+  log:()=>LOG,agg:()=>AGG,lead:()=>leader}
+})();
+/*PH:END*/
 
 /* ---------- время суток ---------- */
-const K=[[0,'#050a1f','#16264a',.62],[5,'#0b1330','#2b3358',.55],[6.5,'#4a4a7a','#e89b86',.3],[8,'#5aa3dc','#bfe0f2',.04],[17,'#5aa3dc','#bfe0f2',.04],[19,'#5a4a8a','#f08c6a',.3],[20.5,'#14183c','#3a3a63',.52],[24,'#050a1f','#16264a',.62]];
 const hx=h=>[1,3,5].map(i=>parseInt(h.substr(i,2),16)),mix=(a,b,t)=>{const A=hx(a),B=hx(b);return'rgb('+A.map((v,i)=>Math.round(v+(B[i]-v)*t))+')'};
+
 function tick(){
- const h=((Date.now()/240000)%1)*24,j=K.findIndex((k,i)=>h<K[i+1][0]),a=K[j],b=K[j+1],t=(h-a[0])/(b[0]-a[0]),d=a[3]+(b[3]-a[3])*t;
- $('#s1').setAttribute('stop-color',mix(a[1],b[1],t));$('#s2').setAttribute('stop-color',mix(a[2],b[2],t));
- const day=h>=6&&h<19,u=day?(h-6)/13:(h>=19?h-19:h+5)/11;
- document.querySelectorAll('.sun').forEach(e=>{const[x,y,w,hh]=e.dataset.g.split(',').map(Number);e.setAttribute('cx',x+w*(.125+.75*u));e.setAttribute('cy',y+hh*(.85-.79*Math.sin(Math.PI*u)));e.setAttribute('r',(day?8:6)*hh/53);e.setAttribute('fill',day?'#fff3b0':'#e9eeff')});
- const s=room.style;s.setProperty('--dark',d);s.setProperty('--lamp',Math.min(1,Math.max(0,(d-.08)*2.4)));s.setProperty('--br',1-d*.5);s.setProperty('--sun',Math.max(0,.5-d*1.4)*(day?1:0));
+ const t=PH.now(),h=PH.mskHour(t),day=PH.mskDay(t),{sr,ss}=PH.sunTimes(day),K=PH.keys(day);
+ const j=K.findIndex((k,i)=>h<K[i+1][0]),a=K[j],b=K[j+1],f=(h-a[0])/(b[0]-a[0]),d=a[3]+(b[3]-a[3])*f;
+ $('#s1').setAttribute('stop-color',mix(a[1],b[1],f));$('#s2').setAttribute('stop-color',mix(a[2],b[2],f));
+ const dayT=h>=sr&&h<ss,u=dayT?(h-sr)/(ss-sr):((h>=ss?h-ss:h+24-ss)/(24-ss+sr));
+ document.querySelectorAll('.sun').forEach(e=>{const[x,y,w,hh]=e.dataset.g.split(',').map(Number);e.setAttribute('cx',x+w*(.125+.75*u));e.setAttribute('cy',y+hh*(.85-.79*Math.sin(Math.PI*u)));e.setAttribute('r',(dayT?8:6)*hh/53);e.setAttribute('fill',dayT?'#fff3b0':'#e9eeff')});
+ const s=room.style;s.setProperty('--dark',d);s.setProperty('--lamp',Math.min(1,Math.max(0,(d-.08)*2.4)));s.setProperty('--br',1-d*.5);s.setProperty('--sun',Math.max(0,.5-d*1.4)*(dayT?1:0));
  room.dataset.t=d>.4?'night':d>.15?'dusk':'day';
 }
 tick();setInterval(tick,1000);
@@ -410,6 +500,7 @@ tick();setInterval(tick,1000);
   draw()}
  reset();draw();setInterval(step,80);
 })();
+PH.start();
 AG.forEach(life);
 </script>
 </body>
