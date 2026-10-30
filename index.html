@@ -243,10 +243,10 @@ S+=R(0,0,1250,620,'url(#vg)')+R(0,0,1250,620,'none','stroke="#241a2b" stroke-wid
 $('#scene').innerHTML=S;
 
 /* ---------- навигация ---------- */
-const N={A:[270,250],H2:[520,250],B:[270,375],H3:[520,375],D:[270,432],H4:[520,432],K1:[640,170],K2:[745,170],K3:[850,170],K4:[945,175],K5:[680,300],T1:[760,300],T2:[860,300],L1:[700,410],L2:[700,455],F1:[790,455],F2:[835,455],F3:[885,455],V1:[790,508],V2:[835,508],V3:[885,508],WN:[520,118],DR:[495,578],GD1:[975,430],GD2:[1040,430],GH:[1100,400],GT:[1090,255],G1:[1050,185],G2:[1110,185],G3:[1170,327],G4:[1056,535],G5:[1136,535],G6:[1195,165],S1:[155,205],S2:[385,205],S3:[155,375],S4:[385,375]};
+const N={A:[270,250],H2:[520,250],B:[270,375],H3:[520,375],D:[270,432],H4:[520,432],K1:[640,170],K2:[745,170],K3:[850,170],K3A:[805,190],K3B:[895,190],K4:[945,175],K5:[680,300],T1:[760,300],T2:[860,300],L1:[700,410],L2:[700,455],F1:[790,455],F2:[835,455],F3:[885,455],V1:[790,508],V2:[835,508],V3:[885,508],WN:[520,118],DR:[495,578],GD1:[975,430],GD2:[1040,430],GH:[1100,400],GT:[1090,255],G1:[1050,185],G2:[1110,185],G3:[1170,327],G4:[1056,535],G5:[1136,535],G6:[1195,165],S1:[155,205],S2:[385,205],S3:[155,375],S4:[385,375]};
 for(let i=0;i<4;i++){N['BF'+i]=[85+100*i,447];N['BD'+i]=[85+100*i,500]}
 const adj={};
-'A-H2 A-B B-D D-H4 H4-H3 H3-H2 S1-A S2-A S3-B S4-B S4-H3 H2-WN H2-K1 K1-K2 K2-K3 K3-K4 K1-K5 K5-T1 T1-T2 K5-L1 H4-L1 L1-L2 L2-F1 F1-F2 F2-F3 F1-V1 F2-V2 F3-V3 H4-DR BF0-BF1 BF1-BF2 BF2-BF3 D-BF2 BF3-H4 BD0-BF0 BD1-BF1 BD2-BF2 BD3-BF3 F3-GD1 GD1-GD2 GD2-GH GH-GT GT-G1 GT-G2 GT-G6 GH-G3 GH-G4 GH-G5'.split(' ').forEach(e=>{const[a,b]=e.split('-'),d=Math.hypot(N[a][0]-N[b][0],N[a][1]-N[b][1]);(adj[a]??=[]).push([b,d]);(adj[b]??=[]).push([a,d])});
+'A-H2 A-B B-D D-H4 H4-H3 H3-H2 S1-A S2-A S3-B S4-B S4-H3 H2-WN H2-K1 K1-K2 K2-K3 K3-K3A K3-K3B K3-K4 K1-K5 K5-T1 T1-T2 K5-L1 H4-L1 L1-L2 L2-F1 F1-F2 F2-F3 F1-V1 F2-V2 F3-V3 H4-DR BF0-BF1 BF1-BF2 BF2-BF3 D-BF2 BF3-H4 BD0-BF0 BD1-BF1 BD2-BF2 BD3-BF3 F3-GD1 GD1-GD2 GD2-GH GH-GT GT-G1 GT-G2 GT-G6 GH-G3 GH-G4 GH-G5'.split(' ').forEach(e=>{const[a,b]=e.split('-'),d=Math.hypot(N[a][0]-N[b][0],N[a][1]-N[b][1]);(adj[a]??=[]).push([b,d]);(adj[b]??=[]).push([a,d])});
 function path(a,b){const dist={[a]:0},prev={},q=new Set(Object.keys(N));while(q.size){let u=null;q.forEach(k=>{if(dist[k]!==undefined&&(u===null||dist[k]<dist[u]))u=k});if(u===null||u===b)break;q.delete(u);(adj[u]||[]).forEach(([v,d])=>{if(dist[v]===undefined||dist[u]+d<dist[v]){dist[v]=dist[u]+d;prev[v]=u}})}const r=[b];while(r[0]!==a)r.unshift(prev[r[0]]);return r}
 
 /* ---------- агенты ---------- */
@@ -267,14 +267,40 @@ async function go(p,target,off){
  const el=p.el,pts=path(p.node,target).map(k=>N[k]);
  if(off)pts.push([N[target][0]+off[0],N[target][1]+off[1]]);
  el.classList.remove('sit','sleep','work','eat','tv','run','lift','yoga');el.classList.add('moving');p.st='moving';
- for(const[x,y]of pts){const dx=x-p.pos[0],dy=y-p.pos[1],d=Math.hypot(dx,dy);if(d<2)continue;const t=d/SPEED;el.style.setProperty('--dir',dx>=0?1:-1);el.style.transitionDuration=t+'s';place(p,[x,y]);await wait(t*1000+30)}
+ // Мягкое избегание других агентов: движение идёт небольшими шагами,
+ // а не одним CSS-переходом сквозь соседей.
+ for(const[x,y]of pts){
+  let guard=0;
+  while(Math.hypot(x-p.pos[0],y-p.pos[1])>3&&guard++<260){
+   const dx=x-p.pos[0],dy=y-p.pos[1],d=Math.hypot(dx,dy)||1;
+   let vx=dx/d,vy=dy/d;
+   for(const other of AG){
+    if(other===p||!other.pos)continue;
+    const ox=p.pos[0]-other.pos[0],oy=p.pos[1]-other.pos[1],od=Math.hypot(ox,oy);
+    const safe=48;
+    if(od>0&&od<safe){
+     const force=(safe-od)/safe*1.65;
+     vx+=ox/od*force;vy+=oy/od*force;
+    }
+   }
+   const vl=Math.hypot(vx,vy)||1;vx/=vl;vy/=vl;
+   const step=Math.min(SPEED*.035,d);
+   const nx=Math.max(28,Math.min(1222,p.pos[0]+vx*step));
+   const ny=Math.max(105,Math.min(592,p.pos[1]+vy*step));
+   el.style.setProperty('--dir',nx>=p.pos[0]?1:-1);
+   el.style.transitionDuration='0s';place(p,[nx,ny]);
+   await wait(35);
+  }
+  // Если точка временно занята, агент не застревает на маршруте.
+  if(guard>=260)break;
+ }
  p.node=target;el.classList.remove('moving');
 }
 const taken={},free=a=>{const f=a.filter(k=>!taken[k]);return pick(f.length?f:a)};
 const ACT={
  work:{t:'пишет код',em:'💻',at:p=>p.seat,cls:'work sit',s:()=>rnd(45,85),l:['Пишу код','Запускаю тесты','Нашёл баг — чиню','Рефакторю функцию','Читаю логи']},
  fridge:{t:'ищет еду',em:'🧊',at:()=>'K4',cls:'eat',s:()=>rnd(7,12),l:['Что тут у нас?','Холодный кофе — идеально','Йогурт… или сыр?']},
- cook:{t:'готовит',em:'🍳',at:()=>'K3',cls:'eat',s:()=>rnd(12,20),l:['Готовлю пасту','Щепотка соли — и готово','Пахнет отлично']},
+ cook:{t:'готовит',em:'🍳',at:()=>free(['K3','K3A','K3B']),cls:'eat',s:()=>rnd(12,20),l:['Готовлю пасту','Щепотка соли — и готово','Пахнет отлично']},
  eat:{t:'ест',em:'🍕',at:()=>free(['T1','T2']),cls:'eat sit',s:()=>rnd(14,22),l:['Вкуснотища','Ем и думаю о коде','Пицца — топливо для ИИ']},
  tv:{t:'смотрит ТВ',em:'📺',at:()=>free(['V1','V2','V3']),cls:'tv sit',s:()=>rnd(28,48),l:['Что бы глянуть…','Отличная сцена','Ещё одну серию']},
  window:{t:'смотрит в окно',em:'🪟',at:()=>'WN',cls:'',s:()=>rnd(10,18),l:['Красивый вид','Как там погода?','Город не спит']},
