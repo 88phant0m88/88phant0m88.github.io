@@ -484,7 +484,7 @@ tick();setInterval(tick,1000);
  function move(p,tx,ty,s){const dx=tx-p.x,dy=ty-p.y,d=Math.hypot(dx,dy)||1,m=Math.min(s,d);p.x+=dx/d*m;p.y+=dy/d*m}
  function reset(){P.forEach(p=>{if(p.k){p.x=76+rnd(-30,30);p.y=rnd(8,44)}else{p.x=p.t?140:12;p.y=26}});car=pick(P.filter(p=>p.k));pu.x=76;pu.y=26;shot=null}
  function newGame(){sc=[0,0];per=1;left=1200;st='play';reset()}
- function cheer(){soundCue('goal');AG.filter(p=>/^G/.test(p.node)&&p.st==='dwell').sort(()=>Math.random()-.5).slice(0,2).forEach((p,i)=>setTimeout(()=>bubble(p,pick(['ГОЛ! 🏒','Шайба!','Вот это бросок!','Монреаль, давай!','Тампа не сдаётся!'])),i*700));const fan=AG.find(p=>p.el.classList.contains('tv')&&p.st==='dwell');if(fan)bubble(fan,'ГОООЛ! 🏒',2800);eventReact('goal',AG.find(p=>p.st==='dwell')||AG[0])}
+ function cheer(){soundCue('goal');const lines={claude:'Вот это был точный бросок! 🏒',codex:'ГОЛ! Надо пересмотреть повтор.',qwen:'Красивая комбинация, отличный гол!',deepseek:'ДААА! ВОТ ЭТО ХОККЕЙ!'};AG.filter(p=>!p.el.classList.contains('sleep')).forEach((p,i)=>setTimeout(()=>{if(!p.el.classList.contains('sleep'))bubble(p,lines[p.id],3000)},i*650));const fan=AG.find(p=>p.el.classList.contains('tv')&&p.st==='dwell');if(fan)setTimeout(()=>bubble(fan,'ГОООЛ! 🏒',3200),100)}
  function draw(){P.forEach(p=>{p.e.setAttribute('cx',p.x);p.e.setAttribute('cy',p.y)});pk.setAttribute('cx',pu.x);pk.setAttribute('cy',pu.y);
   $('#hs0').textContent=sc[0];$('#hs1').textContent=sc[1];
   $('#hkt').textContent=st==='final'?'ФИНАЛ':st==='break'?'ПЕРЕРЫВ':(per>3?'ОТ':per+'-й')+' '+Math.floor(left/60)+':'+String(Math.floor(left%60)).padStart(2,'0');
