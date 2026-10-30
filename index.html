@@ -256,12 +256,12 @@ AG.forEach((p,i)=>{
  el.className='agent sit';el.style.setProperty('--c',p.c);el.setAttribute('aria-label',p.name+' — нажми, чтобы сменить занятие');
  el.innerHTML=`<span class="sh"></span><span class="body"><img src="https://raw.githubusercontent.com/lobehub/lobe-icons/master/packages/static-png/light/${p.img}.png" alt="${p.name}"></span><span class="zz">Zzz</span><span class="tag">${p.name}<i><b></b></i></span><span class="act"></span><span class="say"></span>`;
  room.appendChild(el);place(p,p.pos,0);
- p.say=el.querySelector('.say');p.zz=el.querySelector('.zz');p.bar=el.querySelector('.tag b');p.act=el.querySelector('.act');p.label='';
+ p.say=el.querySelector('.say');p.zz=el.querySelector('.zz');p.bar=el.querySelector('.tag b');p.actEl=el.querySelector('.act');p.label='';
  el.addEventListener('click',()=>{if(convo||p.busy)return;if(p.el.classList.contains('sleep'))bubble(p,'Ещё пять минуток…');p.force=choose(p,true);p.wake&&p.wake()});
 });
 function place(p,[x,y],t=null){p.pos=[x,y];const s=p.el.style;if(t===0)s.transitionDuration='0s';s.left=x/12.5+'%';s.top=y/6.2+'%';s.zIndex=10+Math.round(y/10)}
 function bubble(p,t,ms=3300){p.say.textContent=t;p.say.classList.add('show');clearTimeout(p.bt);p.bt=setTimeout(()=>p.say.classList.remove('show'),ms)}
-function ui(p,t){if(t)p.label=t;if(p._l!==p.label){p.act.textContent=p.label;p._l=p.label}const w=Math.round(p.e);if(p._w!==w){p.bar.style.width=w+'%';p._w=w}}
+function ui(p,t){if(t)p.label=t;if(p._l!==p.label){p.actEl.textContent=p.label;p._l=p.label}const w=Math.round(p.e);if(p._w!==w){p.bar.style.width=w+'%';p._w=w}}
 const SPEED=120;
 async function go(p,target,off){
  const el=p.el,pts=path(p.node,target).map(k=>N[k]);
