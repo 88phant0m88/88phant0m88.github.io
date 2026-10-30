@@ -1,0 +1,12 @@
+PHANTOM AI HOUSE — BACKUP
+Date: 2026-10-30
+
+This folder contains a snapshot of the project files from the main branch.
+
+Snapshot files:
+- index.html — application source
+- README.md — project documentation
+
+To restore: copy the contents of these files back to the repository root (index.html and README.md) in a new commit.
+
+This is a file-level snapshot, not a Git history rewrite or a deploy artifact.
