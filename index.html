@@ -352,7 +352,11 @@ async function life(p){
   while(a.ex&&!cont&&taken[at]&&taken[at]!==p){p.st='wait';ui(p,'⏳ ждёт очереди: '+a.t);await wait(3000)}
   taken[at]=p;
   if(!cont){ui(p,'🚶 идёт: '+a.t);await go(p,at)}
-  if(!cont||rem!==null){p.st='dwell';p.last=k;a.cls&&a.cls.split(' ').forEach(c=>p.el.classList.add(c));p.zz.textContent='Zzz';ui(p,a.em+' '+a.t);if(!cont)soundCue(k);fx();
+  if(!cont||rem!==null){p.st='dwell';p.last=k;
+   /* Сбрасываем визуальное состояние прошлого занятия перед новым: иначе старый eat/sit мог оставаться поверх следующей активности. */
+   p.el.classList.remove('sit','sleep','work','eat','tv','run','lift','yoga','wet','bath','splash','brush','fight','ko');
+   if(a.cls)a.cls.split(' ').forEach(c=>p.el.classList.add(c));
+   p.zz.textContent='Zzz';ui(p,a.em+' '+a.t);if(!cont)soundCue(k);fx();
    if(k==='sleep'&&!cont){bubble(p,'Спокойной ночи…',2200);p.sleepFrom=PH.now()}}
   const sec=rem!==null?rem:a.s(p),t0=PH.now();
   if(rem===null){p.act={k,at,t0};p.plan=sec}
@@ -363,7 +367,7 @@ async function life(p){
   if(k==='sleep'&&PH.asleep(p)&&!p.force)continue;
   if(k==='work')eventReact('work',p);else if(k==='coffee')eventReact('coffee',p);else if(k==='tidy')eventReact('clean',p);else if(k==='relax')eventReact('rest',p);else if(k==='read')eventReact('read',p);
   if(k==='sleep'){p.el.classList.remove('sleep');PH.woke(p);bubble(p,pick(['Ох, хорошо выспался','Бодр и свеж!','Мне снился чистый код']))}
-  ['work','eat','tv','sit','run','lift','yoga','wet','bath','splash','brush'].forEach(c=>p.el.classList.remove(c));fx();
+  ['work','eat','tv','sit','run','lift','yoga','wet','bath','splash','brush','sleep','moving'].forEach(c=>p.el.classList.remove(c));fx();
  }
 }
 const rate=p=>{const c=p.el.classList;return c.contains('sleep')?14:c.contains('run')||c.contains('lift')?-30:c.contains('work')?-8:c.contains('yoga')?-10:-5};
