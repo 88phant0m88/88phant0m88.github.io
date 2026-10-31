@@ -12,7 +12,7 @@ body{min-height:100vh;padding:14px;display:grid;place-items:center;background:ra
 .mapwrap{width:100%;max-width:1500px;overflow-x:auto;border-radius:12px}
 
 /* комната */
-.room{position:relative;min-width:900px;aspect-ratio:1250/880;container-type:inline-size;overflow:hidden;border-radius:10px;background:#2a2030;--dark:.05;--lamp:0;--br:1;--sun:.4;box-shadow:0 0 0 1px #000,0 12px 30px #0008}
+.room{position:relative;min-width:900px;aspect-ratio:1250/800;container-type:inline-size;overflow:hidden;border-radius:10px;background:#2a2030;--dark:.05;--lamp:0;--br:1;--sun:.4;box-shadow:0 0 0 1px #000,0 12px 30px #0008}
 .room svg{position:absolute;inset:0;width:100%;height:100%;display:block}
 .scr{fill:#0c1624;transition:fill .6s}.scr.on{fill:url(#scrg)}
 .dg{opacity:0;transition:opacity .8s}.dg.on{opacity:1}
@@ -66,9 +66,16 @@ body{min-height:100vh;padding:14px;display:grid;place-items:center;background:ra
 .wet img{box-shadow:0 0 0 2px #0004,0 0 14px #7fc3ea}
 .bath .body{clip-path:inset(0 0 40% 0);transform:scale(.88)}.bath .sh{display:none}
 .brush .body{animation:wetk .22s linear infinite alternate}
-.hk:not(.dive) .body{animation:skate 1.4s ease-in-out infinite}@keyframes skate{50%{transform:translateX(2px) rotate(4deg)}}
-.hk.shoot .body{animation:shootk .45s ease-out}@keyframes shootk{40%{transform:translateX(-7px) rotate(-12deg) scale(1.12)}100%{transform:none}}
-.dive .body{transform:rotate(30deg) scale(1.1)}
+.diary-fab{position:fixed;left:10px;bottom:10px;z-index:30;border:1px solid #76539a;background:#21152f;color:#f4eaff;border-radius:12px;padding:11px 14px;font:700 13px system-ui;box-shadow:0 5px 22px #0008;cursor:pointer}
+.diary{position:fixed;inset:0;z-index:40;background:#0c0912ea;display:none;overflow:auto;padding:12px}.diary.open{display:block}
+.diary-in{max-width:760px;margin:0 auto;background:#171020;border:1px solid #604477;border-radius:16px;padding:16px;color:#f4eaff;font:14px/1.5 system-ui}
+.diary-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;font-weight:800;letter-spacing:.08em;color:#d9bdff}
+.dtabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}.dtab{border:1px solid var(--c);background:#21152f;color:#f4eaff;border-radius:99px;padding:7px 13px;font:700 13px system-ui;cursor:pointer}.dtab.on{background:var(--c);color:#fff}
+.dnav{display:flex;align-items:center;gap:10px;margin-bottom:8px}.dday{flex:1;text-align:center;font-weight:700}.dn{border:1px solid #604477;background:#21152f;color:#f4eaff;border-radius:10px;padding:6px 12px;cursor:pointer}.dn:disabled{opacity:.35;cursor:default}
+.dh{margin:16px 0 6px;font-size:13px;letter-spacing:.08em;color:#c69cff;text-transform:uppercase}.dp{margin:4px 0;color:#e9ddf5}.dnote{color:#a99ab8;font-size:12px;margin:8px 0}
+.dl{list-style:none;margin:0;padding:0}.dl li{padding:5px 0;border-bottom:1px solid #2c2038}.dl b{color:#c69cff;font-variant-numeric:tabular-nums;margin-right:4px}
+.dgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px}.dcell{background:#21152f;border:1px solid #3b2a4d;border-radius:10px;padding:8px 10px}.dv{font-size:18px;font-weight:800}.dk{font-size:11px;color:#a99ab8}
+.dach{display:flex;flex-direction:column;padding:7px 10px;margin:4px 0;border:1px solid #2c2038;border-radius:10px;opacity:.55}.dach.on{opacity:1;border-color:#76539a;background:#21152f}.dach span{font-size:12px;color:#a99ab8}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important}}
 
 /* ---------- Phantom House sound controls ---------- */
@@ -81,7 +88,7 @@ body{min-height:100vh;padding:14px;display:grid;place-items:center;background:ra
 </head>
 <body>
 <div class="mapwrap"><div class="room" id="room" aria-label="Комната с агентами">
-<svg viewBox="0 0 1250 880" preserveAspectRatio="none" aria-hidden="true">
+<svg viewBox="0 0 1250 800" preserveAspectRatio="none" aria-hidden="true">
 <defs>
 <pattern id="wood" width="220" height="72" patternUnits="userSpaceOnUse"><rect width="220" height="18" fill="#8d6646"/><rect y="18" width="220" height="18" fill="#7c5a3d"/><rect y="36" width="220" height="18" fill="#946b4a"/><rect y="54" width="220" height="18" fill="#86613f"/><path d="M0 18h220M0 36h220M0 54h220M0 72h220M70 0v18M160 18v18M30 36v18M120 54v18" stroke="#3d2a1c" stroke-width="1.4" opacity=".7"/><path d="M0 1h220M0 19h220M0 37h220M0 55h220" stroke="#ffffff" stroke-opacity=".08"/></pattern>
 <pattern id="tile" width="40" height="40" patternUnits="userSpaceOnUse"><rect width="40" height="40" fill="#dad5cf"/><rect width="20" height="20" fill="#cdc7c1"/><rect x="20" y="20" width="20" height="20" fill="#cdc7c1"/><path d="M0 0h40v40" stroke="#a9a29b" fill="none"/></pattern>
@@ -107,6 +114,8 @@ body{min-height:100vh;padding:14px;display:grid;place-items:center;background:ra
 </div></div>
 
 <button class="sound-fab" id="soundFab" type="button">♫ Звук: выкл.</button>
+<button class="diary-fab" id="diaryFab" type="button">📖 Дневники</button>
+<section class="diary" id="diary" aria-label="Дневники агентов"><div class="diary-in"><div class="diary-head"><b>ДНЕВНИКИ</b><button class="sound-close" id="diaryClose" type="button" aria-label="Закрыть">×</button></div><div id="diaryBody"></div></div></section>
 <section class="sound-panel" id="soundPanel" aria-label="Настройки звука">
  <div class="sound-head"><span>PHANTOM HOUSE · SOUND</span><button class="sound-close" id="soundClose" type="button" aria-label="Закрыть">×</button></div>
  <div class="sound-row"><label for="sndMaster">Общая громкость <output id="sndMasterVal">90%</output></label><input id="sndMaster" type="range" min="0" max="100" value="90"></div>
@@ -248,8 +257,8 @@ S+=C(400,57,5,'#3f8a55')+R(396,59,8,6,'#b07a58')+C(604,57,5,'#4a9a5f')+R(600,59,
 dk.forEach(([x,y])=>{S+=R(x+155,y+54,10,8,'#b07a58','rx="2"')+C(x+160,y+50,7,'#3f8a55')+C(x+162,y+48,4,'#6fb87a')});
 // ---- ванная комната (этап 3) ----
 S+=`<pattern id="bt" width="30" height="30" patternUnits="userSpaceOnUse"><rect width="30" height="30" fill="#cfe0e4"/><rect width="15" height="15" fill="#bcd3d9"/><rect x="15" y="15" width="15" height="15" fill="#bcd3d9"/><path d="M0 0h30v30" stroke="#8fb0b8" fill="none" stroke-width=".6"/></pattern>`;
-S+=R(0,800,564,80,'#150f1c')+R(0,626,560,174,'url(#bt)')+R(0,626,560,174,'#000','filter="url(#nz)" opacity=".05"');
-S+=R(0,616,448,10,'#3b2f45')+R(542,616,462,10,'#3b2f45')+R(1004,616,166,10,'#3b2f45')+R(1232,616,18,10,'#3b2f45')+R(0,626,6,174,'#3b2f45')+R(556,626,8,174,'#3b2f45')+R(0,794,564,6,'#3b2f45');
+S+=R(0,800,564,2,'#150f1c')+R(0,626,560,174,'url(#bt)')+R(0,626,560,174,'#000','filter="url(#nz)" opacity=".05"');
+S+=R(0,616,448,10,'#3b2f45')+R(542,616,462,10,'#3b2f45')+R(1004,616,246,10,'#3b2f45')+R(0,626,6,174,'#3b2f45')+R(556,626,8,174,'#3b2f45')+R(0,794,564,6,'#3b2f45');
 S+=R(6,626,444,50,'#86aab2')+R(542,626,14,50,'#86aab2')+R(6,654,444,22,'#b5d0d6')+R(6,674,444,3,'#5d7f87')+R(6,677,444,16,'url(#ws)')+R(542,677,14,16,'url(#ws)');
 S+=R(452,626,88,50,'url(#wood)')+R(452,626,88,50,'url(#ws)','opacity=".8"')+R(442,616,10,62,'#e2d3b3','rx="2"')+R(542,616,10,62,'#e2d3b3','rx="2"')+R(452,616,90,10,'#c9b48a')+R(452,674,90,5,'#c9b48a');
 S+=R(36,636,130,4,'#5a4a3a')+R(46,640,24,28,'#d0577a','rx="2"')+R(78,640,24,30,'#4a7bd0','rx="2"')+R(110,640,24,27,'#e8e0d0','rx="2"')+C(44,638,2.5,'#c8d0d4')+C(160,638,2.5,'#c8d0d4');
@@ -263,35 +272,23 @@ S+=R(215,680,80,80,'#d8ecf5','rx="4" opacity=".4" stroke="#9fd0e6" stroke-width=
 S+=`<g filter="url(#sh)">${R(310,678,120,44,'url(#stone)','rx="4"')}</g><ellipse cx="370" cy="700" rx="24" ry="15" fill="#e8f0f3" stroke="#9aa7ae" stroke-width="2"/>`+C(370,700,2.5,'#777')+R(366,682,8,9,'#c8d0d4','rx="2"')+C(370,696,2.8,'#7fc3ea','id="tap"')+C(326,692,6,'#fff','stroke="#bbb"')+`<path d="M324 692l-3-10" stroke="#4a7bd0" stroke-width="2"/>`+C(412,692,5,'#e9a3b5');
 // мелочи
 S+=R(455,690,70,30,'#a8c8d4','rx="6"')+`<g filter="url(#sh)">${C(526,745,16,'#b58a5a','stroke="#7a5a35" stroke-width="2"')}${C(526,745,10,'#d6b182')}</g>`+plant(536,778,18)+C(120,788,0,'none');
-// ---- хоккейная зона (этап 4) ----
-S+=`<pattern id="cc" width="40" height="40" patternUnits="userSpaceOnUse"><rect width="40" height="40" fill="#2a2e38"/><path d="M0 0h40M0 0v40" stroke="#363b47"/></pattern><linearGradient id="ice" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f3f8fc"/><stop offset=".5" stop-color="#dcebf5"/><stop offset="1" stop-color="#cfe2ef"/></linearGradient>`;
-S+=R(564,626,686,254,'url(#cc)')+R(564,626,686,254,'#000','filter="url(#nz)" opacity=".08"')+R(556,800,8,76,'#3b2f45');
-S+=R(564,626,606,50,'#3b4558')+R(1232,626,18,50,'#3b4558')+R(564,654,686,22,'#2e3646')+R(564,674,686,3,'#1f2530')+R(564,677,686,18,'url(#ws)');
-S+=R(1166,626,6,50,'#e2d3b3')+R(1232,626,6,50,'#e2d3b3')+R(1172,616,60,10,'#c9b48a')+R(1160,614,12,14,'#e2d3b3')+R(1232,614,12,14,'#e2d3b3')+R(1176,630,52,12,'#1c7a46','rx="2"');
-S+=R(790,630,280,40,'#090b10','rx="4" stroke="#3c465a" stroke-width="2"')+`<text id="hks" x="930" y="647" text-anchor="middle" font-family="monospace" font-size="12" font-weight="700" fill="#8de8ac">ЛЁД СВОБОДЕН</text><text id="hks2" x="930" y="662" text-anchor="middle" font-family="monospace" font-size="9" fill="#cfd8e8"></text>`;
-S+=`<polygon points="600,630 640,630 620,668" fill="#c8102e"/><polygon points="650,630 690,630 670,668" fill="#2b6fd6"/><polygon points="700,630 740,630 720,668" fill="#e8b24a"/>`+R(1090,634,60,6,'#f6f9ff','rx="3"');
-S+=`<g filter="url(#sh)">${R(626,686,610,180,'#cdd2da','rx="48"')}</g>`+R(632,692,598,168,'#7c8596','rx="44"')+R(636,696,590,160,'url(#ice)','rx="42"');
-S+=`<path d="${[...Array(16)].map(()=>{const x=rnd(660,1200),y=rnd(710,845);return'M'+x+' '+y+'q'+rnd(-40,40)+' '+rnd(-14,14)+' '+rnd(30,90)+' '+rnd(-8,8)}).join('')}" fill="none" stroke="#9db5c7" stroke-width=".8" opacity=".35"/>`;
-S+=R(930,696,3,160,'#c8323c','opacity=".85"')+R(829,696,4,160,'#2d5fb4','opacity=".8"')+R(1031,696,4,160,'#2d5fb4','opacity=".8"')+R(662,696,2,160,'#c8323c','opacity=".6"')+R(1200,696,2,160,'#c8323c','opacity=".6"')+C(931,776,26,'none','stroke="#2d5fb4" stroke-width="2" opacity=".8"')+C(931,776,3,'#2d5fb4')+[[760,732],[760,820],[1102,732],[1102,820]].map(([x,y])=>C(x,y,12,'none','stroke="#c8323c" stroke-width="1.4" opacity=".6"')+C(x,y,2.5,'#c8323c')).join('');
-S+=`<path d="M662 757a19 19 0 0 1 0 38z" fill="#8fc1ea" opacity=".55" stroke="#c8323c"/><path d="M1200 757a19 19 0 0 0 0 38z" fill="#8fc1ea" opacity=".55" stroke="#c8323c"/>`+R(640,762,22,28,'#b8c0cc','rx="2" opacity=".9"')+R(1178,762,22,28,'#b8c0cc','rx="2" opacity=".9"')+`<path d="M644 764v24M648 764v24M652 764v24M656 764v24M642 770h18M642 776h18M642 782h18M1182 764v24M1186 764v24M1190 764v24M1194 764v24M1180 770h18M1180 776h18M1180 782h18" stroke="#fff" stroke-opacity=".6"/>`+C(662,762,2.6,'#c8323c')+C(662,790,2.6,'#c8323c')+C(1200,762,2.6,'#c8323c')+C(1200,790,2.6,'#c8323c');
-S+=R(1182,684,48,14,'url(#ice)')+R(1178,684,4,14,'#c8323c')+R(1230,684,4,14,'#c8323c');
-S+=R(850,676,110,11,'#5a4a3a','rx="2"')+R(1000,676,110,11,'#5a4a3a','rx="2"')+C(870,681,3,'#8fd0e8')+C(890,681,3,'#e8b24a')+C(1020,681,3,'#8fd0e8');
-S+=`<g filter="url(#sh)">${R(574,704,46,96,'#2b2630','rx="3"')}</g>`+[0,1,2,3,4].map(i=>`<path d="M${582+i*8} 708v86" stroke="#c9a46a" stroke-width="3"/>`).join('')+`<g filter="url(#sh)">${C(596,830,16,'#25262c')}</g>`+C(590,826,4,'#000')+C(600,830,4,'#000')+C(594,835,4,'#000')+plant(590,862,16);
-S+=`<circle id="pk" cx="0" cy="0" r="3.4" fill="#111" stroke="#fff" stroke-width=".8" style="opacity:0"/>`;
+// ---- двор (вид снаружи) ----
+S+=R(564,626,686,174,'#16221d')+`<path d="${[...Array(11)].map((_,i)=>'M564 '+(634+i*16)+'H1250').join('')}" stroke="#1d2d26" stroke-width="8" opacity=".6"/>`+R(556,626,8,174,'#3b2f45');
+S+=[[880,646],[894,676],[880,706],[894,736],[880,766]].map(([x,y])=>`<ellipse cx="${x}" cy="${y}" rx="18" ry="11" fill="#555a62"/><ellipse cx="${x}" cy="${y-2}" rx="15" ry="8" fill="#6b7078"/>`).join('')+`<g filter="url(#sh)">${R(1010,706,96,24,'#6a4a35','rx="3"')}${R(1016,730,8,10,'#3a281b')}${R(1092,730,8,10,'#3a281b')}</g>`+C(960,664,6,'#e8d29a','stroke="#7a6a45" stroke-width="2"')+R(957,670,6,60,'#2b2630')+plant(620,718,24)+plant(668,764,18)+plant(764,700,18)+plant(1186,700,26)+plant(1214,762,20);
 // входная дверь — на левой стене, отдельно от ванной
 S+=R(0,404,10,50,'#7a5a3a')+R(2,408,6,42,'#93704a')+C(7,430,2,'#e8d29a')+R(14,410,42,34,'#4b3a52','rx="3"')+R(14,410,42,5,'#ffffff18');
 // рамка, свет, вечерняя тьма
-S+=`<rect width="1250" height="880" fill="#07102e" style="opacity:var(--dark)"/>`;
-S+=`<g style="mix-blend-mode:screen;opacity:var(--lamp)">`+dk.map(([x,y])=>C(x+20,y+14,90,'url(#lp)')).join('')+C(962,556,150,'url(#lp)')+C(456,490,120,'url(#lp)')+C(380,690,230,'url(#lp)')+C(250,722,170,'url(#lp)','opacity=".55"')+C(1125,300,230,'url(#lp)')+`<ellipse cx="785" cy="140" rx="190" ry="50" fill="url(#lp)"/></g>`;
-S+=`<g style="mix-blend-mode:screen">`+dk.map(([x,y],i)=>C(x+85,y+34,85,'url(#bg)',`class="dg" id="dg${i}"`)).join('')+C(280,730,260,'url(#bg)','class="dg" id="bgl"')+C(800,775,260,'url(#bg)','opacity=".28"')+C(1060,775,260,'url(#bg)','opacity=".28"')+C(930,775,380,'url(#bg)','class="dg" id="hkgl"')+C(1167,70,120,'url(#bg)','opacity=".6"')+`<polygon id="tvc" points="770,360 900,360 960,470 710,470" fill="url(#tvcg)"/></g>`;
-S+=R(0,0,1250,880,'url(#vg)')+R(0,0,1250,880,'none','stroke="#241a2b" stroke-width="14"')+R(7,7,1236,866,'none','stroke="#6b5878" stroke-opacity=".5" stroke-width="1.5"');
+S+=`<rect width="1250" height="800" fill="#07102e" style="opacity:var(--dark)"/>`;
+S+=`<g style="mix-blend-mode:screen;opacity:var(--lamp)">`+dk.map(([x,y])=>C(x+20,y+14,90,'url(#lp)')).join('')+C(962,556,150,'url(#lp)')+C(456,490,120,'url(#lp)')+C(380,690,230,'url(#lp)')+C(960,664,190,'url(#lp)')+C(250,722,170,'url(#lp)','opacity=".55"')+C(1125,300,230,'url(#lp)')+`<ellipse cx="785" cy="140" rx="190" ry="50" fill="url(#lp)"/></g>`;
+S+=`<g style="mix-blend-mode:screen">`+dk.map(([x,y],i)=>C(x+85,y+34,85,'url(#bg)',`class="dg" id="dg${i}"`)).join('')+C(280,730,260,'url(#bg)','class="dg" id="bgl"')+C(1167,70,120,'url(#bg)','opacity=".6"')+`<polygon id="tvc" points="770,360 900,360 960,470 710,470" fill="url(#tvcg)"/></g>`;
+S+=R(0,0,1250,800,'url(#vg)')+R(0,0,1250,800,'none','stroke="#241a2b" stroke-width="14"')+R(7,7,1236,786,'none','stroke="#6b5878" stroke-opacity=".5" stroke-width="1.5"');
 $('#scene').innerHTML=S;
 
 /* ---------- навигация ---------- */
-const N={A:[270,250],H2:[520,250],B:[270,375],H3:[520,375],D:[270,432],H4:[520,432],K1:[640,170],K2:[745,170],K3:[850,170],K4:[945,175],K5:[680,300],T1:[760,300],T2:[860,300],L1:[700,410],L2:[700,455],F1:[790,455],F2:[835,455],F3:[885,455],V1:[790,508],V2:[835,508],V3:[885,508],WN:[520,118],DR:[495,578],GD1:[975,430],GD2:[1040,430],GH:[1100,400],GT:[1090,255],G1:[1050,185],G2:[1110,185],G3:[1170,327],G4:[1056,535],G5:[1136,535],G6:[1195,165],BR0:[495,650],BR1:[495,715],BT:[110,716],BH:[255,722],BS:[370,742],BM:[408,742],BY1:[110,772],BY2:[255,775],BY3:[370,775],BY4:[495,775],GQ:[1190,440],GP:[1201,590],HP0:[1201,650],HP1:[1201,705],HM1:[1100,748],HM2:[860,748],HS:[960,776],HG:[668,776],S1:[155,205],S2:[385,205],S3:[155,375],S4:[385,375]};
+const N={A:[270,250],H2:[520,250],B:[270,375],H3:[520,375],D:[270,432],H4:[520,432],K1:[640,170],K2:[745,170],K3:[850,170],K4:[945,175],K5:[680,300],T1:[760,300],T2:[860,300],L1:[700,410],L2:[700,455],F1:[790,455],F2:[835,455],F3:[885,455],V1:[790,508],V2:[835,508],V3:[885,508],WN:[520,118],DR:[495,578],GD1:[975,430],GD2:[1040,430],GH:[1100,400],GT:[1090,255],G1:[1050,185],G2:[1110,185],G3:[1170,327],G4:[1056,535],G5:[1136,535],G6:[1195,165],BR0:[495,650],BR1:[495,715],BT:[110,716],BH:[255,722],BS:[370,742],BM:[408,742],BY1:[110,772],BY2:[255,775],BY3:[370,775],BY4:[495,775],S1:[155,205],S2:[385,205],S3:[155,375],S4:[385,375]};
 for(let i=0;i<4;i++){N['BF'+i]=[85+100*i,447];N['BD'+i]=[85+100*i,500]}
 const adj={};
-'A-H2 A-B B-D D-H4 H4-H3 H3-H2 S1-A S2-A S3-B S4-B S4-H3 H2-WN H2-K1 K1-K2 K2-K3 K3-K4 K1-K5 K5-T1 T1-T2 K5-L1 H4-L1 L1-L2 L2-F1 F1-F2 F2-F3 F1-V1 F2-V2 F3-V3 H4-DR BF0-BF1 BF1-BF2 BF2-BF3 D-BF2 BF3-H4 BD0-BF0 BD1-BF1 BD2-BF2 BD3-BF3 F3-GD1 GD1-GD2 GD2-GH GH-GT GT-G1 GT-G2 GT-G6 GH-G3 GH-G4 GH-G5 DR-BR0 BR0-BR1 BR1-BY4 BR1-BS BY4-BY3 BY3-BY2 BY2-BY1 BT-BY1 BH-BY2 BS-BY3 BM-BY3 BM-BS GH-GQ GQ-GP GP-HP0 HP0-HP1 HP1-HM1 HM1-HM2 HM1-HS HM2-HS HM2-HG'.split(' ').forEach(e=>{const[a,b]=e.split('-'),d=Math.hypot(N[a][0]-N[b][0],N[a][1]-N[b][1]);(adj[a]??=[]).push([b,d]);(adj[b]??=[]).push([a,d])});
+'A-H2 A-B B-D D-H4 H4-H3 H3-H2 S1-A S2-A S3-B S4-B S4-H3 H2-WN H2-K1 K1-K2 K2-K3 K3-K4 K1-K5 K5-T1 T1-T2 K5-L1 H4-L1 L1-L2 L2-F1 F1-F2 F2-F3 F1-V1 F2-V2 F3-V3 H4-DR BF0-BF1 BF1-BF2 BF2-BF3 D-BF2 BF3-H4 BD0-BF0 BD1-BF1 BD2-BF2 BD3-BF3 F3-GD1 GD1-GD2 GD2-GH GH-GT GT-G1 GT-G2 GT-G6 GH-G3 GH-G4 GH-G5 DR-BR0 BR0-BR1 BR1-BY4 BR1-BS BY4-BY3 BY3-BY2 BY2-BY1 BT-BY1 BH-BY2 BS-BY3 BM-BY3 BM-BS'.split(' ').forEach(e=>{const[a,b]=e.split('-'),d=Math.hypot(N[a][0]-N[b][0],N[a][1]-N[b][1]);(adj[a]??=[]).push([b,d]);(adj[b]??=[]).push([a,d])});
 function path(a,b){const dist={[a]:0},prev={},q=new Set(Object.keys(N));while(q.size){let u=null;q.forEach(k=>{if(dist[k]!==undefined&&(u===null||dist[k]<dist[u]))u=k});if(u===null||u===b)break;q.delete(u);(adj[u]||[]).forEach(([v,d])=>{if(dist[v]===undefined||dist[u]+d<dist[v]){dist[v]=dist[u]+d;prev[v]=u}})}const r=[b];while(r[0]!==a)r.unshift(prev[r[0]]);return r}
 
 /* ---------- агенты ---------- */
@@ -304,14 +301,14 @@ AG.forEach((p,i)=>{
  p.say=el.querySelector('.say');p.zz=el.querySelector('.zz');p.bar=el.querySelector('.tag b');p.act=el.querySelector('.act');p.label='';
  el.addEventListener('click',()=>{if(convo||p.busy)return;if(p.el.classList.contains('sleep'))bubble(p,'Ещё пять минуток…');p.force=choose(p,true);p.wake&&p.wake()});
 });
-function place(p,[x,y],t=null){p.pos=[x,y];const s=p.el.style;if(t===0)s.transitionDuration='0s';s.left=x/12.5+'%';s.top=y/8.8+'%';s.zIndex=10+Math.round(y/10)}
+function place(p,[x,y],t=null){p.pos=[x,y];const s=p.el.style;if(t===0)s.transitionDuration='0s';s.left=x/12.5+'%';s.top=y/8+'%';s.zIndex=10+Math.round(y/10)}
 function bubble(p,t,ms=3300){p.say.textContent=t;p.say.classList.add('show');clearTimeout(p.bt);p.bt=setTimeout(()=>p.say.classList.remove('show'),ms)}
 function ui(p,t){if(t)p.label=t;if(p._l!==p.label){p.act.textContent=p.label;p._l=p.label}const w=Math.round(p.e);if(p._w!==w){p.bar.style.width=w+'%';p._w=w}}
 const SPEED=120;
 async function go(p,target,off){
  const el=p.el,pts=path(p.node,target).map(k=>N[k]);
  if(off)pts.push([N[target][0]+off[0],N[target][1]+off[1]]);
- el.classList.remove('sit','sleep','work','eat','tv','run','lift','yoga','wet','bath','splash','brush','hk','shoot','dive');el.classList.add('moving');p.st='moving';
+ el.classList.remove('sit','sleep','work','eat','tv','run','lift','yoga','wet','bath','splash','brush');el.classList.add('moving');p.st='moving';
  for(const[x,y]of pts){const dx=x-p.pos[0],dy=y-p.pos[1],d=Math.hypot(dx,dy);if(d<2)continue;const t=d/SPEED;el.style.setProperty('--dir',dx>=0?1:-1);el.style.transitionDuration=t+'s';place(p,[x,y]);await wait(t*1000+30)}
  p.node=target;el.classList.remove('moving');
 }
@@ -338,13 +335,12 @@ const ACT={
  teeth:{t:'чистит зубы',em:'🪥',at:()=>free(['BS','BM']),cls:'brush',s:()=>rnd(12,18),l:null},
  mirror:{t:'смотрится в зеркало',em:'🪞',at:()=>free(['BM','BS']),cls:'',s:()=>rnd(7,12),l:['Выгляжу прилично','Причёска держится','Сегодня определённо мой день']},
  dry:{t:'вытирается полотенцем',em:'🧖',at:()=>'BY2',cls:'',s:()=>rnd(6,10),l:['Полотенце мягкое']},
- hockey:{t:'тренируется в хоккей',em:'🏒',at:p=>hkSpot(p),cls:'',s:()=>300,l:null},
  sleep:{t:'спит',em:'💤',at:p=>'BD'+p.bed,cls:'sleep',s:p=>PH.sleepSec(p),l:null}
 };
 const choose=(p,n)=>PH.choose(p,n);
 function dwell(p,sec,lines){return new Promise(res=>{const tok=p.tok={};p.wake=res;setTimeout(res,sec*1000);const tick=()=>{if(p.tok!==tok)return;if(lines)bubble(p,pick(lines));setTimeout(tick,5500+Math.random()*5000)};setTimeout(tick,1500+Math.random()*2500)})}
 const tvUsers=()=>AG.filter(p=>p.el.classList.contains('tv')).length;
-function fx(){AG.forEach(p=>{const w=p.el.classList.contains('work'),i=p.i;$('#sc'+i).classList.toggle('on',w);$('#dg'+i).classList.toggle('on',w)});const t=tvUsers()>0;$('#tvs').classList.toggle('on',t);$('#tvc').classList.toggle('on',t);[['G1','tm0'],['G2','tm1']].forEach(([n,id])=>$('#'+id).classList.toggle('on',AG.some(p=>p.node===n&&p.el.classList.contains('run'))));const bn=['BR0','BR1','BT','BH','BS','BM','BY1','BY2','BY3','BY4'];$('#bgl').classList.toggle('on',AG.some(p=>bn.includes(p.node)||(p.st==='moving'&&p.pos[1]>625)));$('#shw').classList.toggle('on',AG.some(p=>p.el.classList.contains('wet')));$('#tubw').classList.toggle('on',AG.some(p=>p.el.classList.contains('bath')));$('#tap').classList.toggle('on',AG.some(p=>p.node==='BS'&&p.st==='dwell'&&/splash|brush/.test(p.el.className)));const hn=['HP0','HP1','HM1','HM2','HS','HG'];$('#hkgl').classList.toggle('on',AG.some(p=>hn.includes(p.node)))}
+function fx(){AG.forEach(p=>{const w=p.el.classList.contains('work'),i=p.i;$('#sc'+i).classList.toggle('on',w);$('#dg'+i).classList.toggle('on',w)});const t=tvUsers()>0;$('#tvs').classList.toggle('on',t);$('#tvc').classList.toggle('on',t);[['G1','tm0'],['G2','tm1']].forEach(([n,id])=>$('#'+id).classList.toggle('on',AG.some(p=>p.node===n&&p.el.classList.contains('run'))));const bn=['BR0','BR1','BT','BH','BS','BM','BY1','BY2','BY3','BY4'];$('#bgl').classList.toggle('on',AG.some(p=>bn.includes(p.node)||(p.st==='moving'&&p.pos[1]>625)));$('#shw').classList.toggle('on',AG.some(p=>p.el.classList.contains('wet')));$('#tubw').classList.toggle('on',AG.some(p=>p.el.classList.contains('bath')));$('#tap').classList.toggle('on',AG.some(p=>p.node==='BS'&&p.st==='dwell'&&/splash|brush/.test(p.el.className)))}
 async function life(p){
  await wait(p.i*1500+800);
  for(;;){
@@ -352,7 +348,6 @@ async function life(p){
   let k,rem=null;
   if(p.resume){const r=p.resume;p.resume=null;k=r.k;rem=Math.max(2,(r.until-PH.now())/1000);p.act={k,at:r.at,t0:r.t0};p.plan=r.plan||rem}
   else{k=p.force||choose(p);p.force=null}
-  if(k==='hockey')while(HK.run||(HK.open&&HK.open.gk))await wait(2000);
   const a=ACT[k],at=rem!==null?p.act.at:a.at(p),cont=rem!==null||(k==='sleep'&&p.node===at&&p.el.classList.contains('sleep'));
   while(a.ex&&!cont&&taken[at]&&taken[at]!==p){p.st='wait';ui(p,'⏳ ждёт очереди: '+a.t);await wait(3000)}
   taken[at]=p;
@@ -362,16 +357,16 @@ async function life(p){
   const sec=rem!==null?rem:a.s(p),t0=PH.now();
   if(rem===null){p.act={k,at,t0};p.plan=sec}
   p.until=t0+sec*1000;
-  await(k==='hockey'?hkDwell(p):dwell(p,sec,a.l));
+  await dwell(p,sec,a.l);
   p.tok=null;delete taken[at];
   PH.finish(p,k);
   if(k==='sleep'&&PH.asleep(p)&&!p.force)continue;
   if(k==='work')eventReact('work',p);else if(k==='coffee')eventReact('coffee',p);else if(k==='tidy')eventReact('clean',p);else if(k==='relax')eventReact('rest',p);else if(k==='read')eventReact('read',p);
   if(k==='sleep'){p.el.classList.remove('sleep');PH.woke(p);bubble(p,pick(['Ох, хорошо выспался','Бодр и свеж!','Мне снился чистый код']))}
-  ['work','eat','tv','sit','run','lift','yoga','wet','bath','splash','brush','hk','shoot','dive'].forEach(c=>p.el.classList.remove(c));fx();
+  ['work','eat','tv','sit','run','lift','yoga','wet','bath','splash','brush'].forEach(c=>p.el.classList.remove(c));fx();
  }
 }
-const rate=p=>{const c=p.el.classList;return c.contains('sleep')?14:c.contains('run')||c.contains('lift')?-30:c.contains('hk')?-20:c.contains('work')?-8:c.contains('yoga')?-10:-5};
+const rate=p=>{const c=p.el.classList;return c.contains('sleep')?14:c.contains('run')||c.contains('lift')?-30:c.contains('work')?-8:c.contains('yoga')?-10:-5};
 setInterval(()=>{const t=PH.now();AG.forEach(p=>{const dt=Math.min(5,(t-(p.et||t))/1000);p.et=t;p.e=Math.max(0,Math.min(100,p.e+rate(p)*dt/3600));ui(p)})},1000);
 
 /* ---------- общение, события и ссоры ---------- */
@@ -428,7 +423,7 @@ setTimeout(chat,12000);setInterval(()=>{if(Math.random()<.33)chat()},50000);
 
 /*PH:BEGIN*/
 const PH=(function(){
- const QS=new URLSearchParams(location.search),TEST=QS.get('msk'),DAYMS=864e5,MSK=108e5,AWAY=12e4,OFF=[0,.4,-.2,.8],HKP=[[0,1],[2,3],[0,2],[1,3],[0,3],[1,2]],ACC=[.62,.55,.5,.58],REA=[.5,.6,.55,.52];
+ const QS=new URLSearchParams(location.search),TEST=QS.get('msk'),DAYMS=864e5,MSK=108e5,AWAY=12e4,OFF=[0,.4,-.2,.8];
  const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
  /* ---- реальное московское время (UTC+3, без перехода). ?msk=ЧЧ:ММ — подмена часа для проверки ---- */
  const TOFF=(()=>{const m=/^(\d{1,2}):(\d{2})$/.exec(TEST||'');if(!m)return 0;const d=new Date(Date.now()+MSK),cur=((d.getUTCHours()*60+d.getUTCMinutes())*60+d.getUTCSeconds())*1e3;return(+m[1]*60+ +m[2])*6e4-cur})();
@@ -443,7 +438,7 @@ const PH=(function(){
  /* ---- расписание агента на день (детерминированно: день + имя) ---- */
  const hsh=s=>{let x=7;for(let i=0;i<s.length;i++)x=(Math.imul(x,31)+s.charCodeAt(i))>>>0;return x},jit=(day,id,m)=>(hsh(day+id+m)%41-20)/60;
  function plan(p,day){const dow=new Date(day+'T12:00:00Z').getUTCDay(),we=dow===0||dow===6?1:0,o=OFF[p.i],J=m=>jit(day,p.id,m),wake=7+o*.6+we*1.1+J('w'),bed=Math.min(23.9,23.2+o+we*.8+J('b'));
-  return{day,wake,bed,m:[wake+.05,wake+1.2],e:[bed-1.1,bed-.15],shM:hsh(day+p.id+'s')%10<6,bt:hsh(day+p.id+'t')%10<3,b:[wake+.3,wake+2],l:[13+J('l'),14.6],d:[19+o*.4+J('d'),21],gym:hsh(day+p.id+'g')%10<7?[17.3+J('g'),20]:null,hk:HKP[hsh(day+'hkp')%6].includes(p.i)?[15.3+(hsh(day+'hkt')%41-20)/60,17.8]:null}}
+  return{day,wake,bed,m:[wake+.05,wake+1.2],e:[bed-1.1,bed-.15],shM:hsh(day+p.id+'s')%10<6,bt:hsh(day+p.id+'t')%10<3,b:[wake+.3,wake+2],l:[13+J('l'),14.6],d:[19+o*.4+J('d'),21],gym:hsh(day+p.id+'g')%10<7?[17.3+J('g'),20]:null}}
  const planOf=p=>{const day=mskDay();return p.pl&&p.pl.day===day?p.pl:(p.pl=plan(p,day))},inSleep=(pl,h)=>h<pl.wake||h>=pl.bed,asleep=p=>inSleep(planOf(p),mskHour());
  function script(p,h,day,pl){const add=(key,list,until)=>{if(p.done[key]||p.q.some(x=>x.key===key))return;list.forEach(([a,fin])=>p.q.push({a,key,fin:!!fin,until,day}))};
   if(h>=pl.m[0]&&h<pl.m[1]){const L=[['wash']];if(pl.shM&&p.showered!==day)L.push(['shower'],['dry']);L.push(['teeth'],['mirror',1]);add(day+'m',L,pl.m[1])}
@@ -451,9 +446,8 @@ const PH=(function(){
   if(h>=pl.l[0]&&h<pl.l[1])add(day+'l',[['cook'],['eat',1]],pl.l[1]);
   if(h>=pl.d[0]&&h<pl.d[1])add(day+'d',[['cook'],['eat',1]],pl.d[1]);
   if(h>=pl.e[0]&&h<pl.e[1]){const L=[];if(p.showered!==day)L.push([pl.bt?'bath':'shower'],['dry']);L.push(['wash'],['teeth'],['mirror',1]);add(day+'e',L,pl.e[1])}
-  if(pl.hk&&h>=pl.hk[0]&&h<pl.hk[1])add(day+'h',[['hockey',1]],pl.hk[1]);
   if(pl.gym&&h>=pl.gym[0]&&h<pl.gym[1])add(day+'g',[[pick(['run','bench'])],[pick(['dumb','yoga']),1]],pl.gym[1])}
- const weights=(p,h)=>({work:h>=9.5&&h<18?5:h>=18&&h<21?1.2:.4,fridge:.5,cook:.2,eat:.2,coffee:h<11.5?1.6:h<16?.9:.3,relax:h>=18&&h<23.5?1.6:.5,tidy:.7,read:h>=20.5?1.4:.7,tv:h>=18&&h<23.5?2.6:.9,window:.8,stroll:.6,run:.25,bench:.2,dumb:.2,yoga:.4,wash:.02,mirror:.03,hockey:h>=10&&h<22&&hkFree()?.01:0,sleep:p.e<15?(15-p.e)/3:0});
+ const weights=(p,h)=>({work:h>=9.5&&h<18?5:h>=18&&h<21?1.2:.4,fridge:.5,cook:.2,eat:.2,coffee:h<11.5?1.6:h<16?.9:.3,relax:h>=18&&h<23.5?1.6:.5,tidy:.7,read:h>=20.5?1.4:.7,tv:h>=18&&h<23.5?2.6:.9,window:.8,stroll:.6,run:.25,bench:.2,dumb:.2,yoga:.4,wash:.02,mirror:.03,sleep:p.e<15?(15-p.e)/3:0});
  function choose(p,notSame){p.cur=null;const t=now(),h=mskHour(t),day=mskDay(t),pl=planOf(p);
   if(!notSame){if(inSleep(pl,h)){p.q=[];return'sleep'}script(p,h,day,pl);while(p.q.length){const e=p.q.shift();if(e.day===day&&e.until>h){p.cur=e;return e.a}}}
   const w=weights(p,h);if(p.last)w[p.last]=0;if(notSame)w.sleep=0;
@@ -466,17 +460,19 @@ const PH=(function(){
  function rd(key){if(!LS)return null;try{const raw=LS.getItem(PFX+key);if(!raw)return null;const e=JSON.parse(raw);if(e&&e.v>1)FUTURE=true;if(!e||e.v!==1||typeof e.d!=='string'||fnv(e.d)!==e.s)return null;return JSON.parse(e.d)}catch(err){return null}}
  function wr(key,data){if(!LS||FUTURE)return false;const d=JSON.stringify(data);try{LS.setItem(PFX+key,JSON.stringify({v:1,t:now(),s:fnv(d),d}));return true}catch(err){return false}}
  const okLog=o=>o&&Array.isArray(o.ev)&&typeof o.seq==='number',okAgg=o=>o&&o.days&&Array.isArray(o.ak);
- let LOG=rd('log'),AGG=rd('agg'),seen,dirty=false,leader=true,lastFlush=now(),bakAt=0,logAt=0;
+ let LOG=rd('log'),AGG=rd('agg'),seen,dirty=false,leader=true,lastFlush=now(),bakAt=0,logAt=0,finAt=0;
  if(!okLog(LOG))LOG={seq:0,ev:[]};if(!okAgg(AGG))AGG={days:{},ak:[]};
  const reseen=()=>seen=new Set(LOG.ev.map(e=>e.k).filter(Boolean));reseen();
- function logEvent(y,d,k){if(k&&seen.has(k))return false;if(k)seen.add(k);LOG.ev.push({i:++LOG.seq,t:now(),y,k,d});if(LOG.ev.length>4000){LOG.ev.splice(0,LOG.ev.length-3200);reseen()}dirty=true;return true}
+ function logEvent(y,d,k){if(k&&seen.has(k))return false;if(k)seen.add(k);const ev={i:++LOG.seq,t:now(),y,k,d};LOG.ev.push(ev);try{applyEvent(ev)}catch(x){}if(LOG.ev.length>4000){LOG.ev.splice(0,LOG.ev.length-3200);reseen()}dirty=true;return true}
  function dayAgg(day,id){const D=AGG.days;if(!D[day]){D[day]={};const ks=Object.keys(D).sort();while(ks.length>120)delete D[ks.shift()]}return D[day][id]||(D[day][id]={acts:{},chats:0,fights:0,kos:0,meals:0,workouts:0})}
- function aggAct(p,k,t0,t1,cap){const key=p.id+':'+t0;if(AGG.ak.includes(key))return;AGG.ak.push(key);if(AGG.ak.length>200)AGG.ak.splice(0,AGG.ak.length-150);
-  const r=(dayAgg(mskDay(t0),p.id).acts[k]||(dayAgg(mskDay(t0),p.id).acts[k]=[0,0]));r[0]++;r[1]=Math.round(r[1]+clamp((t1-t0)/1000,0,cap));dirty=true}
+ function aggAct(p,k,t0,t1,cap,at){const key=p.id+':'+t0;if(AGG.ak.includes(key))return;AGG.ak.push(key);if(AGG.ak.length>200)AGG.ak.splice(0,AGG.ak.length-150);
+  const A=dayAgg(mskDay(t0),p.id),r=A.acts[k]||(A.acts[k]=[0,0]),sec=Math.round(clamp((t1-t0)/1000,0,cap));r[0]++;r[1]+=sec;A.pl=A.pl||{};const pn=placeOf(at||p.node);A.pl[pn]=(A.pl[pn]||0)+sec;dirty=true}
  const prune=o=>{const ks=Object.keys(o||{}).sort().slice(-12),r={};ks.forEach(k=>r[k]=1);return r};
- const snapshot=()=>({savedAt:now(),logSeq:LOG.seq,agents:AG.map(p=>({id:p.id,node:p.node,e:+p.e.toFixed(2),act:p.act||null,until:p.until||0,plan:p.plan||0,sleepFrom:p.sleepFrom||0,last:p.last||null,cur:p.cur||null,q:p.q,done:prune(p.done),showered:p.showered||'',hk:p.hk}))});
+ const snapshot=()=>({savedAt:now(),logSeq:LOG.seq,agents:AG.map(p=>({id:p.id,node:p.node,e:+p.e.toFixed(2),act:p.act||null,until:p.until||0,plan:p.plan||0,sleepFrom:p.sleepFrom||0,last:p.last||null,cur:p.cur||null,q:p.q,done:prune(p.done),showered:p.showered||'',ls:p.ls}))});
  function flush(force){if(!LS||!leader||FUTURE)return;const t=now();
+  try{AG.forEach(checkAch);if(t-finAt>6e5||force){finalize();finAt=t}}catch(x){console.error(x)}
   if(dirty&&(force||t-logAt>45e3)){logAt=t;if(!wr('log',LOG)){LOG.ev.splice(0,LOG.ev.length>>1);reseen();wr('log',LOG)}wr('agg',AGG);dirty=false}
+  if(diaDirty){try{if(!wr('diary',DIA)){const ks=Object.keys(DIA.days).sort();ks.slice(0,ks.length>>1).forEach(k=>delete DIA.days[k]);wr('diary',DIA)}}catch(x){}diaDirty=false}
   if(t-bakAt>3e5){const prev=LS.getItem(PFX+'state');if(prev&&rd('state'))try{LS.setItem(PFX+'state.bak',prev)}catch(e){}bakAt=t}
   wr('state',snapshot());lastFlush=t}
  /* ---- одна вкладка пишет, остальные только показывают (нет двойного учёта) ---- */
@@ -489,79 +485,111 @@ const PH=(function(){
  function restore(){const st=rd('state')||rd('state.bak');if(!st||!Array.isArray(st.agents))return null;const t=now();
   if(st.logSeq>LOG.seq){LOG.seq=st.logSeq;logEvent('log_gap',{seq:st.logSeq},'gap:'+st.savedAt)}
   let gap=t-st.savedAt;if(gap<0){logEvent('clock_skew',{gap},'skew:'+st.savedAt);gap=0}gap=Math.min(gap,30*DAYMS);
-  AG.forEach(p=>{const s=st.agents.find(x=>x.id===p.id);if(!s)return;p.e=clamp(+s.e||0,0,100);p.q=Array.isArray(s.q)?s.q:[];p.done=s.done||{};p.showered=s.showered||'';if(s.hk&&p.hk)Object.assign(p.hk,s.hk);p.last=s.last;p.cur=s.cur;p.sleepFrom=s.sleepFrom||0;
+  AG.forEach(p=>{const s=st.agents.find(x=>x.id===p.id);if(!s)return;p.e=clamp(+s.e||0,0,100);p.q=Array.isArray(s.q)?s.q:[];p.done=s.done||{};p.showered=s.showered||'';p.ls=Object.assign(LS0(),s.ls||{});p.last=s.last;p.cur=s.cur;p.sleepFrom=s.sleepFrom||0;
    if(N[s.node]){p.node=s.node;place(p,[...N[s.node]],0)}
-   if(gap<AWAY){if(s.act&&ACT[s.act.k]&&s.act.k!=='hockey'&&s.until>t)p.resume={k:s.act.k,at:s.act.at,t0:s.act.t0,until:s.until,plan:s.plan}}
-   else{if(s.act&&ACT[s.act.k])aggAct(p,s.act.k,s.act.t0,Math.min(st.savedAt,s.until||st.savedAt),(s.plan||60)+20);p.e=energyGap(p,st.savedAt,t,p.e);p.cur=null;p.q=[]}});
-  LOG.ev.filter(e=>e.y==='train'&&e.i>st.logSeq).forEach(e=>applyTrain(e.d));
+   if(gap<AWAY){if(s.act&&ACT[s.act.k]&&s.until>t)p.resume={k:s.act.k,at:s.act.at,t0:s.act.t0,until:s.until,plan:s.plan}}
+   else{if(s.act&&ACT[s.act.k])aggAct(p,s.act.k,s.act.t0,Math.min(st.savedAt,s.until||st.savedAt),(s.plan||60)+20,s.act.at);p.e=energyGap(p,st.savedAt,t,p.e);p.cur=null;p.q=[]}});
+  LOG.ev.filter(e=>e.i>st.logSeq).forEach(applyEvent);
   if(gap>=AWAY)logEvent('away',{from:st.savedAt,to:t,min:Math.round(gap/6e4)},'away:'+st.savedAt);return gap}
- function start(){AG.forEach(p=>{p.q=[];p.done={};p.et=now();p.hk={shots:0,goals:0,saves:0,faced:0,miss:0,sessions:0}});beat();restore();const t=now();
+ function start(){AG.forEach(p=>{p.q=[];p.done={};p.et=now();p.ls=LS0()});beat();restore();try{finalize()}catch(x){console.error(x)}const t=now();
   AG.forEach(p=>{if(!p.resume&&asleep(p)){p.node='BD'+p.bed;place(p,[...N[p.node]],0);p.sleepFrom=p.sleepFrom||bedTs(p,t);p.resume={k:'sleep',at:p.node,t0:t,until:t+1e3,plan:1}}});
   setInterval(beat,5e3);setInterval(flush,15e3);
   addEventListener('visibilitychange',()=>{if(document.hidden)flush(true);else if(now()-lastFlush>AWAY&&leader)location.reload()});addEventListener('pagehide',()=>{flush(true);release()});flush(true)}
  /* ---- события симуляции ---- */
- function finish(p,k){const t1=now(),a=p.act;if(a)aggAct(p,k,a.t0,t1,(p.plan||60)+20);const c=p.cur,day=mskDay(t1);
+ function finish(p,k){const t1=now(),a=p.act;if(a)aggAct(p,k,a.t0,t1,(p.plan||60)+20,a.at);const c=p.cur,day=mskDay(t1);
   if(k==='coffee')p.e=clamp(p.e+3,0,100);if(k==='eat')p.e=clamp(p.e+6,0,100);if(k==='bath')p.e=clamp(p.e+4,0,100);if(k==='shower')p.e=clamp(p.e+2,0,100);
   if(k==='shower'||k==='bath')p.showered=day;
   if(c&&c.a===k&&c.fin){p.done[c.key]=1;const kc=c.key.slice(-1),ty=kc==='g'?'workout':kc==='m'||kc==='e'?'routine':'meal',f=ty==='workout'?'workouts':ty==='routine'?'routines':'meals';
-   if(kc!=='h'&&logEvent(ty,{a:p.id,m:kc},ty+':'+p.id+':'+c.key)){const r=dayAgg(c.day,p.id);r[f]=(r[f]||0)+1}
+   if(logEvent(ty,{a:p.id,m:kc},ty+':'+p.id+':'+c.key)){const r=dayAgg(c.day,p.id);r[f]=(r[f]||0)+1}
    if(kc==='g'&&p.showered!==c.day)p.q.unshift({a:'shower',key:c.day+'x',fin:false,until:24,day:c.day},{a:'dry',key:c.day+'x',fin:false,until:24,day:c.day});p.cur=null}
   dirty=true}
  function woke(p){if(p.sleepFrom){logEvent('sleep',{a:p.id,from:p.sleepFrom,to:now()},'sleep:'+p.id+':'+p.sleepFrom);p.sleepFrom=0}}
  function chat(a,b,out,wi,lo,t0){const day=mskDay(t0);if(!logEvent('chat',{a:a.id,b:b.id,o:out,w:wi&&wi.id,l:lo&&lo.id},'chat:'+t0+':'+a.id+b.id))return;
   dayAgg(day,a.id).chats++;dayAgg(day,b.id).chats++;if(out==='fight'){dayAgg(day,a.id).fights++;dayAgg(day,b.id).fights++;dayAgg(day,lo.id).kos++;lo.q.unshift({a:'sleep',key:'ko'+t0,fin:false,until:24,day})}}
- const acc=p=>Math.min(.85,ACC[p.i]+p.hk.shots*.0006),rea=p=>Math.min(.85,REA[p.i]+p.hk.faced*.0006);
- function applyTrain(d){const s=AG.find(x=>x.id===d.s),g=AG.find(x=>x.id===d.g);if(s){s.hk.shots+=d.sh;s.hk.goals+=d.go;s.hk.miss+=d.ms;s.hk.sessions++}if(g){g.hk.faced+=d.sh-d.ms;g.hk.saves+=d.sv;g.hk.sessions++}}
- function train(sh,gk,r,t0){const d={s:sh.id,g:gk?gk.id:null,sh:r.shots,go:r.goals,sv:r.saves,ms:r.miss};if(!logEvent('train',d,'hk:'+t0+':'+sh.id+(gk?gk.id:'-')))return;applyTrain(d);
-  const day=mskDay(t0),A=dayAgg(day,sh.id);A.shots=(A.shots||0)+r.shots;A.goals=(A.goals||0)+r.goals;A.trainings=(A.trainings||0)+1;if(gk){const B=dayAgg(day,gk.id);B.faced=(B.faced||0)+r.shots-r.miss;B.saves=(B.saves||0)+r.saves;B.trainings=(B.trainings||0)+1}}
- return{acc,rea,train,now,mskHour,mskDay,sunTimes,keys,plan,planOf,choose,asleep,sleepSec,finish,woke,chat,start,flush,restore,rd,logEvent,
+ /* ---- этап 6: статистика, достижения, дневники (всё выводится из журнала и итогов дня) ---- */
+ const LS0=()=>({chats:0,talks:0,spats:0,fights:0,wins:0,losses:0,meals:0,workouts:0,routines:0,nights:0,sleepSec:0,earlyWake:0,lateBed:0,longSleep:0,ach:{}});
+ const hm=t=>{const d=mskD(t);return String(d.getUTCHours()).padStart(2,'0')+':'+String(d.getUTCMinutes()).padStart(2,'0')};
+ const dur=s=>{const m=Math.max(1,Math.round(s/60));return m>=60?Math.floor(m/60)+' ч'+(m%60?' '+m%60+' мин':''):m+' мин'};
+ const NOUN={work:'работа',coffee:'кофе',cook:'готовка',eat:'еда',fridge:'поиск еды',tv:'телевизор',window:'у окна',stroll:'прогулки',run:'бег',bench:'штанга',dumb:'гантели',yoga:'растяжка',relax:'отдых',read:'чтение',tidy:'уборка',shower:'душ',bath:'ванна',wash:'умывание',teeth:'чистка зубов',mirror:'зеркало',dry:'полотенце',sleep:'сон'};
+ const placeOf=n=>/^S\d/.test(n)?'Кабинет':/^[KT]\d/.test(n)?'Кухня':/^[VFL]\d/.test(n)?'Гостиная':/^G/.test(n)?'Спортзал':/^B[DF]\d/.test(n)?'Спальня':/^B[RTHSMY]/.test(n)?'Ванная':n==='WN'?'У окна':'Коридор';
+ const daysSeen=p=>Object.keys(AGG.days).filter(d=>AGG.days[d][p.id]).length;
+ const ACHS=[
+  {k:'fight1',t:'Боевое крещение',d:'Первая драка',f:s=>s.fights>=1},{k:'fight10',t:'Задира',d:'10 драк',f:s=>s.fights>=10},
+  {k:'win5',t:'Победитель',d:'5 побед в драках',f:s=>s.wins>=5},{k:'win25',t:'Непобедимый',d:'25 побед в драках',f:s=>s.wins>=25},
+  {k:'ko5',t:'Стойкий',d:'Пережить 5 нокаутов',f:s=>s.losses>=5},{k:'chat50',t:'Общительный',d:'50 разговоров',f:s=>s.chats>=50},
+  {k:'chat500',t:'Душа дома',d:'500 разговоров',f:s=>s.chats>=500},{k:'early',t:'Жаворонок',d:'Проснуться раньше 6:45',f:s=>s.earlyWake>=1},
+  {k:'owl',t:'Сова',d:'Лечь спать после 23:45',f:s=>s.lateBed>=1},{k:'sleep8',t:'Выспался',d:'Проспать 8 часов подряд',f:s=>s.longSleep>=1},
+  {k:'gym5',t:'Спортсмен',d:'5 тренировок в зале',f:s=>s.workouts>=5},{k:'gym30',t:'Железная воля',d:'30 тренировок в зале',f:s=>s.workouts>=30},
+  {k:'clean14',t:'Чистюля',d:'14 утренних и вечерних рутин',f:s=>s.routines>=14},{k:'meal21',t:'Гурман',d:'21 приём пищи',f:s=>s.meals>=21},
+  {k:'week',t:'Старожил',d:'7 дней в доме',f:(s,d)=>d>=7}];
+ function applyEvent(e){const d=e.d||{},P=id=>AG.find(x=>x.id===id);
+  if(e.y==='chat'){[d.a,d.b].forEach(id=>{const p=P(id);if(!p||!p.ls)return;const s=p.ls;s.chats++;if(d.o==='talk')s.talks++;else if(d.o==='spat')s.spats++;else if(d.o==='fight'){s.spats++;s.fights++;if(d.w===id)s.wins++;if(d.l===id)s.losses++}});return}
+  const a=P(d.a);if(!a||!a.ls)return;const s=a.ls;
+  if(e.y==='meal')s.meals++;else if(e.y==='workout')s.workouts++;else if(e.y==='routine')s.routines++;
+  else if(e.y==='sleep'){s.nights++;const sec=(d.to-d.from)/1000,hw=mskHour(d.to),hb=mskHour(d.from);s.sleepSec+=sec;if(hw<6.75&&hw>3)s.earlyWake++;if(hb>=23.75||hb<3)s.lateBed++;if(sec>=8*3600)s.longSleep++}
+  else if(e.y==='ach')s.ach[d.k]=e.t}
+ function checkAch(p){ACHS.forEach(a=>{if(!p.ls.ach[a.k]&&a.f(p.ls,daysSeen(p)))logEvent('ach',{a:p.id,k:a.k},'ach:'+p.id+':'+a.k)})}
+ let DIA=rd('diary');if(!(DIA&&DIA.days&&typeof DIA.days==='object'))DIA={days:{}};let diaDirty=false;
+ function build(id,day){
+  const t0=dayTs(day,0),t1=t0+DAYMS,A=(AGG.days[day]||{})[id],nm=x=>(AG.find(p=>p.id===x)||{name:x}).name,L=[],S=[],by={};let chats=0,sp=0,fi=0,w=0,l=0;
+  for(const e of LOG.ev){const d=e.d||{};
+   if(e.y==='away'){if(d.to>t0&&d.from<t1){const f=Math.max(d.from,t0),t=Math.min(d.to,t1);L.push([hm(f),'Страница была закрыта до '+hm(t)+' ('+dur((t-f)/1000)+'): за это время события не записывались'])}continue}
+   if(e.t<t0||e.t>=t1)continue;
+   if(e.y==='chat'){if(d.a!==id&&d.b!==id)continue;const o=d.a===id?d.b:d.a;chats++;by[o]=(by[o]||0)+1;
+    if(d.o==='spat'){sp++;L.push([hm(e.t),'Спор с '+nm(o)+', разошлись'])}
+    else if(d.o==='fight'){sp++;fi++;const win=d.w===id;win?w++:l++;L.push([hm(e.t),'Драка с '+nm(o)+': '+(win?'победа':'поражение, нокаут')])}continue}
+   if(d.a!==id)continue;
+   if(e.y==='sleep')L.push([hm(e.t),'Пробуждение. Сон '+hm(d.from)+'–'+hm(d.to)+' ('+dur((d.to-d.from)/1000)+')']);
+   else if(e.y==='routine')L.push([hm(e.t),d.m==='m'?'Утренняя рутина завершена':'Вечерняя рутина завершена']);
+   else if(e.y==='meal')L.push([hm(e.t),{b:'Завтрак',l:'Обед',d:'Ужин'}[d.m]||'Приём пищи']);
+   else if(e.y==='workout')L.push([hm(e.t),'Тренировка в зале завершена']);
+   else if(e.y==='ach'){const a=ACHS.find(x=>x.k===d.k);if(a)L.push([hm(e.t),'Достижение «'+a.t+'»'])}}
+  if(chats)S.push('Общение: '+chats+' ('+Object.entries(by).sort((a,b)=>b[1]-a[1]).map(([k,v])=>nm(k)+' — '+v).join(', ')+')'+(sp?'; споров '+sp:'')+(fi?', драк '+fi+' (побед '+w+', поражений '+l+')':''));
+  if(A){const acts=Object.entries(A.acts||{}).sort((a,b)=>b[1][1]-a[1][1]).filter(x=>x[1][1]>=30).slice(0,5);
+   if(acts.length)S.push('Больше всего времени: '+acts.map(([k,v])=>(NOUN[k]||k)+' — '+dur(v[1])).join('; '));
+   const pl=Object.entries(A.pl||{}).sort((a,b)=>b[1]-a[1]).filter(x=>x[1]>=30);if(pl.length)S.push('По комнатам: '+pl.map(([k,v])=>k+' '+dur(v)).join(', '));
+   const c=k=>A.acts&&A.acts[k]?A.acts[k][0]:0,hy=c('shower')+c('bath');if(hy||c('teeth'))S.push('Гигиена: душ или ванна — '+hy+', чистка зубов — '+c('teeth'));if(c('coffee'))S.push('Кофе: '+c('coffee'))}
+  if(!L.length&&!S.length)return null;
+  L.sort((a,b)=>a[0]<b[0]?-1:a[0]>b[0]?1:0);const M=[];L.forEach(l=>{const q=M[M.length-1],m=q&&/ \(×(\d+)\)$/.exec(q[1]);if(q&&q[0]===l[0]&&q[1].replace(/ \(×\d+\)$/,'')===l[1])q[1]=l[1]+' (×'+((m?+m[1]:1)+1)+')';else M.push(l.slice())});
+  return{day,id,final:false,lines:M,sum:S,sig:fnv(JSON.stringify([M,S]))}}
+ function finalize(){const lim=now()-12e5,days=new Set(Object.keys(AGG.days));LOG.ev.forEach(e=>days.add(mskDay(e.t)));let n=0;
+  [...days].filter(d=>dayTs(d,24)<=lim).forEach(day=>AG.forEach(p=>{if(DIA.days[day]&&DIA.days[day][p.id])return;try{const e=build(p.id,day);if(e){e.final=true;(DIA.days[day]||(DIA.days[day]={}))[p.id]=e;diaDirty=true;n++}}catch(x){console.error('diary',x)}}));return n}
+ const diary=(id,day)=>{if(day<mskDay()&&DIA.days[day]&&DIA.days[day][id])return DIA.days[day][id];try{return build(id,day)}catch(x){console.error('diary',x);return null}};
+ const diaryDays=id=>{const s=new Set([mskDay()]);Object.keys(AGG.days).forEach(d=>{if(AGG.days[d][id])s.add(d)});Object.keys(DIA.days).forEach(d=>{if(DIA.days[d][id])s.add(d)});return[...s].sort().reverse()};
+ const stats=id=>{const p=AG.find(x=>x.id===id),s=p.ls;let top='—',best=0;const tot={};Object.keys(AGG.days).forEach(d=>{const a=AGG.days[d][id];if(a&&a.acts)for(const k in a.acts)tot[k]=(tot[k]||0)+a.acts[k][1]});for(const k in tot)if(k!=='sleep'&&tot[k]>best){best=tot[k];top=(NOUN[k]||k)+' ('+dur(tot[k])+')'}
+  return[['Дней в доме',daysSeen(p)],['Разговоров',s.chats],['Споров',s.spats],['Драк',s.fights],['Побед в драках',s.wins],['Нокаутов',s.losses],['Ночей сна',s.nights],['Средний сон',s.nights?dur(s.sleepSec/s.nights):'—'],['Приёмов пищи',s.meals],['Тренировок в зале',s.workouts],['Утренних и вечерних рутин',s.routines],['Чаще всего',top]]};
+ const achs=id=>{const p=AG.find(x=>x.id===id);return ACHS.map(a=>({k:a.k,t:a.t,d:a.d,at:p.ls.ach[a.k]||0}))};
+ return{diary,diaryDays,stats,achs,now,mskHour,mskDay,sunTimes,keys,plan,planOf,choose,asleep,sleepSec,finish,woke,chat,start,flush,restore,rd,logEvent,
   log:()=>LOG,agg:()=>AGG,lead:()=>leader}
 })();
 /*PH:END*/
 
-/* ---------- хоккейная зона: тренировка «бросок — вратарь» ---------- */
-const HK={open:null,run:false},hkFree=()=>!HK.run&&!HK.open||!!(HK.open&&!HK.open.gk),HY=[-12,-4,4,12],hkTxt=(a,b)=>{$('#hks').textContent=a;$('#hks2').textContent=b||''};
-function hkSpot(p){const o=HK.open;
- if(o&&!o.gk&&o.sh!==p&&PH.now()-o.t<110000){o.gk=p;p.hkS=o;p.hkRole='gk';return'HG'}
- const s={sh:p,gk:null,t:PH.now()};s.done=new Promise(r=>s.fin=r);HK.open=s;p.hkS=s;p.hkRole='sh';
- if(Math.random()<.8){const c=AG.filter(q=>q!==p&&q.st==='dwell'&&!q.busy&&!q.force&&!q.el.classList.contains('sleep')&&!PH.asleep(q));if(c.length){const q=pick(c);q.force='hockey';q.wake&&q.wake()}}
- return'HS'}
-async function hkRound(sh,g,n){
- const r={shots:0,goals:0,saves:0,miss:0},pk=$('#pk');
- hkTxt(g?sh.name+' бросает · '+g.name+' в воротах':sh.name+' бросает по пустым воротам','');
- for(let i=0;i<n;i++){
-  const z=Math.random()*4|0,miss=Math.random()<(1-PH.acc(sh))*.4,ty=776+(miss?(Math.random()<.5?-1:1)*rnd(18,26):HY[z]);
-  ui(sh,'🏒 бросает по воротам');if(g)ui(g,'🥅 стоит в воротах');
-  sh.el.classList.remove('shoot');sh.el.classList.add('shoot');
-  await wait(450);
-  pk.style.transition='none';pk.style.opacity=1;pk.style.transform='translate('+(sh.pos[0]-16)+'px,'+sh.pos[1]+'px)';
-  void pk.getBoundingClientRect();
-  pk.style.transition='transform .5s cubic-bezier(.25,.7,.35,1)';pk.style.transform='translate(664px,'+ty+'px)';
-  let res=miss?'miss':'goal';
-  if(g){const gz=Math.random()<PH.rea(g)?z:Math.random()*4|0;g.el.style.transitionDuration='.3s';place(g,[668,776+HY[gz]]);g.el.classList.add('dive');
-   if(!miss&&((gz===z&&Math.random()<.85)||(Math.abs(gz-z)===1&&Math.random()<.18)))res='save'}
-  await wait(550);
-  r.shots++;
-  if(res==='goal'){r.goals++;bubble(sh,pick(['ГОЛ!','В девятку!','Не удержать!']),1800);if(g)bubble(g,pick(['Эх…','Прошла!']),1800);pk.style.transform='translate(652px,'+ty+'px)'}
-  else if(res==='save'){r.saves++;bubble(g,pick(['Сейв!','Взял!','Не пройдёт!']),1800);pk.style.transform='translate('+(700+Math.random()*30)+'px,'+(776+rnd(-26,26))+'px)'}
-  else{r.miss++;bubble(sh,'Мимо!',1500);pk.style.transform='translate(640px,'+(ty+(ty>776?10:-10))+'px)'}
-  hkTxt(g?sh.name+' ▶ '+g.name:sh.name+' ▶ пустые ворота','Бросков '+r.shots+' · Голов '+r.goals+(g?' · Сейвов '+r.saves:'')+(r.miss?' · Мимо '+r.miss:''));
-  await wait(900);
-  if(g){g.el.classList.remove('dive');g.el.style.transitionDuration='.4s';place(g,[668,776])}
-  pk.style.opacity=0;await wait(250)}
- return r}
-async function hkDwell(p){
- const s=p.hkS;if(!s){await wait(3000);return}
- if(p.hkRole==='gk'){await s.done;return}
- let t=0;while(!(s.gk&&s.gk.node==='HG'&&s.gk.st==='dwell')&&t<150000){await wait(500);t+=500}
- if(HK.open===s)HK.open=null;HK.run=true;
- const gk=s.gk&&s.gk.node==='HG'?s.gk:null;
- try{for(let i=0;i<(gk?2:1);i++){const sh=i?gk:p,g=i?p:gk;
-   if(i){hkTxt('СМЕНА РОЛЕЙ','');await Promise.all([go(sh,'HS'),go(g,'HG')]);sh.st=g.st='dwell'}
-   [sh,g].forEach(a=>a&&a.el.classList.add('hk'));
-   const t0=PH.now(),res=await hkRound(sh,g,gk?8:6);PH.train(sh,g,res,t0)}}
- catch(e){console.error(e)}
- HK.run=false;hkTxt('ЛЁД СВОБОДЕН','');p.hkRole=null;p.hkS=null;if(gk){gk.hkS=null;gk.hkRole=null}s.fin()}
+/* ---------- дневники агентов (этап 6) ---------- */
+const DV={id:'claude',day:null},MONTHS=['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'],WD=['воскресенье','понедельник','вторник','среда','четверг','пятница','суббота'];
+const dEl=(t,c,x)=>{const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e};
+const dAp=(p,...k)=>{k.forEach(x=>p.appendChild(x));return p};
+const fmtDay=d=>{const x=new Date(d+'T12:00:00Z');return x.getUTCDate()+' '+MONTHS[x.getUTCMonth()]+' '+x.getUTCFullYear()+', '+WD[x.getUTCDay()]};
+const fmtAt=t=>{const x=new Date(t+108e5);return String(x.getUTCDate()).padStart(2,'0')+'.'+String(x.getUTCMonth()+1).padStart(2,'0')+' '+String(x.getUTCHours()).padStart(2,'0')+':'+String(x.getUTCMinutes()).padStart(2,'0')};
+function diaryRender(){
+ const B=$('#diaryBody');if(!B)return;const days=PH.diaryDays(DV.id);if(!DV.day||!days.includes(DV.day))DV.day=days[0];B.textContent='';
+ const tabs=dEl('div','dtabs');AG.forEach(a=>{const b=dEl('button','dtab'+(a.id===DV.id?' on':''),a.name);b.type='button';b.style.setProperty('--c',a.c);b.onclick=()=>{location.hash='diary/'+a.id+'/'+DV.day};tabs.appendChild(b)});B.appendChild(tabs);
+ const i=days.indexOf(DV.day),nav=dEl('div','dnav'),pv=dEl('button','dn','◀'),nx=dEl('button','dn','▶');pv.type=nx.type='button';pv.disabled=i>=days.length-1;nx.disabled=i<=0;
+ pv.onclick=()=>{location.hash='diary/'+DV.id+'/'+days[i+1]};nx.onclick=()=>{location.hash='diary/'+DV.id+'/'+days[i-1]};
+ dAp(nav,pv,dEl('div','dday',fmtDay(DV.day)+(DV.day===PH.mskDay()?' · сегодня':'')),nx);B.appendChild(nav);
+ const e=PH.diary(DV.id,DV.day);
+ if(!e)B.appendChild(dEl('p','dnote','За этот день записей нет: у агента не было зарегистрированных событий.'));
+ else{if(e.sum.length){B.appendChild(dEl('h3','dh','Итоги дня'));e.sum.forEach(x=>B.appendChild(dEl('p','dp',x)))}
+  if(e.lines.length){B.appendChild(dEl('h3','dh','События'));const ul=dEl('ul','dl');e.lines.forEach(([t,x])=>{const li=dEl('li','');dAp(li,dEl('b','',t),document.createTextNode(' '+x));ul.appendChild(li)});B.appendChild(ul)}
+  if(!e.final)B.appendChild(dEl('p','dnote','День ещё идёт: запись пополняется по мере событий.'))}
+ B.appendChild(dEl('h3','dh','Статистика'));const g=dEl('div','dgrid');PH.stats(DV.id).forEach(([k,v])=>{dAp(g,dAp(dEl('div','dcell'),dEl('div','dv',String(v)),dEl('div','dk',k)))});B.appendChild(g);
+ B.appendChild(dEl('h3','dh','Достижения'));PH.achs(DV.id).forEach(a=>{dAp(B,dAp(dEl('div','dach'+(a.at?' on':'')),dEl('b','',(a.at?'🏆 ':'🔒 ')+a.t),dEl('span','',a.d+(a.at?' · '+fmtAt(a.at):''))))})}
+function diaryOpen(id,day){if(id)DV.id=id;DV.day=day||DV.day;$('#diary').classList.add('open');diaryRender()}
+function diaryClose(){$('#diary').classList.remove('open')}
+function diaryHash(){const m=/^#diary(?:\/(\w+))?(?:\/(\d{4}-\d{2}-\d{2}))?$/.exec(location.hash||'');if(m&&(!m[1]||AG.some(a=>a.id===m[1])))diaryOpen(m[1],m[2]);else diaryClose()}
+function initDiaryUI(){const fab=$('#diaryFab'),x=$('#diaryClose');if(!fab||!x)return;
+ fab.addEventListener('click',()=>{location.hash='diary/'+DV.id});
+ x.addEventListener('click',()=>{if(typeof history!=='undefined'&&history.replaceState)history.replaceState(null,'',location.pathname+location.search);diaryClose()});
+ addEventListener('hashchange',diaryHash);setInterval(()=>{if($('#diary').classList.contains('open'))diaryRender()},30000);diaryHash()}
 
 /* ---------- время суток ---------- */
 const hx=h=>[1,3,5].map(i=>parseInt(h.substr(i,2),16)),mix=(a,b,t)=>{const A=hx(a),B=hx(b);return'rgb('+A.map((v,i)=>Math.round(v+(B[i]-v)*t))+')'};
@@ -611,6 +639,7 @@ tick();setInterval(tick,1000);
  reset();draw();setInterval(step,80);
 })();
 PH.start();
+initDiaryUI();
 AG.forEach(life);
 </script>
 </body>
