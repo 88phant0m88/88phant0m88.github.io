@@ -12,7 +12,7 @@ body{min-height:100vh;padding:14px;display:grid;place-items:center;background:ra
 .mapwrap{width:100%;max-width:1500px;overflow-x:auto;border-radius:12px}
 
 /* комната */
-.room{position:relative;min-width:900px;aspect-ratio:1250/620;container-type:inline-size;overflow:hidden;border-radius:10px;background:#2a2030;--dark:.05;--lamp:0;--br:1;--sun:.4;box-shadow:0 0 0 1px #000,0 12px 30px #0008}
+.room{position:relative;min-width:900px;aspect-ratio:1250/800;container-type:inline-size;overflow:hidden;border-radius:10px;background:#2a2030;--dark:.05;--lamp:0;--br:1;--sun:.4;box-shadow:0 0 0 1px #000,0 12px 30px #0008}
 .room svg{position:absolute;inset:0;width:100%;height:100%;display:block}
 .scr{fill:#0c1624;transition:fill .6s}.scr.on{fill:url(#scrg)}
 .dg{opacity:0;transition:opacity .8s}.dg.on{opacity:1}
@@ -57,6 +57,15 @@ body{min-height:100vh;padding:14px;display:grid;place-items:center;background:ra
 .yoga .body{animation:yoga 4s ease-in-out infinite}@keyframes yoga{0%,100%{transform:rotate(-9deg) scale(.95)}50%{transform:rotate(9deg) scale(1.03)}}
 .belt{opacity:0}.belt.on{opacity:1;animation:belt .45s linear infinite}@keyframes belt{to{stroke-dashoffset:12}}
 .steam{animation:steam 2.4s ease-out infinite;opacity:0}@keyframes steam{0%{opacity:.7;transform:translateY(0)}100%{opacity:0;transform:translateY(-16px)}}
+#tubw{opacity:0;transition:opacity .8s}#tubw.on{opacity:.85}#shw{opacity:0;transition:opacity .5s}#shw.on{opacity:1}#tap{opacity:0}#tap.on{opacity:1;animation:tapd .7s infinite}
+@keyframes tapd{0%{transform:translateY(-3px)}100%{transform:translateY(5px);opacity:0}}
+.rp{transform-box:fill-box;transform-origin:center;animation:rp 1.4s ease-out infinite}@keyframes rp{0%{transform:scale(.3);opacity:.9}100%{transform:scale(1.5);opacity:0}}
+.drp{animation:drp .9s linear infinite}@keyframes drp{0%{transform:translateY(-8px);opacity:0}30%{opacity:1}100%{transform:translateY(10px);opacity:0}}
+.bub{animation:bub 3s ease-in-out infinite}@keyframes bub{50%{transform:translateY(-3px)}}
+.wet .body,.splash .body{animation:wetk .45s ease-in-out infinite alternate}@keyframes wetk{from{transform:translate(-1px,0) rotate(-3deg)}to{transform:translate(1px,-1px) rotate(3deg)}}
+.wet img{box-shadow:0 0 0 2px #0004,0 0 14px #7fc3ea}
+.bath .body{clip-path:inset(0 0 40% 0);transform:scale(.88)}.bath .sh{display:none}
+.brush .body{animation:wetk .22s linear infinite alternate}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important}}
 
 /* ---------- Phantom House sound controls ---------- */
@@ -65,12 +74,11 @@ body{min-height:100vh;padding:14px;display:grid;place-items:center;background:ra
 .sound-panel.open{display:block}.sound-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;font-weight:800;letter-spacing:.08em;color:#d9bdff}
 .sound-close{background:none;border:0;color:#cdb8e8;font-size:22px;cursor:pointer}.sound-row{margin:13px 0}.sound-row label{display:flex;justify-content:space-between;margin-bottom:7px;color:#e9ddf5}.sound-row output{color:#c69cff;font-variant-numeric:tabular-nums}.sound-row input{width:100%;accent-color:#a879e8}.sound-toggle{display:flex;align-items:center;gap:9px;margin-top:14px;color:#d9c9e8}.sound-toggle input{accent-color:#a879e8}.sound-note{margin-top:12px;color:#a99ab8;font-size:11px;line-height:1.4}
 @media(max-width:600px){.sound-fab{right:10px;bottom:10px}.sound-panel{right:10px;bottom:60px}}
-
 </style>
 </head>
 <body>
 <div class="mapwrap"><div class="room" id="room" aria-label="Комната с агентами">
-<svg viewBox="0 0 1250 620" preserveAspectRatio="none" aria-hidden="true">
+<svg viewBox="0 0 1250 800" preserveAspectRatio="none" aria-hidden="true">
 <defs>
 <pattern id="wood" width="220" height="72" patternUnits="userSpaceOnUse"><rect width="220" height="18" fill="#8d6646"/><rect y="18" width="220" height="18" fill="#7c5a3d"/><rect y="36" width="220" height="18" fill="#946b4a"/><rect y="54" width="220" height="18" fill="#86613f"/><path d="M0 18h220M0 36h220M0 54h220M0 72h220M70 0v18M160 18v18M30 36v18M120 54v18" stroke="#3d2a1c" stroke-width="1.4" opacity=".7"/><path d="M0 1h220M0 19h220M0 37h220M0 55h220" stroke="#ffffff" stroke-opacity=".08"/></pattern>
 <pattern id="tile" width="40" height="40" patternUnits="userSpaceOnUse"><rect width="40" height="40" fill="#dad5cf"/><rect width="20" height="20" fill="#cdc7c1"/><rect x="20" y="20" width="20" height="20" fill="#cdc7c1"/><path d="M0 0h40v40" stroke="#a9a29b" fill="none"/></pattern>
@@ -94,7 +102,6 @@ body{min-height:100vh;padding:14px;display:grid;place-items:center;background:ra
 <g id="scene"></g>
 </svg>
 </div></div>
-
 
 <button class="sound-fab" id="soundFab" type="button">♫ Звук: выкл.</button>
 <section class="sound-panel" id="soundPanel" aria-label="Настройки звука">
@@ -135,7 +142,7 @@ function soundCue(kind){
  if(!soundEnabled)return;
  if(['work','tidy','read'].includes(kind)){tone(680,.045,.018*soundLevel('actions'),'square',520);return}
  if(['coffee','cook','eat','fridge'].includes(kind)){tone(520,.11,.035*soundLevel('actions'),'sine',760);return}
- if(['relax','tv','window','sleep'].includes(kind)){tone(330,.16,.018*soundLevel('actions'),'sine',260);return}
+ if(['relax','tv','window','sleep','shower','bath','wash','teeth','mirror','dry'].includes(kind)){tone(330,.16,.018*soundLevel('actions'),'sine',260);return}
  if(kind==='goal'){tone(620,.16,.06*soundLevel('voices'),'triangle',900);setTimeout(()=>tone(880,.24,.055*soundLevel('voices'),'triangle',1100),130);return}
  tone(440,.08,.02*soundLevel('voices'),'sine',620)
 }
@@ -215,15 +222,6 @@ S+=R(x+14,y+12,62,24,'#fbf7f1','rx="9" stroke="#d8cfc4"')+R(x+5,y+56,80,74,c,'rx
 S+=`<g filter="url(#sh)">${R(440,474,32,32,'#7a5436','rx="3"')}</g>`+C(456,490,8,'#2c2433')+C(456,490,5,'#ffe7a3');
 // стол и дверь
 S+=R(448,606,94,14,'#d9c5a0')+R(458,576,74,24,'#4b3a52','rx="4"')+`<path d="M450 608L474 534" stroke="#7a5a3a" stroke-width="7" stroke-linecap="round"/><path d="M474 534A76 76 0 0 1 540 608" fill="none" stroke="#fff" stroke-opacity=".12" stroke-dasharray="4 4"/>`;
- // обувь у входной двери — четыре пары, по одной для каждого агента
- const shoePair=(x,y,color)=>`<g filter="url(#sh)">
-  <path d="M${x} ${y+5}q4-1 7-7l5 1q2 5 8 7q4 2 3 6h-22q-4-1-1-7z" fill="#29232f" stroke="#17131d" stroke-width="1.5"/>
-  <path d="M${x+2} ${y+5}q5-1 7-7l4 1q2 5 7 7q3 2 2 4h-19q-3-1-1-5z" fill="${color}" stroke="#eadfce" stroke-opacity=".55" stroke-width="1"/>
-  <path d="M${x+25} ${y+5}q4-1 7-7l5 1q2 5 8 7q4 2 3 6h-22q-4-1-1-7z" fill="#29232f" stroke="#17131d" stroke-width="1.5"/>
-  <path d="M${x+27} ${y+5}q5-1 7-7l4 1q2 5 7 7q3 2 2 4h-19q-3-1-1-5z" fill="${color}" stroke="#eadfce" stroke-opacity=".55" stroke-width="1"/>
-  <path d="M${x+8} ${y+2}l5 2m19-2 5 2" stroke="#f3e9dc" stroke-opacity=".7" stroke-width="1.2" stroke-linecap="round"/>
- </g>`;
- S+=shoePair(548,565,'#d97757')+shoePair(592,565,'#10a37f')+shoePair(548,590,'#7c6cf0')+shoePair(592,590,'#4d7cff');
 S+=`<g filter="url(#sh)">${C(590,505,48,'url(#dw)','stroke="#4a3220" stroke-width="2"')}</g>`+[0,120,240].map(a=>C(590+78*Math.cos(a*Math.PI/180+.6),505+78*Math.sin(a*Math.PI/180+.6),17,'#352c40')).join('')+C(590,505,13,'#8a5a3c')+C(590,498,9,'#3f8a55')+C(570,520,5,'#f1ece6');
 // спортзал, еда, растения
 S+=R(996,70,8,322,'#3b2f45')+R(996,468,8,152,'#3b2f45')+R(996,392,8,76,'#5d412c')+R(993,386,14,8,'#241a2b')+R(993,466,14,8,'#241a2b');
@@ -246,18 +244,34 @@ S+=C(872,423,10,'#e9e4dc','stroke="#bbb"')+[[868,420],[876,421],[872,427],[866,4
 S+=plant(22,445,17)+plant(600,330,24)+plant(970,262,26)+plant(712,585,22)+plant(1020,595,22)+plant(1228,590,26)+plant(1228,420,24);
 S+=C(400,57,5,'#3f8a55')+R(396,59,8,6,'#b07a58')+C(604,57,5,'#4a9a5f')+R(600,59,8,6,'#b07a58');
 dk.forEach(([x,y])=>{S+=R(x+155,y+54,10,8,'#b07a58','rx="2"')+C(x+160,y+50,7,'#3f8a55')+C(x+162,y+48,4,'#6fb87a')});
+// ---- ванная комната (этап 3) ----
+S+=`<pattern id="bt" width="30" height="30" patternUnits="userSpaceOnUse"><rect width="30" height="30" fill="#cfe0e4"/><rect width="15" height="15" fill="#bcd3d9"/><rect x="15" y="15" width="15" height="15" fill="#bcd3d9"/><path d="M0 0h30v30" stroke="#8fb0b8" fill="none" stroke-width=".6"/></pattern>`;
+S+=R(560,620,690,180,'#150f1c')+R(0,626,560,174,'url(#bt)')+R(0,626,560,174,'#000','filter="url(#nz)" opacity=".05"');
+S+=R(0,616,448,10,'#3b2f45')+R(542,616,462,10,'#3b2f45')+R(1004,616,246,10,'#3b2f45')+R(0,626,6,174,'#3b2f45')+R(556,626,8,174,'#3b2f45')+R(0,794,564,6,'#3b2f45');
+S+=R(6,626,444,50,'#86aab2')+R(542,626,14,50,'#86aab2')+R(6,654,444,22,'#b5d0d6')+R(6,674,444,3,'#5d7f87')+R(6,677,444,16,'url(#ws)')+R(542,677,14,16,'url(#ws)');
+S+=R(36,636,130,4,'#5a4a3a')+R(46,640,24,28,'#d0577a','rx="2"')+R(78,640,24,30,'#4a7bd0','rx="2"')+R(110,640,24,27,'#e8e0d0','rx="2"')+C(44,638,2.5,'#c8d0d4')+C(160,638,2.5,'#c8d0d4');
+S+=R(222,642,76,5,'#6a4a35')+R(230,630,8,12,'#8fd0e8','rx="2"')+R(244,633,8,9,'#e8b24a','rx="2"')+R(260,628,9,14,'#f08c9a','rx="2"')+R(276,632,8,10,'#9be0b0','rx="2"');
+S+=R(316,630,112,40,'#e9dfcf','rx="3"')+R(320,634,104,32,'#cfe4ee','rx="2"')+`<polygon points="330,634 352,634 338,666 322,666" fill="#fff" opacity=".4"/>`+R(346,627,56,3,'#f1dfae');
+// ванна
+S+=`<g filter="url(#sh)">${R(20,680,185,76,'#f3f6f8','rx="22" stroke="#c4ccd2"')}${R(30,688,165,60,'#e2e9ed','rx="16"')}</g>`+R(30,688,165,60,'#8fd0e8','rx="16" id="tubw"')+[[70,712,6],[96,724,4],[130,708,5],[160,728,6],[150,700,3]].map(([x,y,r],i)=>C(x,y,r,'#fff','class="bub" opacity=".8" style="animation-delay:'+i*.4+'s"')).join('')+R(30,712,10,12,'#aeb8bf','rx="2"')+C(44,718,5,'#c8d0d4','stroke="#8a9299"')+R(40,764,120,26,'#c07b8a','rx="6"');
+// душ
+S+=R(215,680,80,80,'#d8ecf5','rx="4" opacity=".4" stroke="#9fd0e6" stroke-width="2"')+R(222,687,66,66,'#eef3f6','rx="6"')+C(255,722,4,'#8a9299')+C(255,698,9,'#c8d0d4','stroke="#8a9299"')+`<g id="shw"><circle class="rp" cx="255" cy="722" r="14" fill="none" stroke="#7fc3ea" stroke-width="1.5"/><circle class="rp" cx="255" cy="722" r="14" fill="none" stroke="#7fc3ea" stroke-width="1.5" style="animation-delay:.7s"/>${[[240,708],[270,712],[248,735],[266,738],[255,716]].map(([x,y],i)=>C(x,y,2,'#9fd8f2','class="drp" style="animation-delay:'+i*.25+'s"')).join('')}</g>`+R(222,764,66,22,'#5d8fb0','rx="5"');
+// раковина
+S+=`<g filter="url(#sh)">${R(310,678,120,44,'url(#stone)','rx="4"')}</g><ellipse cx="370" cy="700" rx="24" ry="15" fill="#e8f0f3" stroke="#9aa7ae" stroke-width="2"/>`+C(370,700,2.5,'#777')+R(366,682,8,9,'#c8d0d4','rx="2"')+C(370,696,2.8,'#7fc3ea','id="tap"')+C(326,692,6,'#fff','stroke="#bbb"')+`<path d="M324 692l-3-10" stroke="#4a7bd0" stroke-width="2"/>`+C(412,692,5,'#e9a3b5');
+// мелочи
+S+=R(455,690,70,30,'#a8c8d4','rx="6"')+`<g filter="url(#sh)">${C(526,745,16,'#b58a5a','stroke="#7a5a35" stroke-width="2"')}${C(526,745,10,'#d6b182')}</g>`+plant(536,778,18)+C(120,788,0,'none');
 // рамка, свет, вечерняя тьма
-S+=`<rect width="1250" height="620" fill="#07102e" style="opacity:var(--dark)"/>`;
+S+=`<rect width="1250" height="800" fill="#07102e" style="opacity:var(--dark)"/>`;
 S+=`<g style="mix-blend-mode:screen;opacity:var(--lamp)">`+dk.map(([x,y])=>C(x+20,y+14,90,'url(#lp)')).join('')+C(962,556,150,'url(#lp)')+C(456,490,120,'url(#lp)')+C(1125,300,230,'url(#lp)')+`<ellipse cx="785" cy="140" rx="190" ry="50" fill="url(#lp)"/></g>`;
-S+=`<g style="mix-blend-mode:screen">`+dk.map(([x,y],i)=>C(x+85,y+34,85,'url(#bg)',`class="dg" id="dg${i}"`)).join('')+C(1167,70,120,'url(#bg)','opacity=".6"')+`<polygon id="tvc" points="770,360 900,360 960,470 710,470" fill="url(#tvcg)"/></g>`;
-S+=R(0,0,1250,620,'url(#vg)')+R(0,0,1250,620,'none','stroke="#241a2b" stroke-width="14"')+R(7,7,1236,606,'none','stroke="#6b5878" stroke-opacity=".5" stroke-width="1.5"');
+S+=`<g style="mix-blend-mode:screen">`+dk.map(([x,y],i)=>C(x+85,y+34,85,'url(#bg)',`class="dg" id="dg${i}"`)).join('')+C(280,730,200,'url(#bg)','class="dg" id="bgl"')+C(1167,70,120,'url(#bg)','opacity=".6"')+`<polygon id="tvc" points="770,360 900,360 960,470 710,470" fill="url(#tvcg)"/></g>`;
+S+=R(0,0,1250,800,'url(#vg)')+R(0,0,1250,800,'none','stroke="#241a2b" stroke-width="14"')+R(7,7,1236,786,'none','stroke="#6b5878" stroke-opacity=".5" stroke-width="1.5"');
 $('#scene').innerHTML=S;
 
 /* ---------- навигация ---------- */
-const N={A:[270,250],H2:[520,250],B:[270,375],H3:[520,375],D:[270,432],H4:[520,432],K1:[640,170],K2:[745,170],K3:[850,170],K4:[945,175],K5:[680,300],T1:[760,300],T2:[860,300],L1:[700,410],L2:[700,455],F1:[790,455],F2:[835,455],F3:[885,455],V1:[790,508],V2:[835,508],V3:[885,508],WN:[520,118],DR:[495,578],GD1:[975,430],GD2:[1040,430],GH:[1100,400],GT:[1090,255],G1:[1050,185],G2:[1110,185],G3:[1170,327],G4:[1056,535],G5:[1136,535],G6:[1195,165],S1:[155,205],S2:[385,205],S3:[155,375],S4:[385,375]};
+const N={A:[270,250],H2:[520,250],B:[270,375],H3:[520,375],D:[270,432],H4:[520,432],K1:[640,170],K2:[745,170],K3:[850,170],K4:[945,175],K5:[680,300],T1:[760,300],T2:[860,300],L1:[700,410],L2:[700,455],F1:[790,455],F2:[835,455],F3:[885,455],V1:[790,508],V2:[835,508],V3:[885,508],WN:[520,118],DR:[495,578],GD1:[975,430],GD2:[1040,430],GH:[1100,400],GT:[1090,255],G1:[1050,185],G2:[1110,185],G3:[1170,327],G4:[1056,535],G5:[1136,535],G6:[1195,165],BR0:[495,650],BR1:[495,715],BT:[110,716],BH:[255,722],BS:[370,742],BM:[408,742],BY1:[110,772],BY2:[255,775],BY3:[370,775],BY4:[495,775],S1:[155,205],S2:[385,205],S3:[155,375],S4:[385,375]};
 for(let i=0;i<4;i++){N['BF'+i]=[85+100*i,447];N['BD'+i]=[85+100*i,500]}
 const adj={};
-'A-H2 A-B B-D D-H4 H4-H3 H3-H2 S1-A S2-A S3-B S4-B S4-H3 H2-WN H2-K1 K1-K2 K2-K3 K3-K4 K1-K5 K5-T1 T1-T2 K5-L1 H4-L1 L1-L2 L2-F1 F1-F2 F2-F3 F1-V1 F2-V2 F3-V3 H4-DR BF0-BF1 BF1-BF2 BF2-BF3 D-BF2 BF3-H4 BD0-BF0 BD1-BF1 BD2-BF2 BD3-BF3 F3-GD1 GD1-GD2 GD2-GH GH-GT GT-G1 GT-G2 GT-G6 GH-G3 GH-G4 GH-G5'.split(' ').forEach(e=>{const[a,b]=e.split('-'),d=Math.hypot(N[a][0]-N[b][0],N[a][1]-N[b][1]);(adj[a]??=[]).push([b,d]);(adj[b]??=[]).push([a,d])});
+'A-H2 A-B B-D D-H4 H4-H3 H3-H2 S1-A S2-A S3-B S4-B S4-H3 H2-WN H2-K1 K1-K2 K2-K3 K3-K4 K1-K5 K5-T1 T1-T2 K5-L1 H4-L1 L1-L2 L2-F1 F1-F2 F2-F3 F1-V1 F2-V2 F3-V3 H4-DR BF0-BF1 BF1-BF2 BF2-BF3 D-BF2 BF3-H4 BD0-BF0 BD1-BF1 BD2-BF2 BD3-BF3 F3-GD1 GD1-GD2 GD2-GH GH-GT GT-G1 GT-G2 GT-G6 GH-G3 GH-G4 GH-G5 DR-BR0 BR0-BR1 BR1-BY4 BR1-BS BY4-BY3 BY3-BY2 BY2-BY1 BT-BY1 BH-BY2 BS-BY3 BM-BY3 BM-BS'.split(' ').forEach(e=>{const[a,b]=e.split('-'),d=Math.hypot(N[a][0]-N[b][0],N[a][1]-N[b][1]);(adj[a]??=[]).push([b,d]);(adj[b]??=[]).push([a,d])});
 function path(a,b){const dist={[a]:0},prev={},q=new Set(Object.keys(N));while(q.size){let u=null;q.forEach(k=>{if(dist[k]!==undefined&&(u===null||dist[k]<dist[u]))u=k});if(u===null||u===b)break;q.delete(u);(adj[u]||[]).forEach(([v,d])=>{if(dist[v]===undefined||dist[u]+d<dist[v]){dist[v]=dist[u]+d;prev[v]=u}})}const r=[b];while(r[0]!==a)r.unshift(prev[r[0]]);return r}
 
 /* ---------- агенты ---------- */
@@ -267,17 +281,17 @@ AG.forEach((p,i)=>{
  el.className='agent sit';el.style.setProperty('--c',p.c);el.setAttribute('aria-label',p.name+' — нажми, чтобы сменить занятие');
  el.innerHTML=`<span class="sh"></span><span class="body"><img src="https://raw.githubusercontent.com/lobehub/lobe-icons/master/packages/static-png/light/${p.img}.png" alt="${p.name}"></span><span class="zz">Zzz</span><span class="tag">${p.name}<i><b></b></i></span><span class="act"></span><span class="say"></span>`;
  room.appendChild(el);place(p,p.pos,0);
- p.say=el.querySelector('.say');p.zz=el.querySelector('.zz');p.bar=el.querySelector('.tag b');p.actEl=el.querySelector('.act');p.label='';
+ p.say=el.querySelector('.say');p.zz=el.querySelector('.zz');p.bar=el.querySelector('.tag b');p.act=el.querySelector('.act');p.label='';
  el.addEventListener('click',()=>{if(convo||p.busy)return;if(p.el.classList.contains('sleep'))bubble(p,'Ещё пять минуток…');p.force=choose(p,true);p.wake&&p.wake()});
 });
-function place(p,[x,y],t=null){p.pos=[x,y];const s=p.el.style;if(t===0)s.transitionDuration='0s';s.left=x/12.5+'%';s.top=y/6.2+'%';s.zIndex=10+Math.round(y/10)}
+function place(p,[x,y],t=null){p.pos=[x,y];const s=p.el.style;if(t===0)s.transitionDuration='0s';s.left=x/12.5+'%';s.top=y/8+'%';s.zIndex=10+Math.round(y/10)}
 function bubble(p,t,ms=3300){p.say.textContent=t;p.say.classList.add('show');clearTimeout(p.bt);p.bt=setTimeout(()=>p.say.classList.remove('show'),ms)}
-function ui(p,t){if(t)p.label=t;if(p._l!==p.label){p.actEl.textContent=p.label;p._l=p.label}const w=Math.round(p.e);if(p._w!==w){p.bar.style.width=w+'%';p._w=w}}
+function ui(p,t){if(t)p.label=t;if(p._l!==p.label){p.act.textContent=p.label;p._l=p.label}const w=Math.round(p.e);if(p._w!==w){p.bar.style.width=w+'%';p._w=w}}
 const SPEED=120;
 async function go(p,target,off){
  const el=p.el,pts=path(p.node,target).map(k=>N[k]);
  if(off)pts.push([N[target][0]+off[0],N[target][1]+off[1]]);
- el.classList.remove('sit','sleep','work','eat','tv','run','lift','yoga');el.classList.add('moving');p.st='moving';
+ el.classList.remove('sit','sleep','work','eat','tv','run','lift','yoga','wet','bath','splash','brush');el.classList.add('moving');p.st='moving';
  for(const[x,y]of pts){const dx=x-p.pos[0],dy=y-p.pos[1],d=Math.hypot(dx,dy);if(d<2)continue;const t=d/SPEED;el.style.setProperty('--dir',dx>=0?1:-1);el.style.transitionDuration=t+'s';place(p,[x,y]);await wait(t*1000+30)}
  p.node=target;el.classList.remove('moving');
 }
@@ -298,12 +312,18 @@ const ACT={
  relax:{t:'отдыхает на диване',em:'🛋️',at:()=>free(['V1','V2','V3']),cls:'sit',s:()=>rnd(15,28),l:['Наконец-то передышка','Пять минут тишины','Можно немного выдохнуть']},
  tidy:{t:'наводит порядок на столе',em:'🧹',at:p=>p.seat,cls:'work sit',s:()=>rnd(10,17),l:['Навожу порядок','Так гораздо удобнее','Готово, теперь всё на месте']},
  read:{t:'читает у окна',em:'📖',at:()=>'WN',cls:'sit',s:()=>rnd(12,22),l:['Интересная мысль','Нужно это запомнить','Хорошая книга']},
+ shower:{t:'принимает душ',em:'🚿',ex:1,at:()=>'BH',cls:'wet',s:()=>rnd(24,40),l:['Горячая вода — это жизнь','Смываю усталость','Хорошо-то как']},
+ bath:{t:'принимает ванну',em:'🛁',ex:1,at:()=>'BT',cls:'bath',s:()=>rnd(45,75),l:['Пена и тишина','Вот это отдых','Можно тут задержаться']},
+ wash:{t:'умывается',em:'💦',at:()=>free(['BS','BM']),cls:'splash',s:()=>rnd(8,14),l:['Прохладная вода бодрит']},
+ teeth:{t:'чистит зубы',em:'🪥',at:()=>free(['BS','BM']),cls:'brush',s:()=>rnd(12,18),l:null},
+ mirror:{t:'смотрится в зеркало',em:'🪞',at:()=>free(['BM','BS']),cls:'',s:()=>rnd(7,12),l:['Выгляжу прилично','Причёска держится','Сегодня определённо мой день']},
+ dry:{t:'вытирается полотенцем',em:'🧖',at:()=>'BY2',cls:'',s:()=>rnd(6,10),l:['Полотенце мягкое']},
  sleep:{t:'спит',em:'💤',at:p=>'BD'+p.bed,cls:'sleep',s:p=>PH.sleepSec(p),l:null}
 };
 const choose=(p,n)=>PH.choose(p,n);
 function dwell(p,sec,lines){return new Promise(res=>{const tok=p.tok={};p.wake=res;setTimeout(res,sec*1000);const tick=()=>{if(p.tok!==tok)return;if(lines)bubble(p,pick(lines));setTimeout(tick,5500+Math.random()*5000)};setTimeout(tick,1500+Math.random()*2500)})}
 const tvUsers=()=>AG.filter(p=>p.el.classList.contains('tv')).length;
-function fx(){AG.forEach(p=>{const w=p.el.classList.contains('work'),i=p.i;$('#sc'+i).classList.toggle('on',w);$('#dg'+i).classList.toggle('on',w)});const t=tvUsers()>0;$('#tvs').classList.toggle('on',t);$('#tvc').classList.toggle('on',t);[['G1','tm0'],['G2','tm1']].forEach(([n,id])=>$('#'+id).classList.toggle('on',AG.some(p=>p.node===n&&p.el.classList.contains('run'))))}
+function fx(){AG.forEach(p=>{const w=p.el.classList.contains('work'),i=p.i;$('#sc'+i).classList.toggle('on',w);$('#dg'+i).classList.toggle('on',w)});const t=tvUsers()>0;$('#tvs').classList.toggle('on',t);$('#tvc').classList.toggle('on',t);[['G1','tm0'],['G2','tm1']].forEach(([n,id])=>$('#'+id).classList.toggle('on',AG.some(p=>p.node===n&&p.el.classList.contains('run'))));const bn=['BR0','BR1','BT','BH','BS','BM','BY1','BY2','BY3','BY4'];$('#bgl').classList.toggle('on',AG.some(p=>bn.includes(p.node)||(p.st==='moving'&&p.pos[1]>625)));$('#shw').classList.toggle('on',AG.some(p=>p.el.classList.contains('wet')));$('#tubw').classList.toggle('on',AG.some(p=>p.el.classList.contains('bath')));$('#tap').classList.toggle('on',AG.some(p=>p.node==='BS'&&p.st==='dwell'&&/splash|brush/.test(p.el.className)))}
 async function life(p){
  await wait(p.i*1500+800);
  for(;;){
@@ -312,6 +332,7 @@ async function life(p){
   if(p.resume){const r=p.resume;p.resume=null;k=r.k;rem=Math.max(2,(r.until-PH.now())/1000);p.act={k,at:r.at,t0:r.t0};p.plan=r.plan||rem}
   else{k=p.force||choose(p);p.force=null}
   const a=ACT[k],at=rem!==null?p.act.at:a.at(p),cont=rem!==null||(k==='sleep'&&p.node===at&&p.el.classList.contains('sleep'));
+  while(a.ex&&!cont&&taken[at]&&taken[at]!==p){p.st='wait';ui(p,'⏳ ждёт очереди: '+a.t);await wait(3000)}
   taken[at]=p;
   if(!cont){ui(p,'🚶 идёт: '+a.t);await go(p,at)}
   if(!cont||rem!==null){p.st='dwell';p.last=k;a.cls&&a.cls.split(' ').forEach(c=>p.el.classList.add(c));p.zz.textContent='Zzz';ui(p,a.em+' '+a.t);if(!cont)soundCue(k);fx();
@@ -325,7 +346,7 @@ async function life(p){
   if(k==='sleep'&&PH.asleep(p)&&!p.force)continue;
   if(k==='work')eventReact('work',p);else if(k==='coffee')eventReact('coffee',p);else if(k==='tidy')eventReact('clean',p);else if(k==='relax')eventReact('rest',p);else if(k==='read')eventReact('read',p);
   if(k==='sleep'){p.el.classList.remove('sleep');PH.woke(p);bubble(p,pick(['Ох, хорошо выспался','Бодр и свеж!','Мне снился чистый код']))}
-  ['work','eat','tv','sit','run','lift','yoga'].forEach(c=>p.el.classList.remove(c));fx();
+  ['work','eat','tv','sit','run','lift','yoga','wet','bath','splash','brush'].forEach(c=>p.el.classList.remove(c));fx();
  }
 }
 const rate=p=>{const c=p.el.classList;return c.contains('sleep')?14:c.contains('run')||c.contains('lift')?-30:c.contains('work')?-8:c.contains('yoga')?-10:-5};
@@ -399,15 +420,17 @@ const PH=(function(){
  function keys(day){if(KC.day===day)return KC.k;const{sr,ss}=sunTimes(day);KC={day,k:[[0,'#050a1f','#16264a',.62],[sr-1.6,'#0b1330','#2b3358',.55],[sr-.2,'#4a4a7a','#e89b86',.3],[sr+1.3,'#5aa3dc','#bfe0f2',.04],[ss-1.5,'#5aa3dc','#bfe0f2',.04],[ss+.1,'#5a4a8a','#f08c6a',.3],[ss+1.4,'#14183c','#3a3a63',.52],[24,'#050a1f','#16264a',.62]]};return KC.k}
  /* ---- расписание агента на день (детерминированно: день + имя) ---- */
  const hsh=s=>{let x=7;for(let i=0;i<s.length;i++)x=(Math.imul(x,31)+s.charCodeAt(i))>>>0;return x},jit=(day,id,m)=>(hsh(day+id+m)%41-20)/60;
- function plan(p,day){const dow=new Date(day+'T12:00:00Z').getUTCDay(),we=dow===0||dow===6?1:0,o=OFF[p.i],J=m=>jit(day,p.id,m),wake=7+o*.6+we*1.1+J('w');
-  return{day,wake,bed:Math.min(23.9,23.2+o+we*.8+J('b')),b:[wake+.3,wake+2],l:[13+J('l'),14.6],d:[19+o*.4+J('d'),21],gym:hsh(day+p.id+'g')%10<7?[17.3+J('g'),20]:null}}
+ function plan(p,day){const dow=new Date(day+'T12:00:00Z').getUTCDay(),we=dow===0||dow===6?1:0,o=OFF[p.i],J=m=>jit(day,p.id,m),wake=7+o*.6+we*1.1+J('w'),bed=Math.min(23.9,23.2+o+we*.8+J('b'));
+  return{day,wake,bed,m:[wake+.05,wake+1.2],e:[bed-1.1,bed-.15],shM:hsh(day+p.id+'s')%10<6,bt:hsh(day+p.id+'t')%10<3,b:[wake+.3,wake+2],l:[13+J('l'),14.6],d:[19+o*.4+J('d'),21],gym:hsh(day+p.id+'g')%10<7?[17.3+J('g'),20]:null}}
  const planOf=p=>{const day=mskDay();return p.pl&&p.pl.day===day?p.pl:(p.pl=plan(p,day))},inSleep=(pl,h)=>h<pl.wake||h>=pl.bed,asleep=p=>inSleep(planOf(p),mskHour());
  function script(p,h,day,pl){const add=(key,list,until)=>{if(p.done[key]||p.q.some(x=>x.key===key))return;list.forEach(([a,fin])=>p.q.push({a,key,fin:!!fin,until,day}))};
+  if(h>=pl.m[0]&&h<pl.m[1]){const L=[['wash']];if(pl.shM&&p.showered!==day)L.push(['shower'],['dry']);L.push(['teeth'],['mirror',1]);add(day+'m',L,pl.m[1])}
   if(h>=pl.b[0]&&h<pl.b[1])add(day+'b',[['coffee'],['eat',1]],pl.b[1]);
   if(h>=pl.l[0]&&h<pl.l[1])add(day+'l',[['cook'],['eat',1]],pl.l[1]);
   if(h>=pl.d[0]&&h<pl.d[1])add(day+'d',[['cook'],['eat',1]],pl.d[1]);
+  if(h>=pl.e[0]&&h<pl.e[1]){const L=[];if(p.showered!==day)L.push([pl.bt?'bath':'shower'],['dry']);L.push(['wash'],['teeth'],['mirror',1]);add(day+'e',L,pl.e[1])}
   if(pl.gym&&h>=pl.gym[0]&&h<pl.gym[1])add(day+'g',[[pick(['run','bench'])],[pick(['dumb','yoga']),1]],pl.gym[1])}
- const weights=(p,h)=>({work:h>=9.5&&h<18?5:h>=18&&h<21?1.2:.4,fridge:.5,cook:.2,eat:.2,coffee:h<11.5?1.6:h<16?.9:.3,relax:h>=18&&h<23.5?1.6:.5,tidy:.7,read:h>=20.5?1.4:.7,tv:h>=18&&h<23.5?2.6:.9,window:.8,stroll:.6,run:.25,bench:.2,dumb:.2,yoga:.4,sleep:p.e<15?(15-p.e)/3:0});
+ const weights=(p,h)=>({work:h>=9.5&&h<18?5:h>=18&&h<21?1.2:.4,fridge:.5,cook:.2,eat:.2,coffee:h<11.5?1.6:h<16?.9:.3,relax:h>=18&&h<23.5?1.6:.5,tidy:.7,read:h>=20.5?1.4:.7,tv:h>=18&&h<23.5?2.6:.9,window:.8,stroll:.6,run:.25,bench:.2,dumb:.2,yoga:.4,wash:.02,mirror:.03,sleep:p.e<15?(15-p.e)/3:0});
  function choose(p,notSame){p.cur=null;const t=now(),h=mskHour(t),day=mskDay(t),pl=planOf(p);
   if(!notSame){if(inSleep(pl,h)){p.q=[];return'sleep'}script(p,h,day,pl);while(p.q.length){const e=p.q.shift();if(e.day===day&&e.until>h){p.cur=e;return e.a}}}
   const w=weights(p,h);if(p.last)w[p.last]=0;if(notSame)w.sleep=0;
@@ -428,7 +451,7 @@ const PH=(function(){
  function aggAct(p,k,t0,t1,cap){const key=p.id+':'+t0;if(AGG.ak.includes(key))return;AGG.ak.push(key);if(AGG.ak.length>200)AGG.ak.splice(0,AGG.ak.length-150);
   const r=(dayAgg(mskDay(t0),p.id).acts[k]||(dayAgg(mskDay(t0),p.id).acts[k]=[0,0]));r[0]++;r[1]=Math.round(r[1]+clamp((t1-t0)/1000,0,cap));dirty=true}
  const prune=o=>{const ks=Object.keys(o||{}).sort().slice(-12),r={};ks.forEach(k=>r[k]=1);return r};
- const snapshot=()=>({savedAt:now(),logSeq:LOG.seq,agents:AG.map(p=>({id:p.id,node:p.node,e:+p.e.toFixed(2),act:p.act||null,until:p.until||0,plan:p.plan||0,sleepFrom:p.sleepFrom||0,last:p.last||null,cur:p.cur||null,q:p.q,done:prune(p.done)}))});
+ const snapshot=()=>({savedAt:now(),logSeq:LOG.seq,agents:AG.map(p=>({id:p.id,node:p.node,e:+p.e.toFixed(2),act:p.act||null,until:p.until||0,plan:p.plan||0,sleepFrom:p.sleepFrom||0,last:p.last||null,cur:p.cur||null,q:p.q,done:prune(p.done),showered:p.showered||''}))});
  function flush(force){if(!LS||!leader||FUTURE)return;const t=now();
   if(dirty&&(force||t-logAt>45e3)){logAt=t;if(!wr('log',LOG)){LOG.ev.splice(0,LOG.ev.length>>1);reseen();wr('log',LOG)}wr('agg',AGG);dirty=false}
   if(t-bakAt>3e5){const prev=LS.getItem(PFX+'state');if(prev&&rd('state'))try{LS.setItem(PFX+'state.bak',prev)}catch(e){}bakAt=t}
@@ -443,7 +466,7 @@ const PH=(function(){
  function restore(){const st=rd('state')||rd('state.bak');if(!st||!Array.isArray(st.agents))return null;const t=now();
   if(st.logSeq>LOG.seq){LOG.seq=st.logSeq;logEvent('log_gap',{seq:st.logSeq},'gap:'+st.savedAt)}
   let gap=t-st.savedAt;if(gap<0){logEvent('clock_skew',{gap},'skew:'+st.savedAt);gap=0}gap=Math.min(gap,30*DAYMS);
-  AG.forEach(p=>{const s=st.agents.find(x=>x.id===p.id);if(!s)return;p.e=clamp(+s.e||0,0,100);p.q=Array.isArray(s.q)?s.q:[];p.done=s.done||{};p.last=s.last;p.cur=s.cur;p.sleepFrom=s.sleepFrom||0;
+  AG.forEach(p=>{const s=st.agents.find(x=>x.id===p.id);if(!s)return;p.e=clamp(+s.e||0,0,100);p.q=Array.isArray(s.q)?s.q:[];p.done=s.done||{};p.showered=s.showered||'';p.last=s.last;p.cur=s.cur;p.sleepFrom=s.sleepFrom||0;
    if(N[s.node]){p.node=s.node;place(p,[...N[s.node]],0)}
    if(gap<AWAY){if(s.act&&ACT[s.act.k]&&s.until>t)p.resume={k:s.act.k,at:s.act.at,t0:s.act.t0,until:s.until,plan:s.plan}}
    else{if(s.act&&ACT[s.act.k])aggAct(p,s.act.k,s.act.t0,Math.min(st.savedAt,s.until||st.savedAt),(s.plan||60)+20);p.e=energyGap(p,st.savedAt,t,p.e);p.cur=null;p.q=[]}});
@@ -453,9 +476,13 @@ const PH=(function(){
   setInterval(beat,5e3);setInterval(flush,15e3);
   addEventListener('visibilitychange',()=>{if(document.hidden)flush(true);else if(now()-lastFlush>AWAY&&leader)location.reload()});addEventListener('pagehide',()=>{flush(true);release()});flush(true)}
  /* ---- события симуляции ---- */
- function finish(p,k){const t1=now(),a=p.act;if(a)aggAct(p,k,a.t0,t1,(p.plan||60)+20);const c=p.cur;
-  if(k==='coffee')p.e=clamp(p.e+3,0,100);if(k==='eat')p.e=clamp(p.e+6,0,100);
-  if(c&&c.a===k&&c.fin){p.done[c.key]=1;const g=c.key.slice(-1)==='g';if(logEvent(g?'workout':'meal',{a:p.id,m:c.key.slice(-1)},(g?'workout:':'meal:')+p.id+':'+c.key))dayAgg(c.day,p.id)[g?'workouts':'meals']++;p.cur=null}dirty=true}
+ function finish(p,k){const t1=now(),a=p.act;if(a)aggAct(p,k,a.t0,t1,(p.plan||60)+20);const c=p.cur,day=mskDay(t1);
+  if(k==='coffee')p.e=clamp(p.e+3,0,100);if(k==='eat')p.e=clamp(p.e+6,0,100);if(k==='bath')p.e=clamp(p.e+4,0,100);if(k==='shower')p.e=clamp(p.e+2,0,100);
+  if(k==='shower'||k==='bath')p.showered=day;
+  if(c&&c.a===k&&c.fin){p.done[c.key]=1;const kc=c.key.slice(-1),ty=kc==='g'?'workout':kc==='m'||kc==='e'?'routine':'meal',f=ty==='workout'?'workouts':ty==='routine'?'routines':'meals';
+   if(logEvent(ty,{a:p.id,m:kc},ty+':'+p.id+':'+c.key)){const r=dayAgg(c.day,p.id);r[f]=(r[f]||0)+1}
+   if(kc==='g'&&p.showered!==c.day)p.q.unshift({a:'shower',key:c.day+'x',fin:false,until:24,day:c.day},{a:'dry',key:c.day+'x',fin:false,until:24,day:c.day});p.cur=null}
+  dirty=true}
  function woke(p){if(p.sleepFrom){logEvent('sleep',{a:p.id,from:p.sleepFrom,to:now()},'sleep:'+p.id+':'+p.sleepFrom);p.sleepFrom=0}}
  function chat(a,b,out,wi,lo,t0){const day=mskDay(t0);if(!logEvent('chat',{a:a.id,b:b.id,o:out,w:wi&&wi.id,l:lo&&lo.id},'chat:'+t0+':'+a.id+b.id))return;
   dayAgg(day,a.id).chats++;dayAgg(day,b.id).chats++;if(out==='fight'){dayAgg(day,a.id).fights++;dayAgg(day,b.id).fights++;dayAgg(day,lo.id).kos++;lo.q.unshift({a:'sleep',key:'ko'+t0,fin:false,until:24,day})}}
@@ -477,7 +504,6 @@ function tick(){
  room.dataset.t=d>.4?'night':d>.15?'dusk':'day';
 }
 tick();setInterval(tick,1000);
-
 /* ---------- хоккей на ТВ в спортзале ---------- */
 (function(){
  const NS='http://www.w3.org/2000/svg',g=$('#hkp'),pk=$('#hkpk'),cl=(v,a,b)=>Math.max(a,Math.min(b,v)),P=[];
@@ -487,7 +513,7 @@ tick();setInterval(tick,1000);
  function move(p,tx,ty,s){const dx=tx-p.x,dy=ty-p.y,d=Math.hypot(dx,dy)||1,m=Math.min(s,d);p.x+=dx/d*m;p.y+=dy/d*m}
  function reset(){P.forEach(p=>{if(p.k){p.x=76+rnd(-30,30);p.y=rnd(8,44)}else{p.x=p.t?140:12;p.y=26}});car=pick(P.filter(p=>p.k));pu.x=76;pu.y=26;shot=null}
  function newGame(){sc=[0,0];per=1;left=1200;st='play';reset()}
- function cheer(){soundCue('goal');const lines={claude:'Вот это был точный бросок! 🏒',codex:'ГОЛ! Надо пересмотреть повтор.',qwen:'Красивая комбинация, отличный гол!',deepseek:'ДААА! ВОТ ЭТО ХОККЕЙ!'};AG.filter(p=>!p.el.classList.contains('sleep')).forEach((p,i)=>setTimeout(()=>{if(!p.el.classList.contains('sleep'))bubble(p,lines[p.id],3000)},i*650));const fan=AG.find(p=>p.el.classList.contains('tv')&&p.st==='dwell');if(fan)setTimeout(()=>bubble(fan,'ГОООЛ! 🏒',3200),100)}
+ function cheer(){soundCue('goal');AG.filter(p=>/^G/.test(p.node)&&p.st==='dwell').sort(()=>Math.random()-.5).slice(0,2).forEach((p,i)=>setTimeout(()=>bubble(p,pick(['ГОЛ! 🏒','Шайба!','Вот это бросок!','Монреаль, давай!','Тампа не сдаётся!'])),i*700));const fan=AG.find(p=>p.el.classList.contains('tv')&&p.st==='dwell');if(fan)bubble(fan,'ГОООЛ! 🏒',2800);eventReact('goal',AG.find(p=>p.st==='dwell')||AG[0])}
  function draw(){P.forEach(p=>{p.e.setAttribute('cx',p.x);p.e.setAttribute('cy',p.y)});pk.setAttribute('cx',pu.x);pk.setAttribute('cy',pu.y);
   $('#hs0').textContent=sc[0];$('#hs1').textContent=sc[1];
   $('#hkt').textContent=st==='final'?'ФИНАЛ':st==='break'?'ПЕРЕРЫВ':(per>3?'ОТ':per+'-й')+' '+Math.floor(left/60)+':'+String(Math.floor(left%60)).padStart(2,'0');
