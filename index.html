@@ -5,26 +5,31 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#100b1d">
+<meta name="color-scheme" content="dark">
+<link rel="preconnect" href="https://raw.githubusercontent.com" crossorigin>
 <title>Phantom — AI room</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{min-height:100vh;padding:14px;display:grid;place-items:center;background:radial-gradient(ellipse at 50% -10%,#35204d,transparent 55%),#0c0912}
-.mapwrap{width:100%;max-width:1500px;overflow-x:auto;border-radius:12px}
+.mapwrap{width:100%;max-width:1500px;max-width:min(100%,calc((100vh - 28px)*1.5625));overflow-x:auto;border-radius:12px}
 
 /* комната */
-.room{position:relative;min-width:900px;aspect-ratio:1250/800;container-type:inline-size;overflow:hidden;border-radius:10px;background:#2a2030;--dark:.05;--lamp:0;--br:1;--sun:.4;box-shadow:0 0 0 1px #000,0 12px 30px #0008}
-.room svg{position:absolute;inset:0;width:100%;height:100%;display:block}
+.room{position:relative;min-width:900px;aspect-ratio:1250/800;container-type:inline-size;contain:layout paint;overflow:hidden;border-radius:10px;background:#2a2030;--dark:.05;--lamp:0;--br:1;--sun:.4;--tvc:#8fb8ff;--gtv:#9fc0ff;box-shadow:0 0 0 1px #000,0 12px 30px #0008}
+.room svg{position:absolute;top:0;left:0;right:0;bottom:0;width:100%;height:100%;display:block}
 .scr{fill:#0c1624;transition:fill .6s}.scr.on{fill:url(#scrg)}
 .dg{opacity:0;transition:opacity .8s}.dg.on{opacity:1}
-#tvs{fill:#080b14;transition:fill .5s}#tvs.on{fill:url(#tvg2);animation:flick 2.4s infinite}
-#tvc{opacity:0;transition:opacity .8s}#tvc.on{opacity:.55;animation:flick 2.4s infinite}
-@keyframes flick{0%,100%{filter:hue-rotate(0) brightness(1)}30%{filter:hue-rotate(40deg) brightness(1.25)}60%{filter:hue-rotate(-30deg) brightness(.85)}}
+#tvs{fill:#080b14;transition:fill .6s}#tvs.on{fill:var(--tvc)}
+#tvl,#gtvl{opacity:0;transition:opacity .9s}#tvl.on,#gtvl.on{opacity:1}
+.night{position:absolute;top:0;left:0;right:0;bottom:0;background:#07102e;opacity:var(--dark);pointer-events:none;will-change:opacity;transition:opacity 5s linear}
+.fx{pointer-events:none;mix-blend-mode:screen}.lyr{transition:opacity 5s linear}
+.dust{animation:dust 11s ease-in-out infinite;opacity:0}@keyframes dust{0%{transform:translate(0,0);opacity:0}20%{opacity:.7}60%{transform:translate(10px,-16px);opacity:.5}100%{transform:translate(18px,-30px);opacity:0}}
+.room[data-sun="0"] .dust{visibility:hidden;animation-play-state:paused}
 
 /* агенты */
-.agent{position:absolute;width:0;height:0;padding:0;border:0;background:none;cursor:pointer;color:inherit;transition-property:left,top;transition-timing-function:linear;--s:clamp(30px,3.6cqw,52px)}
+.agent{position:absolute;width:0;height:0;padding:0;border:0;background:none;cursor:pointer;color:inherit;transition-property:left,top;transition-timing-function:linear;--s:34px}
 .agent:focus-visible .body img{outline:2px solid #fff}
 .body{position:absolute;left:calc(var(--s)/-2);top:calc(var(--s)/-2);width:var(--s);height:var(--s);transition:transform .5s,filter .5s;filter:brightness(var(--br,1))}
-.body img{width:100%;height:100%;object-fit:contain;padding:12%;background:#f8f4ff;border-radius:50%;border:2px solid var(--c);box-shadow:0 0 0 2px #0004,0 0 12px color-mix(in srgb,var(--c) 55%,transparent);display:block}
+.body img{width:100%;height:100%;object-fit:contain;padding:12%;background:#f8f4ff;border-radius:50%;border:2px solid var(--c);box-shadow:0 0 0 2px #0004,0 0 12px var(--c);display:block}
 .sh{position:absolute;left:calc(var(--s)*-.42);top:calc(var(--s)*.2);width:calc(var(--s)*.84);height:calc(var(--s)*.28);background:radial-gradient(#000b,transparent 70%)}
 .moving .body{animation:walk .36s ease-in-out infinite}
 @keyframes walk{0%,100%{transform:translateY(0) rotate(calc(var(--dir,1)*-4deg))}50%{transform:translateY(-5px) rotate(calc(var(--dir,1)*4deg))}}
@@ -61,13 +66,13 @@ body{min-height:100vh;padding:14px;display:grid;place-items:center;background:ra
 @keyframes tapd{0%{transform:translateY(-3px)}100%{transform:translateY(5px);opacity:0}}
 .rp{transform-box:fill-box;transform-origin:center;animation:rp 1.4s ease-out infinite}@keyframes rp{0%{transform:scale(.3);opacity:.9}100%{transform:scale(1.5);opacity:0}}
 .drp{animation:drp .9s linear infinite}@keyframes drp{0%{transform:translateY(-8px);opacity:0}30%{opacity:1}100%{transform:translateY(10px);opacity:0}}
-.bub{animation:bub 3s ease-in-out infinite}@keyframes bub{50%{transform:translateY(-3px)}}
+@keyframes bub{50%{transform:translateY(-3px)}}
 .wet .body,.splash .body{animation:wetk .45s ease-in-out infinite alternate}@keyframes wetk{from{transform:translate(-1px,0) rotate(-3deg)}to{transform:translate(1px,-1px) rotate(3deg)}}
 .wet img{box-shadow:0 0 0 2px #0004,0 0 14px #7fc3ea}
 .bath .body{clip-path:inset(0 0 40% 0);transform:scale(.88)}.bath .sh{display:none}
 .brush .body{animation:wetk .22s linear infinite alternate}
 .diary-fab{position:fixed;left:10px;bottom:10px;z-index:30;border:1px solid #76539a;background:#21152f;color:#f4eaff;border-radius:12px;padding:11px 14px;font:700 13px system-ui;box-shadow:0 5px 22px #0008;cursor:pointer}
-.diary{position:fixed;inset:0;z-index:40;background:#0c0912ea;display:none;overflow:auto;padding:12px}.diary.open{display:block}
+.diary{position:fixed;top:0;left:0;right:0;bottom:0;z-index:40;background:#0c0912ea;display:none;overflow:auto;padding:12px}.diary.open{display:block}
 .diary-in{max-width:760px;margin:0 auto;background:#171020;border:1px solid #604477;border-radius:16px;padding:16px;color:#f4eaff;font:14px/1.5 system-ui}
 .diary-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;font-weight:800;letter-spacing:.08em;color:#d9bdff}
 .dtabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}.dtab{border:1px solid var(--c);background:#21152f;color:#f4eaff;border-radius:99px;padding:7px 13px;font:700 13px system-ui;cursor:pointer}.dtab.on{background:var(--c);color:#fff}
@@ -75,7 +80,26 @@ body{min-height:100vh;padding:14px;display:grid;place-items:center;background:ra
 .dh{margin:16px 0 6px;font-size:13px;letter-spacing:.08em;color:#c69cff;text-transform:uppercase}.dp{margin:4px 0;color:#e9ddf5}.dnote{color:#a99ab8;font-size:12px;margin:8px 0}
 .dl{list-style:none;margin:0;padding:0}.dl li{padding:5px 0;border-bottom:1px solid #2c2038}.dl b{color:#c69cff;font-variant-numeric:tabular-nums;margin-right:4px}
 .dgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px}.dcell{background:#21152f;border:1px solid #3b2a4d;border-radius:10px;padding:8px 10px}.dv{font-size:18px;font-weight:800}.dk{font-size:11px;color:#a99ab8}
+.dwrow{margin-bottom:6px}.dwbig{font-size:26px;font-weight:800}.dwsub{font-size:12px;color:#a99ab8}.dchart{width:100%;height:70px;background:#21152f;border:1px solid #3b2a4d;border-radius:10px;margin:8px 0}
 .dach{display:flex;flex-direction:column;padding:7px 10px;margin:4px 0;border:1px solid #2c2038;border-radius:10px;opacity:.55}.dach.on{opacity:1;border-color:#76539a;background:#21152f}.dach span{font-size:12px;color:#a99ab8}
+/* этап 9: совместимость, режимы графики, экономия анимаций */
+.room::before{content:"";display:block;padding-top:64%}@supports (aspect-ratio:1/1){.room::before{display:none}}
+@supports (width:clamp(1px,1vw,2px)){.agent{--s:clamp(26px,3.2vw,48px)}}
+@supports (container-type:inline-size){.agent{--s:clamp(26px,3.6cqw,52px)}}
+@supports (color:color-mix(in srgb,red,blue)){.body img{box-shadow:0 0 0 2px #0004,0 0 12px color-mix(in srgb,var(--c) 55%,transparent)}}
+.agent:focus .body img{outline:2px solid #fff}
+.body[data-l]:after{content:attr(data-l);position:absolute;top:0;left:0;width:100%;height:100%;display:flex;align-items:center;justify-content:center;font:800 18px system-ui;color:#fff;background:var(--c);border-radius:50%}
+.fabs{position:fixed;left:10px;bottom:10px;z-index:30;display:flex}.fabs .diary-fab{position:static;margin-right:8px}.diary-fab,.sound-fab{min-height:44px}
+#shw:not(.on) .rp,#shw:not(.on) .drp{animation-play-state:paused}
+.bub{opacity:0;animation-play-state:paused}#tubw.on~.bub{opacity:.8;animation-play-state:running}
+html[data-gfx="balanced"] #base [filter="url(#nz)"],html[data-gfx="lite"] #base [filter="url(#nz)"],html[data-gfx="balanced"] .dust,html[data-gfx="lite"] .dust{display:none}
+html[data-gfx="lite"] #base [filter]{filter:none}
+html[data-gfx="lite"] .amb{display:none}
+html[data-gfx="lite"] .fx{mix-blend-mode:normal;opacity:.85}
+html[data-gfx="lite"] .body{filter:none}
+html[data-gfx="lite"] .steam,html[data-gfx="lite"] .bub,html[data-gfx="lite"] .rp,html[data-gfx="lite"] .drp,html[data-gfx="lite"] .lyr,html[data-gfx="lite"] #tvl,html[data-gfx="lite"] #gtvl{animation:none;transition:none}
+@media(min-width:1600px){body{padding:2vmin}}
+@media(max-width:700px){.room{min-width:640px}.agent{--s:26px}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important}}
 
 /* ---------- Phantom House sound controls ---------- */
@@ -88,7 +112,7 @@ body{min-height:100vh;padding:14px;display:grid;place-items:center;background:ra
 </head>
 <body>
 <div class="mapwrap"><div class="room" id="room" aria-label="Комната с агентами">
-<svg viewBox="0 0 1250 800" preserveAspectRatio="none" aria-hidden="true">
+<svg id="base" viewBox="0 0 1250 800" preserveAspectRatio="none" aria-hidden="true">
 <defs>
 <pattern id="wood" width="220" height="72" patternUnits="userSpaceOnUse"><rect width="220" height="18" fill="#8d6646"/><rect y="18" width="220" height="18" fill="#7c5a3d"/><rect y="36" width="220" height="18" fill="#946b4a"/><rect y="54" width="220" height="18" fill="#86613f"/><path d="M0 18h220M0 36h220M0 54h220M0 72h220M70 0v18M160 18v18M30 36v18M120 54v18" stroke="#3d2a1c" stroke-width="1.4" opacity=".7"/><path d="M0 1h220M0 19h220M0 37h220M0 55h220" stroke="#ffffff" stroke-opacity=".08"/></pattern>
 <pattern id="tile" width="40" height="40" patternUnits="userSpaceOnUse"><rect width="40" height="40" fill="#dad5cf"/><rect width="20" height="20" fill="#cdc7c1"/><rect x="20" y="20" width="20" height="20" fill="#cdc7c1"/><path d="M0 0h40v40" stroke="#a9a29b" fill="none"/></pattern>
@@ -99,22 +123,35 @@ body{min-height:100vh;padding:14px;display:grid;place-items:center;background:ra
 <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop id="s1" offset="0" stop-color="#5aa3dc"/><stop id="s2" offset="1" stop-color="#bfe0f2"/></linearGradient>
 <linearGradient id="dw" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#b9906a"/><stop offset=".5" stop-color="#a47b57"/><stop offset="1" stop-color="#8b6644"/></linearGradient>
 <linearGradient id="stone" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e6e1dc"/><stop offset="1" stop-color="#bdb6b0"/></linearGradient>
-<linearGradient id="shaft" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff3c4" stop-opacity=".75"/><stop offset="1" stop-color="#fff3c4" stop-opacity="0"/></linearGradient>
 <linearGradient id="scrg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#43b6e8"/><stop offset="1" stop-color="#1e3f86"/></linearGradient>
 <linearGradient id="tvg2" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#7a5cff"/><stop offset="1" stop-color="#2fc7e8"/></linearGradient>
-<linearGradient id="tvcg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8ec5ff" stop-opacity=".8"/><stop offset="1" stop-color="#8ec5ff" stop-opacity="0"/></linearGradient>
 <linearGradient id="bl" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".18"/><stop offset="1" stop-color="#000" stop-opacity=".28"/></linearGradient>
-<radialGradient id="lp"><stop offset="0" stop-color="#ffd38c" stop-opacity=".85"/><stop offset="1" stop-color="#ffb45a" stop-opacity="0"/></radialGradient>
-<radialGradient id="bg"><stop offset="0" stop-color="#6ec8ff" stop-opacity=".5"/><stop offset="1" stop-color="#6ec8ff" stop-opacity="0"/></radialGradient>
 <radialGradient id="vg" cx=".5" cy=".5" r=".72"><stop offset=".6" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".55"/></radialGradient>
 <clipPath id="wc"><rect x="380" y="9" width="240" height="53"/></clipPath>
 </defs>
 <g id="scene"></g>
 </svg>
+<div class="night" id="night" aria-hidden="true"></div>
+<svg class="fx" id="fx" viewBox="0 0 1250 800" preserveAspectRatio="none" aria-hidden="true">
+<defs>
+<radialGradient id="lp"><stop offset="0" stop-color="#ffd38c" stop-opacity=".85"/><stop offset="1" stop-color="#ffb45a" stop-opacity="0"/></radialGradient>
+<radialGradient id="bg"><stop offset="0" stop-color="#6ec8ff" stop-opacity=".6"/><stop offset="1" stop-color="#6ec8ff" stop-opacity="0"/></radialGradient>
+<linearGradient id="shaft" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff3c4" stop-opacity=".6"/><stop offset="1" stop-color="#fff3c4" stop-opacity="0"/></linearGradient>
+<linearGradient id="moon" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9fc4ff" stop-opacity=".3"/><stop offset="1" stop-color="#9fc4ff" stop-opacity="0"/></linearGradient>
+<radialGradient id="amb"><stop offset="0" stop-color="#8a5cff" stop-opacity=".18"/><stop offset="1" stop-color="#8a5cff" stop-opacity="0"/></radialGradient>
+<radialGradient id="amb2"><stop offset="0" stop-color="#5aa0ff" stop-opacity=".2"/><stop offset="1" stop-color="#5aa0ff" stop-opacity="0"/></radialGradient>
+<linearGradient id="msp" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#bfe3ff" stop-opacity=".34"/><stop offset="1" stop-color="#bfe3ff" stop-opacity="0"/></linearGradient>
+<linearGradient id="tvsp" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:var(--tvc);stop-opacity:.4"/><stop offset="1" style="stop-color:var(--tvc);stop-opacity:0"/></linearGradient>
+<radialGradient id="tvfl"><stop offset="0" style="stop-color:var(--tvc);stop-opacity:.24"/><stop offset="1" style="stop-color:var(--tvc);stop-opacity:0"/></radialGradient>
+<radialGradient id="gwall"><stop offset="0" style="stop-color:var(--gtv);stop-opacity:.3"/><stop offset="1" style="stop-color:var(--gtv);stop-opacity:0"/></radialGradient>
+<linearGradient id="gfl" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:var(--gtv);stop-opacity:.22"/><stop offset="1" style="stop-color:var(--gtv);stop-opacity:0"/></linearGradient>
+</defs>
+<g id="fxg"></g>
+</svg>
 </div></div>
 
 <button class="sound-fab" id="soundFab" type="button">♫ Звук: выкл.</button>
-<button class="diary-fab" id="diaryFab" type="button">📖 Дневники</button>
+<div class="fabs"><button class="diary-fab" id="diaryFab" type="button">📖 Дневники</button><button class="diary-fab" id="gfxBtn" type="button">🎛 Графика</button></div>
 <section class="diary" id="diary" aria-label="Дневники агентов"><div class="diary-in"><div class="diary-head"><b>ДНЕВНИКИ</b><button class="sound-close" id="diaryClose" type="button" aria-label="Закрыть">×</button></div><div id="diaryBody"></div></div></section>
 <section class="sound-panel" id="soundPanel" aria-label="Настройки звука">
  <div class="sound-head"><span>PHANTOM HOUSE · SOUND</span><button class="sound-close" id="soundClose" type="button" aria-label="Закрыть">×</button></div>
@@ -182,10 +219,9 @@ const AG=[
 /* ---------- сцена ---------- */
 const dk=[[70,110],[300,110],[70,280],[300,280]];
 const plant=(x,y,r)=>`<g filter="url(#sh)">`+C(x,y,r*.55,'#8a5a3c')+[...Array(9)].map((_,i)=>`<ellipse cx="${x}" cy="${y-r*.5}" rx="${r*.2}" ry="${r*.6}" fill="${i%2?'#3f8a55':'#2c7047'}" transform="rotate(${i*40} ${x} ${y})"/>`).join('')+C(x,y,r*.16,'#86c995')+`</g>`;
-let S='';
+let S='',F='';
 // пол
 S+=R(0,70,1000,550,'url(#wood)')+R(630,70,370,290,'url(#tile)')+R(626,70,6,290,'#5d412c')+R(0,70,1000,550,'#000','filter="url(#nz)" opacity=".2" style="mix-blend-mode:multiply"');
-S+=`<polygon id="shaftp" points="400,70 600,70 720,330 440,360" fill="url(#shaft)" style="opacity:var(--sun);mix-blend-mode:screen"/>`;
 // стена
 S+=R(0,0,1250,70,'url(#wall)')+R(0,60,1250,10,'#3b2f45')+R(0,70,1250,26,'url(#ws)');
 S+=R(14,12,42,38,'#2a1d33','rx="2"')+R(19,17,32,28,'#6a8fb0')+`<path d="M19 45l10-14 8 9 6-6 8 11z" fill="#2e4a63"/>`+C(41,26,4,'#f3d98b');
@@ -237,10 +273,11 @@ S+=`<g filter="url(#sh)">${C(590,505,48,'url(#dw)','stroke="#4a3220" stroke-widt
 // спортзал, еда, растения
 S+=R(996,70,8,322,'#3b2f45')+R(996,468,8,152,'#3b2f45')+R(996,392,8,76,'#5d412c')+R(993,386,14,8,'#241a2b')+R(993,466,14,8,'#241a2b');
 S+=R(1004,70,246,550,'#2b2e35')+`<path d="${[...Array(14)].map((_,i)=>`M1004 ${70+i*42}H1250`).join('')}${[...Array(6)].map((_,i)=>`M${1004+i*50} 70V620`).join('')}" stroke="#3d414b" stroke-width="1.5"/>`;
-S+=`<polygon points="1020,70 1072,70 1140,250 1050,270" fill="url(#shaft)" style="opacity:var(--sun);mix-blend-mode:screen"/>`+win(1020,9,52,53,false);
+S+=win(1020,9,52,53,false);
 S+=`<g filter="url(#sh)">${R(1084,3,160,60,'#121218','rx="4" stroke="#2c2c35"')}</g><g transform="translate(1088 7)"><clipPath id="hkc"><rect width="152" height="52" rx="3"/></clipPath><g clip-path="url(#hkc)">${R(0,0,152,52,'#e4eef6')}${R(75,0,2,52,'#c8323c')}${R(49,0,2,52,'#2d5fb4')}${R(101,0,2,52,'#2d5fb4')}${R(8.5,0,1,52,'#c8323c','opacity=".6"')}${R(142.5,0,1,52,'#c8323c','opacity=".6"')}<circle cx="76" cy="26" r="8" fill="none" stroke="#2d5fb4" stroke-width=".8"/><path d="M9 19a7 7 0 0 1 0 14zM143 19a7 7 0 0 0 0 14z" fill="#8fc1ea"/>${R(5,22.5,4,7,'#888')}${R(143,22.5,4,7,'#888')}<g id="hkp"></g><circle id="hkpk" cx="76" cy="26" r="1.8" fill="#111" stroke="#fff" stroke-width=".4"/>${R(44,1,64,12,'#0d1017','opacity=".9" rx="3"')}<text x="76" y="10" text-anchor="middle" font-family="system-ui,sans-serif" font-size="8" font-weight="700" fill="#fff"><tspan fill="#ff6b7d">MTL</tspan> <tspan id="hs0">0</tspan>:<tspan id="hs1">0</tspan> <tspan fill="#7fb2ff">TBL</tspan></text>${R(2,41,50,9,'#0d1017','opacity=".88" rx="2"')}<text id="hkt" x="6" y="48" font-family="system-ui,sans-serif" font-size="6.5" font-weight="700" fill="#fff">1-й 20:00</text><text id="hkf" x="76" y="34" text-anchor="middle" font-family="system-ui,sans-serif" font-size="13" font-weight="900" fill="#ffd54a" stroke="#000" stroke-width=".6" opacity="0">ГОЛ!</text><rect width="152" height="52" fill="url(#bl)" opacity=".25"/></g></g>`;
 [0,1].forEach(i=>{const x=1030+60*i;S+=`<g filter="url(#sh)">${R(x,95,40,120,'#1d1f25','rx="5"')}${R(x+5,114,30,96,'#34363e','rx="3"')}</g><path class="belt" id="tm${i}" d="M${x+10} 116v90M${x+20} 116v90M${x+30} 116v90" stroke="#5b606c" stroke-width="2" stroke-dasharray="6 6"/>`+R(x+4,98,32,13,'#0e1218','rx="2"')+R(x+8,101,24,6,'#3bd1a8','rx="1"')});
 S+=`<g filter="url(#sh)">${R(1118,310,112,34,'#26262c','rx="6"')}${R(1124,314,100,26,'#c0553d','rx="4"')}</g><path d="M1100 327H1245" stroke="#c4c8cd" stroke-width="4"/>`+R(1102,308,9,38,'#222','rx="2"')+R(1113,312,6,30,'#3a3a40','rx="2"')+R(1232,308,9,38,'#222','rx="2"')+R(1224,312,6,30,'#3a3a40','rx="2"');
+S+=R(1088,7,152,52,'#05070b','rx="3" id="gtvoff" style="opacity:0;transition:opacity .6s"');
 S+=`<g filter="url(#sh)">${R(1160,92,76,26,'#202126','rx="3"')}</g>`+[0,1,2,3,4].map(i=>R(1168+i*14,98,8,14,['#d0577a','#4a7bd0','#c9a227','#10a37f','#8a5fa8'][i],'rx="2"')).join('');
 S+=`<g filter="url(#sh)">${R(1030,470,52,130,'#4a7bd0','rx="6"')}${R(1110,470,52,130,'#d0577a','rx="6"')}</g>`+R(1034,474,44,122,'none','rx="4" stroke="#fff" stroke-opacity=".35"')+R(1114,474,44,122,'none','rx="4" stroke="#fff" stroke-opacity=".35"');
 S+=[[1228,470,9],[1232,496,8]].map(([x,y,r])=>`<g filter="url(#sh)">${C(x,y,r,'#25262c')}${C(x,y-r,r*.55,'none','stroke="#25262c" stroke-width="3"')}</g>`).join('');
@@ -271,24 +308,28 @@ S+=R(215,680,80,80,'#d8ecf5','rx="4" opacity=".4" stroke="#9fd0e6" stroke-width=
 // раковина
 S+=`<g filter="url(#sh)">${R(310,678,120,44,'url(#stone)','rx="4"')}</g><ellipse cx="370" cy="700" rx="24" ry="15" fill="#e8f0f3" stroke="#9aa7ae" stroke-width="2"/>`+C(370,700,2.5,'#777')+R(366,682,8,9,'#c8d0d4','rx="2"')+C(370,696,2.8,'#7fc3ea','id="tap"')+C(326,692,6,'#fff','stroke="#bbb"')+`<path d="M324 692l-3-10" stroke="#4a7bd0" stroke-width="2"/>`+C(412,692,5,'#e9a3b5');
 // мелочи
-S+=R(455,690,70,30,'#a8c8d4','rx="6"')+`<g filter="url(#sh)">${C(526,745,16,'#b58a5a','stroke="#7a5a35" stroke-width="2"')}${C(526,745,10,'#d6b182')}</g>`+plant(536,778,18)+C(120,788,0,'none');
+S+=R(455,690,70,30,'#a8c8d4','rx="6"')+`<g filter="url(#sh)">${C(526,745,16,'#b58a5a','stroke="#7a5a35" stroke-width="2"')}${C(526,745,10,'#d6b182')}</g>`+`<g filter="url(#sh)">${R(168,762,34,26,'#dfe3e6','rx="4" stroke="#aeb8bf"')}</g>`+R(178,766,14,7,'#2a3a40','rx="1"')+R(176,776,6,9,'#b9c1c6','rx="2"')+R(188,776,6,9,'#b9c1c6','rx="2"')+plant(536,778,18)+C(120,788,0,'none');
 // ---- двор (вид снаружи) ----
 S+=R(564,626,686,174,'#16221d')+`<path d="${[...Array(11)].map((_,i)=>'M564 '+(634+i*16)+'H1250').join('')}" stroke="#1d2d26" stroke-width="8" opacity=".6"/>`+R(556,626,8,174,'#3b2f45');
 S+=[[880,646],[894,676],[880,706],[894,736],[880,766]].map(([x,y])=>`<ellipse cx="${x}" cy="${y}" rx="18" ry="11" fill="#555a62"/><ellipse cx="${x}" cy="${y-2}" rx="15" ry="8" fill="#6b7078"/>`).join('')+`<g filter="url(#sh)">${R(1010,706,96,24,'#6a4a35','rx="3"')}${R(1016,730,8,10,'#3a281b')}${R(1092,730,8,10,'#3a281b')}</g>`+C(960,664,6,'#e8d29a','stroke="#7a6a45" stroke-width="2"')+R(957,670,6,60,'#2b2630')+plant(620,718,24)+plant(668,764,18)+plant(764,700,18)+plant(1186,700,26)+plant(1214,762,20);
 // входная дверь — на левой стене, отдельно от ванной
 S+=R(0,404,10,50,'#7a5a3a')+R(2,408,6,42,'#93704a')+C(7,430,2,'#e8d29a')+R(14,410,42,34,'#4b3a52','rx="3"')+R(14,410,42,5,'#ffffff18');
 // рамка, свет, вечерняя тьма
-S+=`<rect width="1250" height="800" fill="#07102e" style="opacity:var(--dark)"/>`;
-S+=`<g style="mix-blend-mode:screen;opacity:var(--lamp)">`+dk.map(([x,y])=>C(x+20,y+14,90,'url(#lp)')).join('')+C(962,556,150,'url(#lp)')+C(456,490,120,'url(#lp)')+C(380,690,230,'url(#lp)')+C(960,664,190,'url(#lp)')+C(250,722,170,'url(#lp)','opacity=".55"')+C(1125,300,230,'url(#lp)')+`<ellipse cx="785" cy="140" rx="190" ry="50" fill="url(#lp)"/></g>`;
-S+=`<g style="mix-blend-mode:screen">`+dk.map(([x,y],i)=>C(x+85,y+34,85,'url(#bg)',`class="dg" id="dg${i}"`)).join('')+C(280,730,260,'url(#bg)','class="dg" id="bgl"')+C(1167,70,120,'url(#bg)','opacity=".6"')+`<polygon id="tvc" points="770,360 900,360 960,470 710,470" fill="url(#tvcg)"/></g>`;
+// ---- свет: отдельный слой поверх сцены (этап 8) ----
+const dust=(n,pt)=>[...Array(n)].map(()=>{const p=pt(Math.random(),Math.random());return C(p[0].toFixed(1),p[1].toFixed(1),(.8+Math.random()*.9).toFixed(1),'#fff6d8','class="dust" style="animation-delay:-'+(Math.random()*11).toFixed(1)+'s;animation-duration:'+(9+Math.random()*6).toFixed(1)+'s"')}).join('');
+F+=`<g class="lyr" style="opacity:var(--sun)"><polygon points="400,70 600,70 720,330 440,360" fill="url(#shaft)"/><polygon points="1020,70 1072,70 1140,250 1050,270" fill="url(#shaft)"/>`+dust(16,(t,r)=>{const l=400+40*t,rr=600+120*t;return[l+(rr-l)*r,80+250*t]})+dust(6,(t,r)=>{const l=1020+30*t,rr=1072+68*t;return[l+(rr-l)*r,75+190*t]})+`</g>`;
+F+=`<g class="lyr" style="opacity:var(--lamp)"><polygon points="400,70 600,70 720,330 440,360" fill="url(#moon)"/><polygon points="1020,70 1072,70 1140,250 1050,270" fill="url(#moon)"/>`+C(300,300,430,'url(#amb)','class="amb"')+C(850,470,330,'url(#amb)','class="amb"')+C(520,120,300,'url(#amb2)','class="amb"')+C(1125,300,240,'url(#amb2)','class="amb" opacity=".7"')+dk.map(([x,y])=>C(x+20,y+14,90,'url(#lp)')).join('')+C(962,556,150,'url(#lp)')+C(456,490,120,'url(#lp)')+C(380,690,200,'url(#lp)','opacity=".6"')+C(960,664,190,'url(#lp)')+C(250,722,170,'url(#lp)','opacity=".4"')+C(1125,300,200,'url(#lp)','opacity=".35"')+`<ellipse cx="785" cy="140" rx="190" ry="50" fill="url(#lp)"/></g>`;
+F+=`<g>`+dk.map(([x,y],i)=>C(x+85,y+34,95,'url(#bg)','class="dg" id="dg'+i+'"')+`<polygon class="dg" id="ds${i}" points="${x+51},${y+20} ${x+119},${y+20} ${x+140},${y+72} ${x+30},${y+72}" fill="url(#msp)"/>`).join('')+C(280,730,260,'url(#bg)','class="dg" id="bgl"')+`<ellipse class="dg" id="lkit" cx="785" cy="150" rx="210" ry="80" fill="url(#lp)"/>`+C(835,500,170,'url(#lp)','class="dg" id="lsofa"')+C(1110,330,240,'url(#bg)','class="dg" id="lgym"')+`</g>`;
+F+=`<g id="tvl"><polygon points="768,356 902,356 985,500 690,500" fill="url(#tvsp)"/><ellipse cx="835" cy="405" rx="165" ry="55" fill="url(#tvfl)"/>`+R(790,405,100,36,'none','rx="6" style="fill:var(--tvc);opacity:.22"')+[748,808,868].map(x=>R(x,474,56,56,'none','rx="8" style="fill:var(--tvc);opacity:.14"')).join('')+`</g>`;
+F+=`<g id="gtvl"><ellipse cx="1166" cy="33" rx="128" ry="44" fill="url(#gwall)"/><polygon points="1090,70 1240,70 1250,340 1030,340" fill="url(#gfl)"/></g>`;
 S+=R(0,0,1250,800,'url(#vg)')+R(0,0,1250,800,'none','stroke="#241a2b" stroke-width="14"')+R(7,7,1236,786,'none','stroke="#6b5878" stroke-opacity=".5" stroke-width="1.5"');
-$('#scene').innerHTML=S;
+$('#scene').innerHTML=S;$('#fxg').innerHTML=F;
 
 /* ---------- навигация ---------- */
-const N={A:[270,250],H2:[520,250],B:[270,375],H3:[520,375],D:[270,432],H4:[520,432],K1:[640,170],K2:[745,170],K3:[850,170],K4:[945,175],K5:[680,300],T1:[760,300],T2:[860,300],L1:[700,410],L2:[700,455],F1:[790,455],F2:[835,455],F3:[885,455],V1:[790,508],V2:[835,508],V3:[885,508],WN:[520,118],DR:[495,578],GD1:[975,430],GD2:[1040,430],GH:[1100,400],GT:[1090,255],G1:[1050,185],G2:[1110,185],G3:[1170,327],G4:[1056,535],G5:[1136,535],G6:[1195,165],BR0:[495,650],BR1:[495,715],BT:[110,716],BH:[255,722],BS:[370,742],BM:[408,742],BY1:[110,772],BY2:[255,775],BY3:[370,775],BY4:[495,775],S1:[155,205],S2:[385,205],S3:[155,375],S4:[385,375]};
+const N={A:[270,250],H2:[520,250],B:[270,375],H3:[520,375],D:[270,432],H4:[520,432],K1:[640,170],K2:[745,170],K3:[850,170],K4:[945,175],K5:[680,300],T1:[760,300],T2:[860,300],L1:[700,410],L2:[700,455],F1:[790,455],F2:[835,455],F3:[885,455],V1:[790,508],V2:[835,508],V3:[885,508],WN:[520,118],DR:[495,578],GD1:[975,430],GD2:[1040,430],GH:[1100,400],GT:[1090,255],G1:[1050,185],G2:[1110,185],G3:[1170,327],G4:[1056,535],G5:[1136,535],G6:[1195,165],BR0:[495,650],BR1:[495,715],BT:[110,716],BH:[255,722],BS:[370,742],BM:[408,742],BY1:[110,772],BY2:[255,775],BY3:[370,775],BY4:[495,775],BW:[185,776],S1:[155,205],S2:[385,205],S3:[155,375],S4:[385,375]};
 for(let i=0;i<4;i++){N['BF'+i]=[85+100*i,447];N['BD'+i]=[85+100*i,500]}
 const adj={};
-'A-H2 A-B B-D D-H4 H4-H3 H3-H2 S1-A S2-A S3-B S4-B S4-H3 H2-WN H2-K1 K1-K2 K2-K3 K3-K4 K1-K5 K5-T1 T1-T2 K5-L1 H4-L1 L1-L2 L2-F1 F1-F2 F2-F3 F1-V1 F2-V2 F3-V3 H4-DR BF0-BF1 BF1-BF2 BF2-BF3 D-BF2 BF3-H4 BD0-BF0 BD1-BF1 BD2-BF2 BD3-BF3 F3-GD1 GD1-GD2 GD2-GH GH-GT GT-G1 GT-G2 GT-G6 GH-G3 GH-G4 GH-G5 DR-BR0 BR0-BR1 BR1-BY4 BR1-BS BY4-BY3 BY3-BY2 BY2-BY1 BT-BY1 BH-BY2 BS-BY3 BM-BY3 BM-BS'.split(' ').forEach(e=>{const[a,b]=e.split('-'),d=Math.hypot(N[a][0]-N[b][0],N[a][1]-N[b][1]);(adj[a]??=[]).push([b,d]);(adj[b]??=[]).push([a,d])});
+'A-H2 A-B B-D D-H4 H4-H3 H3-H2 S1-A S2-A S3-B S4-B S4-H3 H2-WN H2-K1 K1-K2 K2-K3 K3-K4 K1-K5 K5-T1 T1-T2 K5-L1 H4-L1 L1-L2 L2-F1 F1-F2 F2-F3 F1-V1 F2-V2 F3-V3 H4-DR BF0-BF1 BF1-BF2 BF2-BF3 D-BF2 BF3-H4 BD0-BF0 BD1-BF1 BD2-BF2 BD3-BF3 F3-GD1 GD1-GD2 GD2-GH GH-GT GT-G1 GT-G2 GT-G6 GH-G3 GH-G4 GH-G5 DR-BR0 BR0-BR1 BR1-BY4 BR1-BS BY4-BY3 BY3-BY2 BY2-BY1 BT-BY1 BH-BY2 BS-BY3 BM-BY3 BM-BS BY1-BW BW-BY2'.split(' ').forEach(e=>{const[a,b]=e.split('-'),d=Math.hypot(N[a][0]-N[b][0],N[a][1]-N[b][1]);(adj[a]||(adj[a]=[])).push([b,d]);(adj[b]||(adj[b]=[])).push([a,d])});
 function path(a,b){const dist={[a]:0},prev={},q=new Set(Object.keys(N));while(q.size){let u=null;q.forEach(k=>{if(dist[k]!==undefined&&(u===null||dist[k]<dist[u]))u=k});if(u===null||u===b)break;q.delete(u);(adj[u]||[]).forEach(([v,d])=>{if(dist[v]===undefined||dist[u]+d<dist[v]){dist[v]=dist[u]+d;prev[v]=u}})}const r=[b];while(r[0]!==a)r.unshift(prev[r[0]]);return r}
 
 /* ---------- агенты ---------- */
@@ -296,14 +337,14 @@ AG.forEach((p,i)=>{
  p.i=i;p.node=p.seat;p.pos=[...N[p.seat]];p.e=rnd(65,100);p.st='dwell';p.busy=false;
  const el=p.el=document.createElement('button');
  el.className='agent sit';el.style.setProperty('--c',p.c);el.setAttribute('aria-label',p.name+' — нажми, чтобы сменить занятие');
- el.innerHTML=`<span class="sh"></span><span class="body"><img src="https://raw.githubusercontent.com/lobehub/lobe-icons/master/packages/static-png/light/${p.img}.png" alt="${p.name}"></span><span class="zz">Zzz</span><span class="tag">${p.name}<i><b></b></i></span><span class="act"></span><span class="say"></span>`;
+ el.innerHTML=`<span class="sh"></span><span class="body"><img src="https://raw.githubusercontent.com/lobehub/lobe-icons/master/packages/static-png/light/${p.img}.png" alt="${p.name}" onerror="this.style.display='none';this.parentNode.setAttribute('data-l','${p.name.charAt(0)}')"></span><span class="zz">Zzz</span><span class="tag">${p.name}<i><b></b></i></span><span class="act"></span><span class="say"></span>`;
  room.appendChild(el);place(p,p.pos,0);
- p.say=el.querySelector('.say');p.zz=el.querySelector('.zz');p.bar=el.querySelector('.tag b');p.actEl=el.querySelector('.act');p.label='';
+ p.say=el.querySelector('.say');p.zz=el.querySelector('.zz');p.bar=el.querySelector('.tag b');p.act=el.querySelector('.act');p.label='';
  el.addEventListener('click',()=>{if(convo||p.busy)return;if(p.el.classList.contains('sleep'))bubble(p,'Ещё пять минуток…');p.force=choose(p,true);p.wake&&p.wake()});
 });
 function place(p,[x,y],t=null){p.pos=[x,y];const s=p.el.style;if(t===0)s.transitionDuration='0s';s.left=x/12.5+'%';s.top=y/8+'%';s.zIndex=10+Math.round(y/10)}
 function bubble(p,t,ms=3300){p.say.textContent=t;p.say.classList.add('show');clearTimeout(p.bt);p.bt=setTimeout(()=>p.say.classList.remove('show'),ms)}
-function ui(p,t){if(t)p.label=t;if(p._l!==p.label){p.actEl.textContent=p.label;p._l=p.label}const w=Math.round(p.e);if(p._w!==w){p.bar.style.width=w+'%';p._w=w}}
+function ui(p,t){if(t)p.label=t;if(p._l!==p.label){p.act.textContent=p.label;p._l=p.label}const w=Math.round(p.e);if(p._w!==w){p.bar.style.width=w+'%';p._w=w}}
 const SPEED=120;
 async function go(p,target,off){
  const el=p.el,pts=path(p.node,target).map(k=>N[k]);
@@ -334,13 +375,14 @@ const ACT={
  wash:{t:'умывается',em:'💦',at:()=>free(['BS','BM']),cls:'splash',s:()=>rnd(8,14),l:['Прохладная вода бодрит']},
  teeth:{t:'чистит зубы',em:'🪥',at:()=>free(['BS','BM']),cls:'brush',s:()=>rnd(12,18),l:null},
  mirror:{t:'смотрится в зеркало',em:'🪞',at:()=>free(['BM','BS']),cls:'',s:()=>rnd(7,12),l:['Выгляжу прилично','Причёска держится','Сегодня определённо мой день']},
+ weigh:{t:'взвешивается',em:'⚖️',at:()=>'BW',cls:'',s:()=>rnd(6,10),l:['Цифры на весах','Стрелка не обманет','Посмотрим, что показывают']},
  dry:{t:'вытирается полотенцем',em:'🧖',at:()=>'BY2',cls:'',s:()=>rnd(6,10),l:['Полотенце мягкое']},
  sleep:{t:'спит',em:'💤',at:p=>'BD'+p.bed,cls:'sleep',s:p=>PH.sleepSec(p),l:null}
 };
 const choose=(p,n)=>PH.choose(p,n);
 function dwell(p,sec,lines){return new Promise(res=>{const tok=p.tok={};p.wake=res;setTimeout(res,sec*1000);const tick=()=>{if(p.tok!==tok)return;if(lines)bubble(p,pick(lines));setTimeout(tick,5500+Math.random()*5000)};setTimeout(tick,1500+Math.random()*2500)})}
 const tvUsers=()=>AG.filter(p=>p.el.classList.contains('tv')).length;
-function fx(){AG.forEach(p=>{const w=p.el.classList.contains('work'),i=p.i;$('#sc'+i).classList.toggle('on',w);$('#dg'+i).classList.toggle('on',w)});const t=tvUsers()>0;$('#tvs').classList.toggle('on',t);$('#tvc').classList.toggle('on',t);[['G1','tm0'],['G2','tm1']].forEach(([n,id])=>$('#'+id).classList.toggle('on',AG.some(p=>p.node===n&&p.el.classList.contains('run'))));const bn=['BR0','BR1','BT','BH','BS','BM','BY1','BY2','BY3','BY4'];$('#bgl').classList.toggle('on',AG.some(p=>bn.includes(p.node)||(p.st==='moving'&&p.pos[1]>625)));$('#shw').classList.toggle('on',AG.some(p=>p.el.classList.contains('wet')));$('#tubw').classList.toggle('on',AG.some(p=>p.el.classList.contains('bath')));$('#tap').classList.toggle('on',AG.some(p=>p.node==='BS'&&p.st==='dwell'&&/splash|brush/.test(p.el.className)))}
+function fx(){AG.forEach(p=>{const w=p.el.classList.contains('work'),i=p.i;$c('#sc'+i).classList.toggle('on',w);$c('#dg'+i).classList.toggle('on',w);$c('#ds'+i).classList.toggle('on',w)});const t=tvUsers()>0;$c('#tvs').classList.toggle('on',t);$c('#tvl').classList.toggle('on',t);[['G1','tm0'],['G2','tm1']].forEach(([n,id])=>$c('#'+id).classList.toggle('on',AG.some(p=>p.node===n&&p.el.classList.contains('run'))));const bn=['BR0','BR1','BT','BH','BS','BM','BY1','BY2','BY3','BY4','BW'];$c('#bgl').classList.toggle('on',AG.some(p=>bn.includes(p.node)||(p.st==='moving'&&p.pos[1]>625)));$c('#shw').classList.toggle('on',AG.some(p=>p.el.classList.contains('wet')));$c('#tubw').classList.toggle('on',AG.some(p=>p.el.classList.contains('bath')));$c('#tap').classList.toggle('on',AG.some(p=>p.node==='BS'&&p.st==='dwell'&&/splash|brush/.test(p.el.className)));const near=re=>AG.some(p=>re.test(p.node)&&(p.st==='dwell'||p.st==='moving'));$c('#lkit').classList.toggle('on',near(/^[KT]\d/));$c('#lsofa').classList.toggle('on',AG.some(p=>/^V\d/.test(p.node)&&p.st==='dwell'));$c('#lgym').classList.toggle('on',near(/^G/));gymTV()}
 async function life(p){
  await wait(p.i*1500+800);
  for(;;){
@@ -352,11 +394,7 @@ async function life(p){
   while(a.ex&&!cont&&taken[at]&&taken[at]!==p){p.st='wait';ui(p,'⏳ ждёт очереди: '+a.t);await wait(3000)}
   taken[at]=p;
   if(!cont){ui(p,'🚶 идёт: '+a.t);await go(p,at)}
-  if(!cont||rem!==null){p.st='dwell';p.last=k;
-   /* Сбрасываем визуальное состояние прошлого занятия перед новым: иначе старый eat/sit мог оставаться поверх следующей активности. */
-   p.el.classList.remove('sit','sleep','work','eat','tv','run','lift','yoga','wet','bath','splash','brush','fight','ko');
-   if(a.cls)a.cls.split(' ').forEach(c=>p.el.classList.add(c));
-   p.zz.textContent='Zzz';ui(p,a.em+' '+a.t);if(!cont)soundCue(k);fx();
+  if(!cont||rem!==null){p.st='dwell';p.last=k;a.cls&&a.cls.split(' ').forEach(c=>p.el.classList.add(c));p.zz.textContent='Zzz';ui(p,a.em+' '+a.t);if(!cont)soundCue(k);fx();
    if(k==='sleep'&&!cont){bubble(p,'Спокойной ночи…',2200);p.sleepFrom=PH.now()}}
   const sec=rem!==null?rem:a.s(p),t0=PH.now();
   if(rem===null){p.act={k,at,t0};p.plan=sec}
@@ -367,7 +405,7 @@ async function life(p){
   if(k==='sleep'&&PH.asleep(p)&&!p.force)continue;
   if(k==='work')eventReact('work',p);else if(k==='coffee')eventReact('coffee',p);else if(k==='tidy')eventReact('clean',p);else if(k==='relax')eventReact('rest',p);else if(k==='read')eventReact('read',p);
   if(k==='sleep'){p.el.classList.remove('sleep');PH.woke(p);bubble(p,pick(['Ох, хорошо выспался','Бодр и свеж!','Мне снился чистый код']))}
-  ['work','eat','tv','sit','run','lift','yoga','wet','bath','splash','brush','sleep','moving'].forEach(c=>p.el.classList.remove(c));fx();
+  ['work','eat','tv','sit','run','lift','yoga','wet','bath','splash','brush'].forEach(c=>p.el.classList.remove(c));fx();
  }
 }
 const rate=p=>{const c=p.el.classList;return c.contains('sleep')?14:c.contains('run')||c.contains('lift')?-30:c.contains('work')?-8:c.contains('yoga')?-10:-5};
@@ -401,7 +439,7 @@ function eventReact(kind,actor){
  const now=Date.now();if(now-lastReaction<6500)return;lastReaction=now;
  const candidates=AG.filter(p=>p!==actor&&!p.busy&&!p.el.classList.contains('sleep')&&p.st==='dwell');
  if(!candidates.length)return;
- const listener=pick(candidates),lines=REACT[kind]?.[listener.id];if(!lines)return;
+ const listener=pick(candidates),lines=(REACT[kind]||{})[listener.id];if(!lines)return;
  setTimeout(()=>{if(!listener.busy&&listener.st==='dwell')bubble(listener,pick(lines),2800)},900+Math.random()*900);
 }
 
@@ -438,14 +476,14 @@ const PH=(function(){
  function sunTimes(day){if(SUN.day===day)return SUN;const r=Math.PI/180,N=Math.round((Date.parse(day+'T00:00:00Z')-Date.parse(day.slice(0,4)+'-01-01T00:00:00Z'))/DAYMS)+1;
   const dec=-Math.asin(.39779*Math.cos(r*(.98565*(N+10)+1.914*Math.sin(r*.98565*(N-2))))),B=2*Math.PI*(N-81)/364,eot=9.87*Math.sin(2*B)-7.53*Math.cos(B)-1.5*Math.sin(B),lat=55.75*r;
   const c=(Math.cos(90.833*r)-Math.sin(lat)*Math.sin(dec))/(Math.cos(lat)*Math.cos(dec)),H=Math.acos(clamp(c,-1,1))/r/15,noon=15-37.62/15-eot/60;return SUN={day,sr:noon-H,ss:noon+H}}
- function keys(day){if(KC.day===day)return KC.k;const{sr,ss}=sunTimes(day);KC={day,k:[[0,'#050a1f','#16264a',.62],[sr-1.6,'#0b1330','#2b3358',.55],[sr-.2,'#4a4a7a','#e89b86',.3],[sr+1.3,'#5aa3dc','#bfe0f2',.04],[ss-1.5,'#5aa3dc','#bfe0f2',.04],[ss+.1,'#5a4a8a','#f08c6a',.3],[ss+1.4,'#14183c','#3a3a63',.52],[24,'#050a1f','#16264a',.62]]};return KC.k}
+ function keys(day){if(KC.day===day)return KC.k;const{sr,ss}=sunTimes(day);KC={day,k:[[0,'#050a1f','#16264a',.56],[sr-1.6,'#0b1330','#2b3358',.52],[sr-.2,'#4a4a7a','#e89b86',.3],[sr+1.3,'#5aa3dc','#bfe0f2',.04],[ss-1.5,'#5aa3dc','#bfe0f2',.04],[ss+.1,'#5a4a8a','#f08c6a',.3],[ss+1.4,'#14183c','#3a3a63',.5],[24,'#050a1f','#16264a',.56]]};return KC.k}
  /* ---- расписание агента на день (детерминированно: день + имя) ---- */
  const hsh=s=>{let x=7;for(let i=0;i<s.length;i++)x=(Math.imul(x,31)+s.charCodeAt(i))>>>0;return x},jit=(day,id,m)=>(hsh(day+id+m)%41-20)/60;
  function plan(p,day){const dow=new Date(day+'T12:00:00Z').getUTCDay(),we=dow===0||dow===6?1:0,o=OFF[p.i],J=m=>jit(day,p.id,m),wake=7+o*.6+we*1.1+J('w'),bed=Math.min(23.9,23.2+o+we*.8+J('b'));
   return{day,wake,bed,m:[wake+.05,wake+1.2],e:[bed-1.1,bed-.15],shM:hsh(day+p.id+'s')%10<6,bt:hsh(day+p.id+'t')%10<3,b:[wake+.3,wake+2],l:[13+J('l'),14.6],d:[19+o*.4+J('d'),21],gym:hsh(day+p.id+'g')%10<7?[17.3+J('g'),20]:null}}
  const planOf=p=>{const day=mskDay();return p.pl&&p.pl.day===day?p.pl:(p.pl=plan(p,day))},inSleep=(pl,h)=>h<pl.wake||h>=pl.bed,asleep=p=>inSleep(planOf(p),mskHour());
  function script(p,h,day,pl){const add=(key,list,until)=>{if(p.done[key]||p.q.some(x=>x.key===key))return;list.forEach(([a,fin])=>p.q.push({a,key,fin:!!fin,until,day}))};
-  if(h>=pl.m[0]&&h<pl.m[1]){const L=[['wash']];if(pl.shM&&p.showered!==day)L.push(['shower'],['dry']);L.push(['teeth'],['mirror',1]);add(day+'m',L,pl.m[1])}
+  if(h>=pl.m[0]&&h<pl.m[1]){const L=[['wash']];if(pl.shM&&p.showered!==day)L.push(['shower'],['dry']);L.push(['weigh'],['teeth'],['mirror',1]);add(day+'m',L,pl.m[1])}
   if(h>=pl.b[0]&&h<pl.b[1])add(day+'b',[['coffee'],['eat',1]],pl.b[1]);
   if(h>=pl.l[0]&&h<pl.l[1])add(day+'l',[['cook'],['eat',1]],pl.l[1]);
   if(h>=pl.d[0]&&h<pl.d[1])add(day+'d',[['cook'],['eat',1]],pl.d[1]);
@@ -489,20 +527,20 @@ const PH=(function(){
  function restore(){const st=rd('state')||rd('state.bak');if(!st||!Array.isArray(st.agents))return null;const t=now();
   if(st.logSeq>LOG.seq){LOG.seq=st.logSeq;logEvent('log_gap',{seq:st.logSeq},'gap:'+st.savedAt)}
   let gap=t-st.savedAt;if(gap<0){logEvent('clock_skew',{gap},'skew:'+st.savedAt);gap=0}gap=Math.min(gap,30*DAYMS);
-  AG.forEach(p=>{const s=st.agents.find(x=>x.id===p.id);if(!s)return;p.e=clamp(+s.e||0,0,100);p.q=Array.isArray(s.q)?s.q:[];p.done=s.done||{};p.showered=s.showered||'';p.ls=Object.assign(LS0(),s.ls||{});p.last=s.last;p.cur=s.cur;p.sleepFrom=s.sleepFrom||0;
+  AG.forEach(p=>{const s=st.agents.find(x=>x.id===p.id);if(!s)return;p.e=clamp(+s.e||0,0,100);p.q=Array.isArray(s.q)?s.q:[];p.done=s.done||{};p.showered=s.showered||'';p.ls=Object.assign(LS0(p),s.ls||{});p.last=s.last;p.cur=s.cur;p.sleepFrom=s.sleepFrom||0;
    if(N[s.node]){p.node=s.node;place(p,[...N[s.node]],0)}
    if(gap<AWAY){if(s.act&&ACT[s.act.k]&&s.until>t)p.resume={k:s.act.k,at:s.act.at,t0:s.act.t0,until:s.until,plan:s.plan}}
    else{if(s.act&&ACT[s.act.k])aggAct(p,s.act.k,s.act.t0,Math.min(st.savedAt,s.until||st.savedAt),(s.plan||60)+20,s.act.at);p.e=energyGap(p,st.savedAt,t,p.e);p.cur=null;p.q=[]}});
   LOG.ev.filter(e=>e.i>st.logSeq).forEach(applyEvent);
   if(gap>=AWAY)logEvent('away',{from:st.savedAt,to:t,min:Math.round(gap/6e4)},'away:'+st.savedAt);return gap}
- function start(){AG.forEach(p=>{p.q=[];p.done={};p.et=now();p.ls=LS0()});beat();restore();try{finalize()}catch(x){console.error(x)}const t=now();
+ function start(){AG.forEach(p=>{p.q=[];p.done={};p.et=now();p.ls=LS0(p)});beat();restore();try{finalize()}catch(x){console.error(x)}const t=now();
   AG.forEach(p=>{if(!p.resume&&asleep(p)){p.node='BD'+p.bed;place(p,[...N[p.node]],0);p.sleepFrom=p.sleepFrom||bedTs(p,t);p.resume={k:'sleep',at:p.node,t0:t,until:t+1e3,plan:1}}});
   setInterval(beat,5e3);setInterval(flush,15e3);
   addEventListener('visibilitychange',()=>{if(document.hidden)flush(true);else if(now()-lastFlush>AWAY&&leader)location.reload()});addEventListener('pagehide',()=>{flush(true);release()});flush(true)}
  /* ---- события симуляции ---- */
  function finish(p,k){const t1=now(),a=p.act;if(a)aggAct(p,k,a.t0,t1,(p.plan||60)+20,a.at);const c=p.cur,day=mskDay(t1);
   if(k==='coffee')p.e=clamp(p.e+3,0,100);if(k==='eat')p.e=clamp(p.e+6,0,100);if(k==='bath')p.e=clamp(p.e+4,0,100);if(k==='shower')p.e=clamp(p.e+2,0,100);
-  if(k==='shower'||k==='bath')p.showered=day;
+  if(k==='shower'||k==='bath')p.showered=day;if(k==='weigh'&&!p.ls.wh.some(x=>x[0]===day))logEvent('weight',{a:p.id,day,kg:+p.ls.kg.toFixed(2)},'weight:'+p.id+':'+day);
   if(c&&c.a===k&&c.fin){p.done[c.key]=1;const kc=c.key.slice(-1),ty=kc==='g'?'workout':kc==='m'||kc==='e'?'routine':'meal',f=ty==='workout'?'workouts':ty==='routine'?'routines':'meals';
    if(logEvent(ty,{a:p.id,m:kc},ty+':'+p.id+':'+c.key)){const r=dayAgg(c.day,p.id);r[f]=(r[f]||0)+1}
    if(kc==='g'&&p.showered!==c.day)p.q.unshift({a:'shower',key:c.day+'x',fin:false,until:24,day:c.day},{a:'dry',key:c.day+'x',fin:false,until:24,day:c.day});p.cur=null}
@@ -511,11 +549,13 @@ const PH=(function(){
  function chat(a,b,out,wi,lo,t0){const day=mskDay(t0);if(!logEvent('chat',{a:a.id,b:b.id,o:out,w:wi&&wi.id,l:lo&&lo.id},'chat:'+t0+':'+a.id+b.id))return;
   dayAgg(day,a.id).chats++;dayAgg(day,b.id).chats++;if(out==='fight'){dayAgg(day,a.id).fights++;dayAgg(day,b.id).fights++;dayAgg(day,lo.id).kos++;lo.q.unshift({a:'sleep',key:'ko'+t0,fin:false,until:24,day})}}
  /* ---- этап 6: статистика, достижения, дневники (всё выводится из журнала и итогов дня) ---- */
- const LS0=()=>({chats:0,talks:0,spats:0,fights:0,wins:0,losses:0,meals:0,workouts:0,routines:0,nights:0,sleepSec:0,earlyWake:0,lateBed:0,longSleep:0,ach:{}});
+ const W0=[72.4,81,68.5,76.2],APP=[1,1.08,.94,1.03],KCAL_MEAL=580;
+ const MET={sleep:.95,work:1.5,coffee:1.6,cook:2,eat:1.5,fridge:1.8,tv:1.2,relax:1.2,read:1.3,window:1.3,stroll:3,run:9,bench:5,dumb:4,yoga:2.5,shower:2,bath:1.3,wash:2,teeth:2,mirror:1.5,dry:2,tidy:3,weigh:1.5};
+ const LS0=p=>({chats:0,talks:0,spats:0,fights:0,wins:0,losses:0,meals:0,workouts:0,routines:0,nights:0,sleepSec:0,earlyWake:0,lateBed:0,longSleep:0,kg:W0[p.i],kg0:W0[p.i],wday:'',wh:[],ach:{}});
  const hm=t=>{const d=mskD(t);return String(d.getUTCHours()).padStart(2,'0')+':'+String(d.getUTCMinutes()).padStart(2,'0')};
  const dur=s=>{const m=Math.max(1,Math.round(s/60));return m>=60?Math.floor(m/60)+' ч'+(m%60?' '+m%60+' мин':''):m+' мин'};
- const NOUN={work:'работа',coffee:'кофе',cook:'готовка',eat:'еда',fridge:'поиск еды',tv:'телевизор',window:'у окна',stroll:'прогулки',run:'бег',bench:'штанга',dumb:'гантели',yoga:'растяжка',relax:'отдых',read:'чтение',tidy:'уборка',shower:'душ',bath:'ванна',wash:'умывание',teeth:'чистка зубов',mirror:'зеркало',dry:'полотенце',sleep:'сон'};
- const placeOf=n=>/^S\d/.test(n)?'Кабинет':/^[KT]\d/.test(n)?'Кухня':/^[VFL]\d/.test(n)?'Гостиная':/^G/.test(n)?'Спортзал':/^B[DF]\d/.test(n)?'Спальня':/^B[RTHSMY]/.test(n)?'Ванная':n==='WN'?'У окна':'Коридор';
+ const NOUN={work:'работа',coffee:'кофе',cook:'готовка',eat:'еда',fridge:'поиск еды',tv:'телевизор',window:'у окна',stroll:'прогулки',run:'бег',bench:'штанга',dumb:'гантели',yoga:'растяжка',relax:'отдых',read:'чтение',tidy:'уборка',shower:'душ',bath:'ванна',wash:'умывание',teeth:'чистка зубов',mirror:'зеркало',dry:'полотенце',weigh:'взвешивание',sleep:'сон'};
+ const placeOf=n=>/^S\d/.test(n)?'Кабинет':/^[KT]\d/.test(n)?'Кухня':/^[VFL]\d/.test(n)?'Гостиная':/^G/.test(n)?'Спортзал':/^B[DF]\d/.test(n)?'Спальня':/^B[RTHSMYW]/.test(n)?'Ванная':n==='WN'?'У окна':'Коридор';
  const daysSeen=p=>Object.keys(AGG.days).filter(d=>AGG.days[d][p.id]).length;
  const ACHS=[
   {k:'fight1',t:'Боевое крещение',d:'Первая драка',f:s=>s.fights>=1},{k:'fight10',t:'Задира',d:'10 драк',f:s=>s.fights>=10},
@@ -525,19 +565,20 @@ const PH=(function(){
   {k:'owl',t:'Сова',d:'Лечь спать после 23:45',f:s=>s.lateBed>=1},{k:'sleep8',t:'Выспался',d:'Проспать 8 часов подряд',f:s=>s.longSleep>=1},
   {k:'gym5',t:'Спортсмен',d:'5 тренировок в зале',f:s=>s.workouts>=5},{k:'gym30',t:'Железная воля',d:'30 тренировок в зале',f:s=>s.workouts>=30},
   {k:'clean14',t:'Чистюля',d:'14 утренних и вечерних рутин',f:s=>s.routines>=14},{k:'meal21',t:'Гурман',d:'21 приём пищи',f:s=>s.meals>=21},
-  {k:'week',t:'Старожил',d:'7 дней в доме',f:(s,d)=>d>=7}];
+  {k:'week',t:'Старожил',d:'7 дней в доме',f:(s,d)=>d>=7},{k:'kgdown',t:'Минус килограмм',d:'Вес ниже начального на 1 кг',f:s=>s.kg0-s.kg>=1},{k:'kgup',t:'Плюс килограмм',d:'Вес выше начального на 1 кг',f:s=>s.kg-s.kg0>=1}];
  function applyEvent(e){const d=e.d||{},P=id=>AG.find(x=>x.id===id);
   if(e.y==='chat'){[d.a,d.b].forEach(id=>{const p=P(id);if(!p||!p.ls)return;const s=p.ls;s.chats++;if(d.o==='talk')s.talks++;else if(d.o==='spat')s.spats++;else if(d.o==='fight'){s.spats++;s.fights++;if(d.w===id)s.wins++;if(d.l===id)s.losses++}});return}
   const a=P(d.a);if(!a||!a.ls)return;const s=a.ls;
   if(e.y==='meal')s.meals++;else if(e.y==='workout')s.workouts++;else if(e.y==='routine')s.routines++;
   else if(e.y==='sleep'){s.nights++;const sec=(d.to-d.from)/1000,hw=mskHour(d.to),hb=mskHour(d.from);s.sleepSec+=sec;if(hw<6.75&&hw>3)s.earlyWake++;if(hb>=23.75||hb<3)s.lateBed++;if(sec>=8*3600)s.longSleep++}
-  else if(e.y==='ach')s.ach[d.k]=e.t}
+  else if(e.y==='ach')s.ach[d.k]=e.t;else if(e.y==='weight'){if(!s.wh.some(x=>x[0]===d.day)){s.wh.push([d.day,d.kg]);if(s.wh.length>400)s.wh.shift()}}else if(e.y==='wt'){s.kg=d.kg1;s.wday=d.day}}
  function checkAch(p){ACHS.forEach(a=>{if(!p.ls.ach[a.k]&&a.f(p.ls,daysSeen(p)))logEvent('ach',{a:p.id,k:a.k},'ach:'+p.id+':'+a.k)})}
  let DIA=rd('diary');if(!(DIA&&DIA.days&&typeof DIA.days==='object'))DIA={days:{}};let diaDirty=false;
  function build(id,day){
-  const t0=dayTs(day,0),t1=t0+DAYMS,A=(AGG.days[day]||{})[id],nm=x=>(AG.find(p=>p.id===x)||{name:x}).name,L=[],S=[],by={};let chats=0,sp=0,fi=0,w=0,l=0;
+  const t0=dayTs(day,0),t1=t0+DAYMS,A=(AGG.days[day]||{})[id],nm=x=>(AG.find(p=>p.id===x)||{name:x}).name,L=[],S=[],by={};let chats=0,sp=0,fi=0,w=0,l=0,wt=null;
   for(const e of LOG.ev){const d=e.d||{};
    if(e.y==='away'){if(d.to>t0&&d.from<t1){const f=Math.max(d.from,t0),t=Math.min(d.to,t1);L.push([hm(f),'Страница была закрыта до '+hm(t)+' ('+dur((t-f)/1000)+'): за это время события не записывались'])}continue}
+   if(e.y==='wt'){if(d.a===id&&d.day===day)wt=d;continue}
    if(e.t<t0||e.t>=t1)continue;
    if(e.y==='chat'){if(d.a!==id&&d.b!==id)continue;const o=d.a===id?d.b:d.a;chats++;by[o]=(by[o]||0)+1;
     if(d.o==='spat'){sp++;L.push([hm(e.t),'Спор с '+nm(o)+', разошлись'])}
@@ -547,26 +588,49 @@ const PH=(function(){
    else if(e.y==='routine')L.push([hm(e.t),d.m==='m'?'Утренняя рутина завершена':'Вечерняя рутина завершена']);
    else if(e.y==='meal')L.push([hm(e.t),{b:'Завтрак',l:'Обед',d:'Ужин'}[d.m]||'Приём пищи']);
    else if(e.y==='workout')L.push([hm(e.t),'Тренировка в зале завершена']);
+   else if(e.y==='weight')L.push([hm(e.t),'Взвешивание: '+f2(d.kg)+' кг']);
    else if(e.y==='ach'){const a=ACHS.find(x=>x.k===d.k);if(a)L.push([hm(e.t),'Достижение «'+a.t+'»'])}}
   if(chats)S.push('Общение: '+chats+' ('+Object.entries(by).sort((a,b)=>b[1]-a[1]).map(([k,v])=>nm(k)+' — '+v).join(', ')+')'+(sp?'; споров '+sp:'')+(fi?', драк '+fi+' (побед '+w+', поражений '+l+')':''));
   if(A){const acts=Object.entries(A.acts||{}).sort((a,b)=>b[1][1]-a[1][1]).filter(x=>x[1][1]>=30).slice(0,5);
    if(acts.length)S.push('Больше всего времени: '+acts.map(([k,v])=>(NOUN[k]||k)+' — '+dur(v[1])).join('; '));
    const pl=Object.entries(A.pl||{}).sort((a,b)=>b[1]-a[1]).filter(x=>x[1]>=30);if(pl.length)S.push('По комнатам: '+pl.map(([k,v])=>k+' '+dur(v)).join(', '));
    const c=k=>A.acts&&A.acts[k]?A.acts[k][0]:0,hy=c('shower')+c('bath');if(hy||c('teeth'))S.push('Гигиена: душ или ванна — '+hy+', чистка зубов — '+c('teeth'));if(c('coffee'))S.push('Кофе: '+c('coffee'))}
+  if(wt){const b=wt.in-wt.ex;S.push('Вес: '+f2(wt.kg0)+' → '+f2(wt.kg1)+' кг ('+sg(wt.kg1-wt.kg0)+'). Питание ≈ '+wt.in+' ккал (приёмов пищи '+wt.meals+'), расход ≈ '+wt.ex+' ккал, баланс '+(b>=0?'+':'−')+Math.abs(b)+' ккал; учтено '+wt.cov+'% суток. Больше всего энергии ушло на: '+wt.top.map(([k,v])=>(NOUN[k]||k)+' '+v+' ккал').join(', ')+'.')}
   if(!L.length&&!S.length)return null;
   L.sort((a,b)=>a[0]<b[0]?-1:a[0]>b[0]?1:0);const M=[];L.forEach(l=>{const q=M[M.length-1],m=q&&/ \(×(\d+)\)$/.exec(q[1]);if(q&&q[0]===l[0]&&q[1].replace(/ \(×\d+\)$/,'')===l[1])q[1]=l[1]+' (×'+((m?+m[1]:1)+1)+')';else M.push(l.slice())});
   return{day,id,final:false,lines:M,sum:S,sig:fnv(JSON.stringify([M,S]))}}
+ const f2=x=>(Math.round(x*100)/100).toFixed(2).replace('.',','),sg=x=>(x>0?'+':x<0?'−':'')+f2(Math.abs(x));
+function energyDay(p,day){const A=(AGG.days[day]||{})[p.id];if(!A||!A.acts)return null;const kg=p.ls.kg,part={};let sec=0,exp=0;
+  for(const k in A.acts){const s=A.acts[k][1],e=s/3600*(MET[k]||1.5)*kg;sec+=s;exp+=e;part[k]=e}
+  const c=k=>A.acts[k]?A.acts[k][1]:0,meals=A.meals||0;
+  const intake=APP[p.i]*(meals*KCAL_MEAL+Math.min(200,c('fridge')*1.5)+Math.min(80,c('coffee')*.8)+Math.min(200,Math.max(0,c('eat')-meals*18)*3));
+  return{intake,exp,cov:Math.min(1,sec/86400),part,meals}}
+ function weightDay(p,day){const s=p.ls;if(s.wday&&day<=s.wday)return;const E=energyDay(p,day);if(!E)return;
+  const dk=clamp((E.intake-E.exp)/7700,-.2,.2),kg1=Math.round((s.kg+dk)*1e4)/1e4;
+  logEvent('wt',{a:p.id,day,kg0:Math.round(s.kg*1e4)/1e4,kg1,in:Math.round(E.intake),ex:Math.round(E.exp),cov:Math.round(E.cov*100),meals:E.meals,top:Object.entries(E.part).sort((a,b)=>b[1]-a[1]).slice(0,3).map(([k,v])=>[k,Math.round(v)])},'wt:'+p.id+':'+day)}
  function finalize(){const lim=now()-12e5,days=new Set(Object.keys(AGG.days));LOG.ev.forEach(e=>days.add(mskDay(e.t)));let n=0;
-  [...days].filter(d=>dayTs(d,24)<=lim).forEach(day=>AG.forEach(p=>{if(DIA.days[day]&&DIA.days[day][p.id])return;try{const e=build(p.id,day);if(e){e.final=true;(DIA.days[day]||(DIA.days[day]={}))[p.id]=e;diaDirty=true;n++}}catch(x){console.error('diary',x)}}));return n}
+  [...days].sort().filter(d=>dayTs(d,24)<=lim).forEach(day=>AG.forEach(p=>{try{weightDay(p,day)}catch(x){console.error('weight',x)}if(DIA.days[day]&&DIA.days[day][p.id])return;try{const e=build(p.id,day);if(e){e.final=true;(DIA.days[day]||(DIA.days[day]={}))[p.id]=e;diaDirty=true;n++}}catch(x){console.error('diary',x)}}));return n}
  const diary=(id,day)=>{if(day<mskDay()&&DIA.days[day]&&DIA.days[day][id])return DIA.days[day][id];try{return build(id,day)}catch(x){console.error('diary',x);return null}};
  const diaryDays=id=>{const s=new Set([mskDay()]);Object.keys(AGG.days).forEach(d=>{if(AGG.days[d][id])s.add(d)});Object.keys(DIA.days).forEach(d=>{if(DIA.days[d][id])s.add(d)});return[...s].sort().reverse()};
  const stats=id=>{const p=AG.find(x=>x.id===id),s=p.ls;let top='—',best=0;const tot={};Object.keys(AGG.days).forEach(d=>{const a=AGG.days[d][id];if(a&&a.acts)for(const k in a.acts)tot[k]=(tot[k]||0)+a.acts[k][1]});for(const k in tot)if(k!=='sleep'&&tot[k]>best){best=tot[k];top=(NOUN[k]||k)+' ('+dur(tot[k])+')'}
-  return[['Дней в доме',daysSeen(p)],['Разговоров',s.chats],['Споров',s.spats],['Драк',s.fights],['Побед в драках',s.wins],['Нокаутов',s.losses],['Ночей сна',s.nights],['Средний сон',s.nights?dur(s.sleepSec/s.nights):'—'],['Приёмов пищи',s.meals],['Тренировок в зале',s.workouts],['Утренних и вечерних рутин',s.routines],['Чаще всего',top]]};
+  return[['Вес сейчас',f2(s.kg)+' кг'],['Изменение веса',sg(s.kg-s.kg0)+' кг'],['Дней в доме',daysSeen(p)],['Разговоров',s.chats],['Споров',s.spats],['Драк',s.fights],['Побед в драках',s.wins],['Нокаутов',s.losses],['Ночей сна',s.nights],['Средний сон',s.nights?dur(s.sleepSec/s.nights):'—'],['Приёмов пищи',s.meals],['Тренировок в зале',s.workouts],['Утренних и вечерних рутин',s.routines],['Чаще всего',top]]};
  const achs=id=>{const p=AG.find(x=>x.id===id);return ACHS.map(a=>({k:a.k,t:a.t,d:a.d,at:p.ls.ach[a.k]||0}))};
- return{diary,diaryDays,stats,achs,now,mskHour,mskDay,sunTimes,keys,plan,planOf,choose,asleep,sleepSec,finish,woke,chat,start,flush,restore,rd,logEvent,
+ const weight=id=>{const s=AG.find(x=>x.id===id).ls;return{kg:s.kg,kg0:s.kg0,wh:s.wh.slice()}};
+ return{energyDay:(id,day)=>energyDay(AG.find(x=>x.id===id),day),weight,diary,diaryDays,stats,achs,now,mskHour,mskDay,sunTimes,keys,plan,planOf,choose,asleep,sleepSec,finish,woke,chat,start,flush,restore,rd,logEvent,
   log:()=>LOG,agg:()=>AGG,lead:()=>leader}
 })();
 /*PH:END*/
+
+/* ---------- мониторинг кадров и автоснижение графики ---------- */
+const FPS={fr:[],last:0,avg:60,p95:16,low:0,wins:0};let perfEl=null;
+function fpsJudge(){FPS.wins++;if(GFX.pref!=='auto'||FPS.wins<2)return;if(FPS.avg<22)FPS.low++;else FPS.low=0;
+ if(FPS.low>=2&&GFX.auto!=='lite'){GFX.auto=GFX.auto==='high'?'balanced':'lite';FPS.low=0;try{localStorage.setItem('phantomHouseGfxAuto',GFX.auto+':'+Date.now())}catch(e){}gfxApply()}}
+function perfShow(){if(perfEl)perfEl.textContent='FPS '+FPS.avg.toFixed(0)+' · кадр p95 '+FPS.p95.toFixed(0)+' мс · '+GFX.cur+' · DOM '+document.getElementsByTagName('*').length}
+function fpsLoop(t){if(document.hidden)FPS.last=0;else{if(FPS.last){const dt=t-FPS.last;if(dt<500)FPS.fr.push(dt)}FPS.last=t;
+  if(FPS.fr.length>=120){const s=FPS.fr.slice().sort((x,y)=>x-y);FPS.avg=1000/(FPS.fr.reduce((x,y)=>x+y,0)/FPS.fr.length);FPS.p95=s[Math.floor(s.length*.95)];FPS.fr=[];fpsJudge();perfShow()}}
+ requestAnimationFrame(fpsLoop)}
+function initGfx(){gfxInit();const b=$c('#gfxBtn');if(b)b.addEventListener('click',gfxCycle);if(typeof requestAnimationFrame==='function')requestAnimationFrame(fpsLoop);
+ if(/[?&]perf\b/.test(location.search)){perfEl=document.createElement('div');perfEl.style.cssText='position:fixed;left:8px;top:8px;z-index:99;background:#000c;color:#9f9;font:12px monospace;padding:4px 8px;border-radius:6px';document.body.appendChild(perfEl);perfShow()}}
 
 /* ---------- дневники агентов (этап 6) ---------- */
 const DV={id:'claude',day:null},MONTHS=['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'],WD=['воскресенье','понедельник','вторник','среда','четверг','пятница','суббота'];
@@ -585,51 +649,91 @@ function diaryRender(){
  else{if(e.sum.length){B.appendChild(dEl('h3','dh','Итоги дня'));e.sum.forEach(x=>B.appendChild(dEl('p','dp',x)))}
   if(e.lines.length){B.appendChild(dEl('h3','dh','События'));const ul=dEl('ul','dl');e.lines.forEach(([t,x])=>{const li=dEl('li','');dAp(li,dEl('b','',t),document.createTextNode(' '+x));ul.appendChild(li)});B.appendChild(ul)}
   if(!e.final)B.appendChild(dEl('p','dnote','День ещё идёт: запись пополняется по мере событий.'))}
+ diaryWeight(B);
  B.appendChild(dEl('h3','dh','Статистика'));const g=dEl('div','dgrid');PH.stats(DV.id).forEach(([k,v])=>{dAp(g,dAp(dEl('div','dcell'),dEl('div','dv',String(v)),dEl('div','dk',k)))});B.appendChild(g);
  B.appendChild(dEl('h3','dh','Достижения'));PH.achs(DV.id).forEach(a=>{dAp(B,dAp(dEl('div','dach'+(a.at?' on':'')),dEl('b','',(a.at?'🏆 ':'🔒 ')+a.t),dEl('span','',a.d+(a.at?' · '+fmtAt(a.at):''))))})}
-function diaryOpen(id,day){if(id)DV.id=id;DV.day=day||DV.day;$('#diary').classList.add('open');diaryRender()}
+function diaryWeight(B){
+ const w=PH.weight(DV.id),wh=w.wh.slice(-30);B.appendChild(dEl('h3','dh','Вес'));
+ const top=dEl('div','dwrow'),big=dEl('div','dwbig',String(Math.round(w.kg*100)/100).replace('.',',')+' кг');top.appendChild(big);
+ top.appendChild(dEl('div','dwsub','Начальный вес: '+String(w.kg0).replace('.',',')+' кг · изменение '+((w.kg-w.kg0)>=0?'+':'−')+String(Math.abs(Math.round((w.kg-w.kg0)*100)/100)).replace('.',',')+' кг'));B.appendChild(top);
+ if(wh.length<2){B.appendChild(dEl('p','dnote','История измерений появится после нескольких утренних взвешиваний.'));if(wh.length)B.appendChild(dEl('p','dp',fmtDay(wh[0][0])+': '+String(wh[0][1]).replace('.',',')+' кг'));return}
+ const NS='http://www.w3.org/2000/svg',svg=document.createElementNS(NS,'svg');svg.setAttribute('viewBox','0 0 300 70');svg.setAttribute('class','dchart');
+ const v=wh.map(x=>x[1]),mn=Math.min(...v),mx=Math.max(...v),sp=Math.max(.2,mx-mn),pts=wh.map((x,i)=>(8+i*(284/(wh.length-1))).toFixed(1)+','+(62-(x[1]-mn)/sp*52).toFixed(1)).join(' ');
+ const pl=document.createElementNS(NS,'polyline');pl.setAttribute('points',pts);pl.setAttribute('fill','none');pl.setAttribute('stroke','#c69cff');pl.setAttribute('stroke-width','2');svg.appendChild(pl);B.appendChild(svg);
+ const ul=dEl('ul','dl');wh.slice(-7).reverse().forEach((x,i,a)=>{const prev=wh[wh.length-1-i-1],li=dEl('li','');dAp(li,dEl('b','',x[0].slice(5).replace('-','.')),document.createTextNode(' '+String(x[1]).replace('.',',')+' кг'+(prev?' ('+((x[1]-prev[1])>=0?'+':'−')+String(Math.abs(Math.round((x[1]-prev[1])*100)/100)).replace('.',',')+')':'')));ul.appendChild(li)});B.appendChild(ul)}
+function diaryOpen(id,day){const was=$('#diary').classList.contains('open');if(id)DV.id=id;DV.day=day||DV.day;$('#diary').classList.add('open');diaryRender();if(!was){const t=document.querySelector('.dtab.on');if(t&&t.focus)t.focus()}}
+function diaryShut(){if(typeof history!=='undefined'&&history.replaceState)history.replaceState(null,'',location.pathname+location.search);diaryClose();const f=document.querySelector('#diaryFab');if(f&&f.focus)f.focus()}
 function diaryClose(){$('#diary').classList.remove('open')}
 function diaryHash(){const m=/^#diary(?:\/(\w+))?(?:\/(\d{4}-\d{2}-\d{2}))?$/.exec(location.hash||'');if(m&&(!m[1]||AG.some(a=>a.id===m[1])))diaryOpen(m[1],m[2]);else diaryClose()}
 function initDiaryUI(){const fab=$('#diaryFab'),x=$('#diaryClose');if(!fab||!x)return;
  fab.addEventListener('click',()=>{location.hash='diary/'+DV.id});
- x.addEventListener('click',()=>{if(typeof history!=='undefined'&&history.replaceState)history.replaceState(null,'',location.pathname+location.search);diaryClose()});
+ x.addEventListener('click',diaryShut);addEventListener('keydown',e=>{if((e.key==='Escape'||e.keyCode===27)&&$('#diary').classList.contains('open'))diaryShut()});
  addEventListener('hashchange',diaryHash);setInterval(()=>{if($('#diary').classList.contains('open'))diaryRender()},30000);diaryHash()}
 
 /* ---------- время суток ---------- */
+/* ---------- графика: три режима и мониторинг кадров (этап 9) ---------- */
+const $c=(()=>{const c={};return s=>c[s]||(c[s]=document.querySelector(s))})();
+const GL={high:{n:'Высокая',tick:1000,hk:80,lt:400},balanced:{n:'Сбалансированная',tick:2000,hk:160,lt:800},lite:{n:'Облегчённая',tick:5000,hk:240,lt:1200}},GORD=['high','balanced','lite'],GPREF=['auto','high','balanced','lite'];
+const GFX={pref:'auto',auto:'high',cur:'high'},CF=()=>GL[GFX.cur];
+function gfxApply(){GFX.cur=GFX.pref==='auto'?GFX.auto:GFX.pref;document.documentElement.setAttribute('data-gfx',GFX.cur);const b=$c('#gfxBtn');if(b)b.textContent='🎛 '+(GFX.pref==='auto'?'Авто · ':'')+GL[GFX.cur].n}
+function gfxDetect(){try{const ua=navigator.userAgent||'',tv=/Android TV|SMART-?TV|SmartTV|Tizen|Web0S|WebOS|CrKey|BRAVIA|AFTM|AFTT|HbbTV|YaTV|TV Build/i.test(ua),mob=/Android|iPhone|iPad|Mobile/i.test(ua),cores=navigator.hardwareConcurrency||4,mem=navigator.deviceMemory||4;let L=(tv||mob)?1:0;if(cores<=2||mem<=1)L=2;else if(cores<=4||mem<=2)L=Math.min(2,L+1);if(typeof matchMedia==='function'&&matchMedia('(prefers-reduced-motion: reduce)').matches)L=2;return GORD[L]}catch(e){return'balanced'}}
+function gfxInit(){let p='auto',a=null;try{p=localStorage.getItem('phantomHouseGfx')||'auto';a=(localStorage.getItem('phantomHouseGfxAuto')||'').split(':')}catch(e){}
+ if(p!=='auto'&&!GL[p])p='auto';GFX.pref=p;GFX.auto=(a&&GL[a[0]]&&Date.now()-(+a[1]||0)<6048e5)?a[0]:gfxDetect();gfxApply()}
+function gfxSet(p){GFX.pref=p;try{localStorage.setItem('phantomHouseGfx',p)}catch(e){}gfxApply()}
+const gfxCycle=()=>gfxSet(GPREF[(GPREF.indexOf(GFX.pref)+1)%GPREF.length]);
+/* ---------- свет и время суток (этап 8) ---------- */
 const hx=h=>[1,3,5].map(i=>parseInt(h.substr(i,2),16)),mix=(a,b,t)=>{const A=hx(a),B=hx(b);return'rgb('+A.map((v,i)=>Math.round(v+(B[i]-v)*t))+')'};
-
+const LV={};let _suns=null;const suns=()=>_suns||(_suns=[].slice.call(document.querySelectorAll('.sun')));let skyA='',skyB='';
+const sv=(k,v)=>{if(LV[k]!==v){LV[k]=v;room.style.setProperty(k,v)}},rd=(x,n)=>String(Math.round(x*n)/n);
 function tick(){
  const t=PH.now(),h=PH.mskHour(t),day=PH.mskDay(t),{sr,ss}=PH.sunTimes(day),K=PH.keys(day);
  const j=K.findIndex((k,i)=>h<K[i+1][0]),a=K[j],b=K[j+1],f=(h-a[0])/(b[0]-a[0]),d=a[3]+(b[3]-a[3])*f;
- $('#s1').setAttribute('stop-color',mix(a[1],b[1],f));$('#s2').setAttribute('stop-color',mix(a[2],b[2],f));
+ const c1=mix(a[1],b[1],f),c2=mix(a[2],b[2],f);if(c1!==skyA){skyA=c1;$c('#s1').setAttribute('stop-color',c1)}if(c2!==skyB){skyB=c2;$c('#s2').setAttribute('stop-color',c2)}
  const dayT=h>=sr&&h<ss,u=dayT?(h-sr)/(ss-sr):((h>=ss?h-ss:h+24-ss)/(24-ss+sr));
- document.querySelectorAll('.sun').forEach(e=>{const[x,y,w,hh]=e.dataset.g.split(',').map(Number);e.setAttribute('cx',x+w*(.125+.75*u));e.setAttribute('cy',y+hh*(.85-.79*Math.sin(Math.PI*u)));e.setAttribute('r',(dayT?8:6)*hh/53);e.setAttribute('fill',dayT?'#fff3b0':'#e9eeff')});
- const s=room.style;s.setProperty('--dark',d);s.setProperty('--lamp',Math.min(1,Math.max(0,(d-.08)*2.4)));s.setProperty('--br',1-d*.5);s.setProperty('--sun',Math.max(0,.5-d*1.4)*(dayT?1:0));
- room.dataset.t=d>.4?'night':d>.15?'dusk':'day';
+ suns().forEach(e=>{const[x,y,w,hh]=e.dataset.g.split(',').map(Number),cx=(x+w*(.125+.75*u)).toFixed(1),cy=(y+hh*(.85-.79*Math.sin(Math.PI*u))).toFixed(1),key=cx+'|'+cy+'|'+dayT;if(e._k===key)return;e._k=key;e.setAttribute('cx',cx);e.setAttribute('cy',cy);e.setAttribute('r',(dayT?8:6)*hh/53);e.setAttribute('fill',dayT?'#fff3b0':'#e9eeff')});
+ const lamp=Math.min(1,Math.max(0,(d-.08)*2.4)),sun=Math.max(0,.5-d*1.4)*(dayT?1:0);
+ sv('--dark',rd(d,250));sv('--lamp',rd(lamp,100));sv('--br',rd(1-d*.4,100));sv('--sun',rd(sun,100));
+ const sd=sun>.02?'1':'0';if(room.dataset.sun!==sd)room.dataset.sun=sd;
+ const ph=d>.4?'night':d>.15?'dusk':'day';if(room.dataset.t!==ph)room.dataset.t=ph;
 }
-tick();setInterval(tick,1000);
+const LT={tv:'#8fb8ff',tvT:'#8fb8ff',gym:'#9fc0ff',gymT:'#9fc0ff'},TVPAL=['#8fb8ff','#a58cff','#7fe0d0','#ffb27f','#9fd0ff'];
+const rgbHex=a=>'#'+a.map(v=>Math.round(v).toString(16).padStart(2,'0')).join('');
+function setGymTint(c){LT.gymT=c}
+function lightTick(){[['tv','tvT','--tvc',.45],['gym','gymT','--gtv',.45]].forEach(([k,tk,prop,f])=>{if(LT[k]===LT[tk]||(k==='gym'&&!gymOn))return;const A=hx(LT[k]),B=hx(LT[tk]);LT[k]=rgbHex(A.map((v,i)=>Math.abs(B[i]-v)<3?B[i]:v+(B[i]-v)*f));room.style.setProperty(prop,LT[k])})}
+let gymOn=null;
+function gymTV(){const hr=PH.mskHour(),on=AG.some(p=>/^G/.test(p.node))||(hr>=10&&hr<23);if(on===gymOn)return;gymOn=on;$c('#gtvl').classList.toggle('on',on);$c('#gtvoff').style.opacity=on?0:.92}
+function tickLoop(){try{tick()}catch(e){console.error(e)}setTimeout(tickLoop,CF().tick)}
+function lightLoop(){try{lightTick()}catch(e){console.error(e)}setTimeout(lightLoop,(LT.tv!==LT.tvT||(gymOn&&LT.gym!==LT.gymT))?CF().lt:1500)}
+setInterval(gymTV,20000);setInterval(()=>{if(tvUsers()>0)LT.tvT=pick(TVPAL)},20000);
+tick();gymTV();setTimeout(tickLoop,CF().tick);lightLoop();
 /* ---------- хоккей на ТВ в спортзале ---------- */
+const HKS={n:0};
 (function(){
  const NS='http://www.w3.org/2000/svg',g=$('#hkp'),pk=$('#hkpk'),cl=(v,a,b)=>Math.max(a,Math.min(b,v)),P=[];
- for(let t=0;t<2;t++)for(let k=0;k<6;k++){const e=document.createElementNS(NS,'circle');e.setAttribute('r',k?2.6:3.3);e.setAttribute('fill',t?'#2b6fd6':'#c8102e');e.setAttribute('stroke','#fff');e.setAttribute('stroke-width','.7');g.appendChild(e);P.push({t,k,e,x:76,y:26,ox:0,oy:0})}
- let st='play',per=1,left=1200,sc=[0,0],car,shot=null,wt=0,fl=0,tmr=0;const pu={x:76,y:26};
+ const PS={},PW={wS:6,wG:7.4,rS:4.6,bS:4.6,rG:5.8,bG:5.8},r1=v=>Math.round(v*10)/10;
+ Object.keys(PW).forEach(id=>{const e=document.createElementNS(NS,'path');e.setAttribute('fill','none');e.setAttribute('stroke-linecap','round');e.setAttribute('stroke',id[0]==='w'?'#fff':id[0]==='r'?'#c8102e':'#2b6fd6');e.setAttribute('stroke-width',PW[id]);g.appendChild(e);PS[id]=e});
+ for(let t=0;t<2;t++)for(let k=0;k<6;k++)P.push({t,k,x:76,y:26,ox:0,oy:0});
+ let st='play',per=1,left=1200,sc=[0,0],car,shot=null,wt=0,fl=0,tmr=0,lastTn,gt=0,gat=-1e9;const pu={x:76,y:26};
  const sk=t=>P.filter(p=>p.t===t&&p.k),dd=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
  function move(p,tx,ty,s){const dx=tx-p.x,dy=ty-p.y,d=Math.hypot(dx,dy)||1,m=Math.min(s,d);p.x+=dx/d*m;p.y+=dy/d*m}
  function reset(){P.forEach(p=>{if(p.k){p.x=76+rnd(-30,30);p.y=rnd(8,44)}else{p.x=p.t?140:12;p.y=26}});car=pick(P.filter(p=>p.k));pu.x=76;pu.y=26;shot=null}
  function newGame(){sc=[0,0];per=1;left=1200;st='play';reset()}
  function cheer(){soundCue('goal');AG.filter(p=>/^G/.test(p.node)&&p.st==='dwell').sort(()=>Math.random()-.5).slice(0,2).forEach((p,i)=>setTimeout(()=>bubble(p,pick(['ГОЛ! 🏒','Шайба!','Вот это бросок!','Монреаль, давай!','Тампа не сдаётся!'])),i*700));const fan=AG.find(p=>p.el.classList.contains('tv')&&p.st==='dwell');if(fan)bubble(fan,'ГОООЛ! 🏒',2800);eventReact('goal',AG.find(p=>p.st==='dwell')||AG[0])}
- function draw(){P.forEach(p=>{p.e.setAttribute('cx',p.x);p.e.setAttribute('cy',p.y)});pk.setAttribute('cx',pu.x);pk.setAttribute('cy',pu.y);
-  $('#hs0').textContent=sc[0];$('#hs1').textContent=sc[1];
-  $('#hkt').textContent=st==='final'?'ФИНАЛ':st==='break'?'ПЕРЕРЫВ':(per>3?'ОТ':per+'-й')+' '+Math.floor(left/60)+':'+String(Math.floor(left%60)).padStart(2,'0');
-  $('#hkf').setAttribute('opacity',fl>0?1:0)}
+ const E={};let dr=true;const el=id=>E[id]||(E[id]=$c('#'+id)),setT=(id,v)=>{const e=el(id);if(e._t!==v){e._t=v;e.textContent=v}};
+ function draw(){const D={wS:'',wG:'',rS:'',bS:'',rG:'',bG:''};P.forEach(p=>{const q='M'+r1(p.x)+' '+r1(p.y)+'h0';D[p.k?'wS':'wG']+=q;D[(p.t?'b':'r')+(p.k?'S':'G')]+=q});for(const id in D)if(PS[id]._d!==D[id]){PS[id]._d=D[id];PS[id].setAttribute('d',D[id])}
+  
+  const px=Math.round(pu.x*10)/10,py=Math.round(pu.y*10)/10;if(pk._x!==px){pk._x=px;pk.setAttribute('cx',px)}if(pk._y!==py){pk._y=py;pk.setAttribute('cy',py)}
+  setT('hs0',sc[0]);setT('hs1',sc[1]);setT('hkt',st==='final'?'ФИНАЛ':st==='break'?'ПЕРЕРЫВ':(per>3?'ОТ':per+'-й')+' '+Math.floor(left/60)+':'+String(Math.floor(left%60)).padStart(2,'0'));
+  const fo=fl>0?1:0,ff=el('hkf');if(ff._o!==fo){ff._o=fo;ff.setAttribute('opacity',fo)}
+  const tn=fl>0?'#ffd36b':st!=='play'?'#cfe0ff':PH.now()-gat<20000?(gt?'#7fb2ff':'#ff8a96'):'#b9d2ff';if(tn!==lastTn){lastTn=tn;setGymTint(tn)}}
  function step(){
   if(fl>0)fl--;
-  if(st!=='play'){if(--wt<=0){if(st==='final')newGame();else{st='play';per++;left=per>3?300:1200;reset()}}draw();return}
+  if(st!=='play'){if(--wt<=0){if(st==='final')newGame();else{st='play';per++;left=per>3?300:1200;reset()}}dr&&draw();return}
   left-=.6;
-  if(left<=0){left=0;if(per<3||(per===3&&sc[0]===sc[1])){st='break';wt=60}else{if(sc[0]===sc[1])sc[Math.random()<.5?0:1]++;st='final';wt=250}draw();return}
+  if(left<=0){left=0;if(per<3||(per===3&&sc[0]===sc[1])){st='break';wt=60}else{if(sc[0]===sc[1])sc[Math.random()<.5?0:1]++;st='final';wt=250}dr&&draw();return}
   if(shot){pu.x+=(shot.x-pu.x)*.35;pu.y+=(shot.y-pu.y)*.35;
-   if(++shot.n>6){if(shot.goal){sc[shot.t]++;fl=30;$('#hkf').textContent='ГОЛ! '+(shot.t?'TBL':'MTL');cheer();reset()}else{car=pick(sk(1-shot.t));shot=null}}
-   draw();return}
+   if(++shot.n>6){if(shot.goal){sc[shot.t]++;fl=30;gt=shot.t;gat=PH.now();$('#hkf').textContent='ГОЛ! '+(shot.t?'TBL':'MTL');cheer();reset()}else{car=pick(sk(1-shot.t));shot=null}}
+   dr&&draw();return}
   const c=car,att=c.t?-1:1,gx=c.t?10:142;
   move(c,gx,26+Math.sin(left/9)*14,.9);
   pu.x+=(c.x+att*2-pu.x)*.5;pu.y+=(c.y-pu.y)*.5;
@@ -639,10 +743,11 @@ tick();setInterval(tick,1000);
    if(Math.abs(c.x-gx)<34&&r<.45)shot={x:gx,y:26+rnd(-4,4),goal:Math.random()<.4,t:c.t,n:0};
    else if(r<.2)car=sk(1-c.t).sort((a,b)=>dd(a,c)-dd(b,c))[0];
    else car=pick(sk(c.t).filter(p=>p!==c))}
-  draw()}
- reset();draw();setInterval(step,80);
+  dr&&draw()}
+ function hkLoop(){let d=2000;try{if(!document.hidden&&gymOn){const n=Math.max(1,Math.round(CF().hk/80));for(let i=0;i<n;i++){dr=i===n-1;step();HKS.n++}d=CF().hk}}catch(e){console.error(e)}setTimeout(hkLoop,d)}
+ reset();draw();hkLoop();
 })();
-PH.start();
+initGfx();PH.start();
 initDiaryUI();
 AG.forEach(life);
 </script>
