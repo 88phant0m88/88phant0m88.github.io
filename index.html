@@ -89,7 +89,7 @@ body{min-height:100vh;padding:14px;display:grid;place-items:center;background:ra
 @supports (color:color-mix(in srgb,red,blue)){.body img{box-shadow:0 0 0 2px #0004,0 0 12px color-mix(in srgb,var(--c) 55%,transparent)}}
 .agent:focus .body img{outline:2px solid #fff}
 .body[data-l]:after{content:attr(data-l);position:absolute;top:0;left:0;width:100%;height:100%;display:flex;align-items:center;justify-content:center;font:800 18px system-ui;color:#fff;background:var(--c);border-radius:50%}
-.fabs{position:fixed;left:10px;bottom:10px;z-index:30;display:flex}.fabs .diary-fab{position:static;margin-right:8px}.diary-fab,.sound-fab{min-height:44px}
+.fabs{position:fixed;left:10px;right:10px;bottom:10px;z-index:30;display:flex;align-items:stretch;gap:8px}.fabs button{position:static;flex:1;min-width:0;min-height:44px;margin:0;padding:10px 8px;text-align:center;white-space:nowrap}.sound-fab{z-index:30}.diary-fab{z-index:30}
 #shw:not(.on) .rp,#shw:not(.on) .drp{animation-play-state:paused}
 .bub{opacity:0;animation-play-state:paused}#tubw.on~.bub{opacity:.8;animation-play-state:running}
 html[data-gfx="balanced"] #base [filter="url(#nz)"],html[data-gfx="lite"] #base [filter="url(#nz)"],html[data-gfx="balanced"] .dust,html[data-gfx="lite"] .dust{display:none}
@@ -107,7 +107,7 @@ html[data-gfx="lite"] .steam,html[data-gfx="lite"] .bub,html[data-gfx="lite"] .r
 .sound-panel{position:fixed;right:16px;bottom:68px;z-index:31;width:min(330px,calc(100vw - 32px));padding:17px;background:#171020f5;border:1px solid #604477;border-radius:16px;color:#f4eaff;font:13px system-ui;box-shadow:0 12px 38px #000b;backdrop-filter:blur(14px);display:none}
 .sound-panel.open{display:block}.sound-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;font-weight:800;letter-spacing:.08em;color:#d9bdff}
 .sound-close{background:none;border:0;color:#cdb8e8;font-size:22px;cursor:pointer}.sound-row{margin:13px 0}.sound-row label{display:flex;justify-content:space-between;margin-bottom:7px;color:#e9ddf5}.sound-row output{color:#c69cff;font-variant-numeric:tabular-nums}.sound-row input{width:100%;accent-color:#a879e8}.sound-toggle{display:flex;align-items:center;gap:9px;margin-top:14px;color:#d9c9e8}.sound-toggle input{accent-color:#a879e8}.sound-note{margin-top:12px;color:#a99ab8;font-size:11px;line-height:1.4}
-@media(max-width:600px){.sound-fab{right:10px;bottom:10px}.sound-panel{right:10px;bottom:60px}}
+@media(max-width:600px){.sound-panel{right:10px;bottom:66px}}
 </style>
 </head>
 <body>
@@ -150,8 +150,7 @@ html[data-gfx="lite"] .steam,html[data-gfx="lite"] .bub,html[data-gfx="lite"] .r
 </svg>
 </div></div>
 
-<button class="sound-fab" id="soundFab" type="button">♫ Звук: выкл.</button>
-<div class="fabs"><button class="diary-fab" id="diaryFab" type="button">📖 Дневники</button><button class="diary-fab" id="gfxBtn" type="button">🎛 Графика</button></div>
+<div class="fabs"><button class="diary-fab" id="diaryFab" type="button">📖 Дневники</button><button class="diary-fab" id="gfxBtn" type="button">🎛 Графика</button><button class="sound-fab" id="soundFab" type="button">♫ Звук: выкл.</button></div>
 <section class="diary" id="diary" aria-label="Дневники агентов"><div class="diary-in"><div class="diary-head"><b>ДНЕВНИКИ</b><button class="sound-close" id="diaryClose" type="button" aria-label="Закрыть">×</button></div><div id="diaryBody"></div></div></section>
 <section class="sound-panel" id="soundPanel" aria-label="Настройки звука">
  <div class="sound-head"><span>PHANTOM HOUSE · SOUND</span><button class="sound-close" id="soundClose" type="button" aria-label="Закрыть">×</button></div>
@@ -339,12 +338,12 @@ AG.forEach((p,i)=>{
  el.className='agent sit';el.style.setProperty('--c',p.c);el.setAttribute('aria-label',p.name+' — нажми, чтобы сменить занятие');
  el.innerHTML=`<span class="sh"></span><span class="body"><img src="https://raw.githubusercontent.com/lobehub/lobe-icons/master/packages/static-png/light/${p.img}.png" alt="${p.name}" onerror="this.style.display='none';this.parentNode.setAttribute('data-l','${p.name.charAt(0)}')"></span><span class="zz">Zzz</span><span class="tag">${p.name}<i><b></b></i></span><span class="act"></span><span class="say"></span>`;
  room.appendChild(el);place(p,p.pos,0);
- p.say=el.querySelector('.say');p.zz=el.querySelector('.zz');p.bar=el.querySelector('.tag b');p.act=el.querySelector('.act');p.label='';
+ p.say=el.querySelector('.say');p.zz=el.querySelector('.zz');p.bar=el.querySelector('.tag b');p.actEl=el.querySelector('.act');p.label='';
  el.addEventListener('click',()=>{if(convo||p.busy)return;if(p.el.classList.contains('sleep'))bubble(p,'Ещё пять минуток…');p.force=choose(p,true);p.wake&&p.wake()});
 });
 function place(p,[x,y],t=null){p.pos=[x,y];const s=p.el.style;if(t===0)s.transitionDuration='0s';s.left=x/12.5+'%';s.top=y/8+'%';s.zIndex=10+Math.round(y/10)}
 function bubble(p,t,ms=3300){p.say.textContent=t;p.say.classList.add('show');clearTimeout(p.bt);p.bt=setTimeout(()=>p.say.classList.remove('show'),ms)}
-function ui(p,t){if(t)p.label=t;if(p._l!==p.label){p.act.textContent=p.label;p._l=p.label}const w=Math.round(p.e);if(p._w!==w){p.bar.style.width=w+'%';p._w=w}}
+function ui(p,t){if(t)p.label=t;if(p._l!==p.label){p.actEl.textContent=p.label;p._l=p.label}const w=Math.round(p.e);if(p._w!==w){p.bar.style.width=w+'%';p._w=w}}
 const SPEED=120;
 async function go(p,target,off){
  const el=p.el,pts=path(p.node,target).map(k=>N[k]);
